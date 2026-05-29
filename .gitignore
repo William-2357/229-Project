@@ -1,0 +1,25 @@
+# Data files — too large for git
+data/raw/
+data/__pycache__/
+*.zip
+*.tar.gz
+*.mat
+*.npz
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+
+# Cache directories
+data/bciciv2a_cache/
+data/jeong2020_cache/
+data/synthetic_cache/
+
+# Individual per-subject result files — too many small files
+results/**/*.json
+!results/**/modal_summary.json
+results/**/*.csv
+results/
+results_*/
