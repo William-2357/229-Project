@@ -1,6 +1,5 @@
-"""Dataset classes for Jeong2020 and BCIC-IV-2a EEG datasets."""
+"""Dataset classes for BCIC-IV-2a EEG datasets."""
 
-import os
 import numpy as np
 from pathlib import Path
 from abc import ABC, abstractmethod
@@ -139,94 +138,6 @@ class BaseEEGDataset(ABC):
                 )
                 np.savez_compressed(path, X=X, y=y)
                 print(f"    saved {path.name}  X={X.shape}")
-
-
-class JeongDataset(BaseEEGDataset):
-    """Jeong 2020 GigaScience dataset.
-
-    30 subjects, 2 sessions (Day1/Day2), 11-class motor execution + imagery.
-    64-channel EEG at 2500 Hz.
-    Download: http://gigadb.org/dataset/100660
-
-    Expected directory layout:
-        data_dir/
-            s01/
-                s01_session1.npz
-                s01_session2.npz
-            s02/
-                ...
-    """
-
-    N_SUBJECTS = 30
-    N_CLASSES = 11
-    N_CHANNELS = 39
-    ORIG_SFREQ = 2500.0
-    _notch_freqs = (50.0,)
-    _default_sessions = [1, 2]
-
-    @property
-    def subject_ids(self) -> list:
-        return list(range(1, self.N_SUBJECTS + 1))
-
-    @property
-    def n_classes(self) -> int:
-        return self.N_CLASSES
-
-    @property
-    def n_channels(self) -> int:
-        return self.N_CHANNELS
-
-    @property
-    def orig_sfreq(self) -> float:
-        return self.ORIG_SFREQ
-
-    def _load_raw_subject(self, subject_id: int, session: int) -> tuple:
-        """Load from .npz files produced by download.py."""
-        subj_dir = self.data_dir / f"s{subject_id:02d}"
-        npz_path = subj_dir / f"s{subject_id:02d}_session{session}.npz"
-
-        if not npz_path.exists():
-            raise FileNotFoundError(
-                f"Data file not found: {npz_path}\n"
-                "Run: python -m data.download --dataset jeong2020 --data_dir <dir>"
-            )
-
-        d = np.load(npz_path, allow_pickle=True)
-        raw = d["eeg"].astype(np.float64)   # (C, T)
-        events = d["events"].astype(int)     # (N,) sample indices
-        labels = d["labels"].astype(int)     # (N,) 0-indexed class labels
-        return raw, events, labels
-
-    def get_train_test_subjects(self) -> tuple[list, list]:
-        """Return (train_subjects, test_subjects) using session 3 as held-out."""
-        return list(range(1, self.N_SUBJECTS + 1)), list(range(1, self.N_SUBJECTS + 1))
-
-    def get_subject_data_by_session(
-        self, subject_id: int, sessions: list[int]
-    ) -> tuple[np.ndarray, np.ndarray]:
-        return self.get_subject_data(subject_id, sessions=sessions, use_cache=False)
-
-    def get_source_data(self, held_out_subject: int) -> tuple[np.ndarray, np.ndarray]:
-        """Pool sessions 1+2 from all subjects except held_out_subject."""
-        all_X, all_y = [], []
-        for subj in self.subject_ids:
-            if subj == held_out_subject:
-                continue
-            X, y = self.get_subject_data(subj, sessions=[1, 2])
-            all_X.append(X)
-            all_y.append(y)
-        return np.concatenate(all_X, axis=0), np.concatenate(all_y, axis=0)
-
-    def get_target_data(self, subject_id: int) -> tuple[tuple, tuple]:
-        """Return ((X_train, y_train), (X_test, y_test)) for target subject.
-
-        train = session 1 (80%), test = session 2 (20% held-out split).
-        Dataset only has 2 sessions so we use an 80/20 split of session 1
-        for calibration and session 2 as the held-out test set.
-        """
-        X_tr, y_tr = self.get_subject_data(subject_id, sessions=[1])
-        X_te, y_te = self.get_subject_data(subject_id, sessions=[2])
-        return (X_tr, y_tr), (X_te, y_te)
 
 
 class BCICIVDataset(BaseEEGDataset):

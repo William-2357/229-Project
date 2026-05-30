@@ -22,17 +22,8 @@ import torch.nn as nn
 from peft import LoraConfig, get_peft_model
 
 from .base import BaseAdapter, train_epoch, evaluate_model
+from .linear_probe import train_linear_probe
 from models.foundations import FoundationBackbone, FoundationWithHead
-
-
-class _HeadWrapper(nn.Module):
-    """Thin nn.Module that applies a linear head to pre-extracted feature vectors."""
-    def __init__(self, head: nn.Module):
-        super().__init__()
-        self.head = head
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.head(x)
 
 
 def _get_linear_target_modules(model: nn.Module, rank: int = 8) -> list[str]:
@@ -97,55 +88,16 @@ class FoundationLoRAAdapter(BaseAdapter):
         self.batch_size = batch_size
         self._model: nn.Module | None = None
 
-    def _train_linear_probe(
-        self, model: FoundationWithHead, X: np.ndarray, y: np.ndarray
-    ) -> FoundationWithHead:
-        """Train only the classification head with backbone frozen.
-
-        Pre-extracts backbone features once so the epoch loop runs only the
-        linear head — avoids 100x redundant forward passes through the large
-        frozen backbone.
-        """
-        model.freeze_backbone()
-
-        # Extract features once (backbone frozen, so features are constant)
-        model.eval()
-        feats = []
-        with torch.no_grad():
-            for start in range(0, len(X), self.batch_size):
-                xb = torch.FloatTensor(X[start: start + self.batch_size]).to(self.device)
-                feats.append(model.backbone.get_features(xb).cpu().numpy())
-        X_feat = np.concatenate(feats, axis=0)
-
-        n_val = max(1, int(len(X_feat) * self.val_fraction_probe))
-        idx = np.random.permutation(len(X_feat))
-        val_idx, train_idx = idx[:n_val], idx[n_val:] if len(idx) > n_val else idx
-
-        X_tr, y_tr = X_feat[train_idx], y[train_idx]
-        X_val, y_val = X_feat[val_idx], y[val_idx]
-
-        head = _HeadWrapper(model.head)
-        optimizer = torch.optim.AdamW(
-            head.parameters(), lr=self.lr_probe, weight_decay=self.weight_decay
+    def _probe_kwargs(self) -> dict:
+        return dict(
+            device=self.device,
+            batch_size=self.batch_size,
+            lr=self.lr_probe,
+            weight_decay=self.weight_decay,
+            max_epochs=self.max_epochs_probe,
+            patience=self.patience_probe,
+            val_fraction=self.val_fraction_probe,
         )
-        best_val_acc, best_state, patience_counter = -1.0, None, 0
-
-        for _ in range(self.max_epochs_probe):
-            train_epoch(head, X_tr, y_tr, optimizer, self.device, self.batch_size)
-            val_acc = evaluate_model(head, X_val, y_val, self.device)
-            if val_acc > best_val_acc:
-                best_val_acc = val_acc
-                best_state = copy.deepcopy(head.state_dict())
-                patience_counter = 0
-            else:
-                patience_counter += 1
-            if patience_counter >= self.patience_probe:
-                break
-
-        if best_state is not None:
-            head.load_state_dict(best_state)
-        # head.head IS model.head (same object) — no copy needed
-        return model
 
     def _finetune_lora(
         self, lora_model: nn.Module, X_cal: np.ndarray, y_cal: np.ndarray
@@ -204,8 +156,9 @@ class FoundationLoRAAdapter(BaseAdapter):
         cache_key = ("foundation_lora_probe", self.seed)
         if source_cache is not None and cache_key in source_cache:
             model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
+            model.freeze_backbone()
         else:
-            model = self._train_linear_probe(model, X_src, y_src)
+            model = train_linear_probe(model, X_src, y_src, **self._probe_kwargs())
             if source_cache is not None:
                 source_cache[cache_key] = copy.deepcopy(model.state_dict())
 

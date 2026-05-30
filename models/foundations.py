@@ -103,6 +103,8 @@ class _MIRepNetEmbedding(nn.Module):
         self.conv1      = nn.Conv2d(1, 64, (1, 25))
         self.conv2      = nn.Conv2d(64, 128, (C, 1))
         self.bn         = nn.BatchNorm2d(128)
+        self.pool       = nn.AvgPool2d((1, 75), stride=(1, 15))
+        self.dropout    = nn.Dropout(0.5)
         self.projection = nn.Sequential(nn.Conv2d(128, 256, (1, 1)))
         self.chan_embed  = nn.Embedding(C, 256)
 
@@ -114,8 +116,10 @@ class _MIRepNetEmbedding(nn.Module):
         x = x.unsqueeze(1)                              # (B, 1, C, T)
         x = F.elu(self.conv1(x))                        # (B, 64, C, T-24)
         x = F.elu(self.bn(self.conv2(x)))               # (B, 128, 1, T-24)
-        x = self.projection(x)                          # (B, 256, 1, T-24)
-        return x.squeeze(2).transpose(1, 2)             # (B, T-24, 256)
+        x = self.pool(x)                                # (B, 128, 1, pooled_T)
+        x = self.dropout(x)
+        x = self.projection(x)                          # (B, 256, 1, pooled_T)
+        return x.squeeze(2).transpose(1, 2)             # (B, pooled_T, 256)
 
 
 # Channel map: BCIC-IV 2a (22 ch) → MIRepNet 45-channel template position.
@@ -159,7 +163,20 @@ class MIRepNetBackbone(FoundationBackbone):
         super().__init__()
         self.input_sfreq = input_sfreq
         # channel_map[i] = position in 45-ch template for input channel i; -1 = drop
-        self.channel_map = channel_map if channel_map is not None else _BCICIV2A_TO_MIREPNET45
+        if channel_map is not None:
+            self.channel_map = channel_map
+        elif n_channels == len(_BCICIV2A_TO_MIREPNET45):
+            self.channel_map = _BCICIV2A_TO_MIREPNET45
+        elif n_channels == _MIRepNetEmbedding.N_PRETRAIN_CH:
+            self.channel_map = list(range(_MIRepNetEmbedding.N_PRETRAIN_CH))
+        else:
+            self.channel_map = None
+        if self.channel_map is None:
+            raise ValueError(
+                "MIRepNet pretrained weights require either the 22-channel "
+                "BCIC-IV-2a layout, the full 45-channel template, or an explicit "
+                f"channel_map; got n_channels={n_channels}."
+            )
 
         D = self._EMB_DIM
         self.embedding = _MIRepNetEmbedding()
@@ -191,6 +208,12 @@ class MIRepNetBackbone(FoundationBackbone):
 
     def get_features(self, X: torch.Tensor) -> torch.Tensor:
         B, _, T = X.shape
+        if self.channel_map is None or len(self.channel_map) != X.shape[1]:
+            raise ValueError(
+                "MIRepNet requires an explicit channel_map matching the input "
+                f"channel count. Got {X.shape[1]} channels but channel_map has "
+                f"{0 if self.channel_map is None else len(self.channel_map)} entries."
+            )
 
         # 1. Resample to 250 Hz
         if self.input_sfreq != self._TARGET_SFREQ:
@@ -316,6 +339,11 @@ class NeuroGPTBackbone(FoundationBackbone):
                  input_sfreq: float = 200.0,
                  checkpoint_path: Optional[str] = None, **kwargs):
         super().__init__()
+        if checkpoint_path is not None and n_channels != 22:
+            raise ValueError(
+                "NeuroGPT pretrained encoder weights are tied to 22-channel "
+                f"inputs; got n_channels={n_channels}."
+            )
         self.input_sfreq = input_sfreq
         # Named to match top-level checkpoint keys: encoder.* and embedder.*
         self.encoder  = _NeuroGPTEncoderBlock(n_channels=n_channels)
@@ -337,15 +365,15 @@ class NeuroGPTBackbone(FoundationBackbone):
 
     def get_features(self, X: torch.Tensor) -> torch.Tensor:
         """Extract 1024-dim features from (B, 22, T) EEG input."""
-        # 1. Per-channel z-score normalisation (matches NeuroGPT preprocessing)
-        mu  = X.mean(dim=-1, keepdim=True)
-        std = X.std(dim=-1, keepdim=True)
-        X   = (X - mu) / (std + 1e-25)
-
-        # 2. Resample to 250 Hz if input is at a different rate
+        # 1. Resample to 250 Hz if input is at a different rate.
         if self.input_sfreq != self._TARGET_SFREQ:
             target_len = int(X.shape[-1] * self._TARGET_SFREQ / self.input_sfreq)
             X = F.interpolate(X, size=target_len, mode="linear", align_corners=False)
+
+        # 2. Per-channel z-score normalisation at the model's input sampling rate.
+        mu  = X.mean(dim=-1, keepdim=True)
+        std = X.std(dim=-1, keepdim=True)
+        X   = (X - mu) / (std + 1e-25)
 
         # 3. Chunk into 500-sample (2 s) windows and average features across chunks.
         #    NeuroGPT was pretrained on 2 s chunks; a 4 s trial has two valid chunks.
@@ -426,67 +454,239 @@ class REVEBackbone(FoundationBackbone):
 # CBraMod
 # ---------------------------------------------------------------------------
 
-class _CBraModEncoder(nn.Module):
-    """CBraMod: Criss-Cross Brain Foundation Model (Wang et al. 2024).
+class _CBraModPatchEmbedding(nn.Module):
+    """Patch embedding block matching the official CBraMod checkpoint keys."""
 
-    Each EEG channel is treated as a sequence token; a transformer over
-    channels produces per-channel embeddings that are mean-pooled.
-
-    TODO: replace with the official criss-cross architecture from:
-        https://github.com/wenhui0206/CBraMod  (verify actual repo URL)
-    """
-
-    def __init__(self, n_channels: int, n_times: int, emb_dim: int = 200,
-                 n_layers: int = 6, n_heads: int = 10):
+    def __init__(self, in_dim: int = 200, d_model: int = 200):
         super().__init__()
-        patch_size = min(200, n_times)
-        self.patch_size = patch_size
-        self.channel_embed = nn.Linear(patch_size, emb_dim)
-        self.pos_embed = nn.Embedding(n_channels, emb_dim)
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=emb_dim, nhead=n_heads,
-            dim_feedforward=emb_dim * 4,
-            dropout=0.1, activation="gelu", batch_first=True,
+        self.d_model = d_model
+        self.positional_encoding = nn.Sequential(
+            nn.Conv2d(
+                in_channels=d_model,
+                out_channels=d_model,
+                kernel_size=(19, 7),
+                stride=(1, 1),
+                padding=(9, 3),
+                groups=d_model,
+            )
         )
-        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
-        self.norm = nn.LayerNorm(emb_dim)
+        self.mask_encoding = nn.Parameter(torch.zeros(in_dim), requires_grad=False)
+        self.proj_in = nn.Sequential(
+            nn.Conv2d(1, 25, kernel_size=(1, 49), stride=(1, 25), padding=(0, 24)),
+            nn.GroupNorm(5, 25),
+            nn.GELU(),
+            nn.Conv2d(25, 25, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1)),
+            nn.GroupNorm(5, 25),
+            nn.GELU(),
+            nn.Conv2d(25, 25, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1)),
+            nn.GroupNorm(5, 25),
+            nn.GELU(),
+        )
+        self.spectral_proj = nn.Sequential(
+            nn.Linear(in_dim // 2 + 1, d_model),
+            nn.Dropout(0.1),
+        )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        B, C, T = x.shape
-        x_patch = x[:, :, :self.patch_size]
-        if T < self.patch_size:
-            pad = torch.zeros(B, C, self.patch_size - T, device=x.device)
-            x_patch = torch.cat([x_patch, pad], dim=2)
-        x_patch = self.channel_embed(x_patch)   # (B, C, emb_dim)
-        pos_ids = torch.arange(C, device=x.device)
-        x_patch = x_patch + self.pos_embed(pos_ids)
-        x_patch = self.transformer(x_patch)
-        return self.norm(x_patch).mean(dim=1)   # (B, emb_dim)
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+        # x: (B, C, P, 200), where P is the number of temporal patches.
+        bz, ch_num, patch_num, patch_size = x.shape
+        if mask is None:
+            mask_x = x
+        else:
+            mask_x = x.clone()
+            mask_x[mask == 1] = self.mask_encoding
+
+        mask_x = mask_x.contiguous().view(bz, 1, ch_num * patch_num, patch_size)
+        patch_emb = self.proj_in(mask_x)
+        patch_emb = patch_emb.permute(0, 2, 1, 3).contiguous()
+        patch_emb = patch_emb.view(bz, ch_num, patch_num, self.d_model)
+
+        spectral = torch.fft.rfft(
+            mask_x.contiguous().view(bz * ch_num * patch_num, patch_size),
+            dim=-1,
+            norm="forward",
+        )
+        spectral = torch.abs(spectral).contiguous().view(
+            bz, ch_num, patch_num, patch_size // 2 + 1
+        )
+        patch_emb = patch_emb + self.spectral_proj(spectral)
+
+        pos = self.positional_encoding(patch_emb.permute(0, 3, 1, 2))
+        return patch_emb + pos.permute(0, 2, 3, 1)
+
+
+class _CBraModEncoderLayer(nn.Module):
+    """Criss-cross transformer layer from the official CBraMod implementation."""
+
+    def __init__(
+        self,
+        d_model: int = 200,
+        nhead: int = 8,
+        dim_feedforward: int = 800,
+        dropout: float = 0.1,
+    ):
+        super().__init__()
+        self.self_attn_s = nn.MultiheadAttention(
+            d_model // 2, nhead // 2, dropout=dropout, batch_first=True
+        )
+        self.self_attn_t = nn.MultiheadAttention(
+            d_model // 2, nhead // 2, dropout=dropout, batch_first=True
+        )
+        self.linear1 = nn.Linear(d_model, dim_feedforward)
+        self.dropout = nn.Dropout(dropout)
+        self.linear2 = nn.Linear(dim_feedforward, d_model)
+        self.norm1 = nn.LayerNorm(d_model)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.dropout1 = nn.Dropout(dropout)
+        self.dropout2 = nn.Dropout(dropout)
+
+    def forward(self, src: torch.Tensor, src_mask: torch.Tensor | None = None) -> torch.Tensor:
+        x = src
+        x = x + self._sa_block(self.norm1(x), src_mask)
+        x = x + self._ff_block(self.norm2(x))
+        return x
+
+    def _sa_block(
+        self, x: torch.Tensor, attn_mask: torch.Tensor | None = None
+    ) -> torch.Tensor:
+        bz, ch_num, patch_num, d_model = x.shape
+        xs = x[:, :, :, : d_model // 2]
+        xt = x[:, :, :, d_model // 2 :]
+
+        xs = xs.transpose(1, 2).contiguous().view(
+            bz * patch_num, ch_num, d_model // 2
+        )
+        xt = xt.contiguous().view(bz * ch_num, patch_num, d_model // 2)
+
+        xs = self.self_attn_s(xs, xs, xs, attn_mask=attn_mask, need_weights=False)[0]
+        xt = self.self_attn_t(xt, xt, xt, attn_mask=attn_mask, need_weights=False)[0]
+
+        xs = xs.contiguous().view(bz, patch_num, ch_num, d_model // 2).transpose(1, 2)
+        xt = xt.contiguous().view(bz, ch_num, patch_num, d_model // 2)
+        return self.dropout1(torch.cat((xs, xt), dim=3))
+
+    def _ff_block(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.linear2(self.dropout(F.gelu(self.linear1(x))))
+        return self.dropout2(x)
+
+
+class _CBraModEncoder(nn.Module):
+    """Stack of criss-cross transformer layers matching checkpoint key names."""
+
+    def __init__(
+        self,
+        n_layers: int = 12,
+        d_model: int = 200,
+        nhead: int = 8,
+        dim_feedforward: int = 800,
+    ):
+        super().__init__()
+        self.layers = nn.ModuleList([
+            _CBraModEncoderLayer(
+                d_model=d_model,
+                nhead=nhead,
+                dim_feedforward=dim_feedforward,
+            )
+            for _ in range(n_layers)
+        ])
+
+    def forward(self, src: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+        output = src
+        for layer in self.layers:
+            output = layer(output, src_mask=mask)
+        return output
+
+
+class _CBraModModel(nn.Module):
+    """Official CBraMod architecture, kept local to avoid a runtime repo dependency."""
+
+    def __init__(
+        self,
+        in_dim: int = 200,
+        out_dim: int = 200,
+        d_model: int = 200,
+        dim_feedforward: int = 800,
+        n_layer: int = 12,
+        nhead: int = 8,
+    ):
+        super().__init__()
+        self.patch_embedding = _CBraModPatchEmbedding(in_dim=in_dim, d_model=d_model)
+        self.encoder = _CBraModEncoder(
+            n_layers=n_layer,
+            d_model=d_model,
+            nhead=nhead,
+            dim_feedforward=dim_feedforward,
+        )
+        self.proj_out = nn.Sequential(nn.Linear(d_model, out_dim))
+
+    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:
+        x = self.patch_embedding(x, mask)
+        x = self.encoder(x)
+        return self.proj_out(x)
 
 
 class CBraModBackbone(FoundationBackbone):
     """CBraMod: Criss-Cross Brain Foundation Model (Wang et al. 2024).
 
-    TODO: load official pretrained weights — verify repository URL and
-    replace _CBraModEncoder with the official criss-cross implementation.
+    The official model consumes patched EEG shaped as (B, C, P, 200). This
+    wrapper keeps the benchmark-facing API at (B, C, T), patches along time,
+    and mean-pools CBraMod's per-channel, per-patch outputs to one feature
+    vector per trial.
     """
 
     _EMB_DIM = 200
+    _PATCH_SIZE = 200
 
     def __init__(self, n_channels: int, n_times: int,
                  checkpoint_path: Optional[str] = None, **kwargs):
         super().__init__()
-        self.encoder = _CBraModEncoder(n_channels, n_times, self._EMB_DIM)
+        self.model = _CBraModModel(
+            in_dim=self._PATCH_SIZE,
+            out_dim=self._EMB_DIM,
+            d_model=self._EMB_DIM,
+            dim_feedforward=self._EMB_DIM * 4,
+            n_layer=12,
+            nhead=8,
+        )
         if checkpoint_path is not None:
             state = torch.load(checkpoint_path, map_location="cpu")
-            self.encoder.load_state_dict(state, strict=False)
+            if isinstance(state, dict) and "state_dict" in state:
+                state = state["state_dict"]
+            if isinstance(state, dict) and "model" in state:
+                state = state["model"]
+            state = {
+                k.removeprefix("module.").removeprefix("model."): v
+                for k, v in state.items()
+            }
+            missing, unexpected = self.model.load_state_dict(state, strict=False)
+            if missing or unexpected:
+                print(
+                    f"[CBraMod] loaded with {len(missing)} missing and "
+                    f"{len(unexpected)} unexpected keys"
+                )
 
     @property
     def feature_dim(self) -> int:
         return self._EMB_DIM
 
     def get_features(self, X: torch.Tensor) -> torch.Tensor:
-        return self.encoder(X)
+        B, C, T = X.shape
+        patch_size = self._PATCH_SIZE
+
+        # CBraMod was pretrained on normalized 200-sample patches.
+        mu = X.mean(dim=-1, keepdim=True)
+        std = X.std(dim=-1, keepdim=True)
+        X = (X - mu) / (std + 1e-8)
+
+        n_patches = max(1, (T + patch_size - 1) // patch_size)
+        target_len = n_patches * patch_size
+        if T < target_len:
+            X = F.pad(X, (0, target_len - T))
+        elif T > target_len:
+            X = X[:, :, :target_len]
+
+        X = X.contiguous().view(B, C, n_patches, patch_size)
+        return self.model(X).mean(dim=(1, 2))
 
 
 # ---------------------------------------------------------------------------

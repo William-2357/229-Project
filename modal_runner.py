@@ -21,7 +21,7 @@ from pathlib import Path
 # Configuration — edit these before running
 # ---------------------------------------------------------------------------
 
-#DATASET = "jeong2020"       # jeong2020 | bciciv2a | synthetic
+#DATASET = "bciciv2a"       # bciciv2a | synthetic
 #BACKBONE = "eegnet"        # eegnet | shallowconv
 #METHODS = ["loso", "ea", "tta", "finetune", "lora", "ea_lora", "cld", "ea_cld"]  # or subset
 #K_MINUTES = [0, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -31,8 +31,8 @@ from pathlib import Path
 #MAX_CONCURRENCY = 20       # max simultaneous GPUs
 #CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
 
-DATASET = "bciciv2a"          # or jeong2020
-BACKBONE = "mirepnet"         # mirepnet | neurogpt | reve | cbramod
+DATASET = "bciciv2a"
+BACKBONE = "cbramod"          # mirepnet | neurogpt | reve | cbramod
 METHODS = [
     "foundation_ea",          # K=0 unsupervised
     "foundation_finetune",    # K=0 linear probe + K>0 full finetune
@@ -41,7 +41,7 @@ METHODS = [
     "foundation_cld",         # K=0 source features + K>0 CLD head
     "foundation_ea_cld",      # same + EA alignment
 ]
-CHECKPOINT_PATH = "/data/MIRepNet.pth"  # path inside container (mounted from eeg-data volume)
+CHECKPOINT_PATH = "/data/CBraMod_checkpoint.pth"  # path inside container (mounted from eeg-data volume)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -92,7 +92,7 @@ image = (
 # Unsupervised methods (K=0 only): loso, ea, tta
 # ---------------------------------------------------------------------------
 
-UNSUPERVISED = {"loso", "ea", "tta", "foundation_ea"}
+UNSUPERVISED = {"loso", "ea", "tta", "foundation_loso", "foundation_ea", "foundation_tta"}
 SUPERVISED = {"finetune", "lora", "ea_lora", "cld", "ea_cld",
               "foundation_finetune", "foundation_lora", "foundation_ea_lora",
               "foundation_cld", "foundation_ea_cld"}
@@ -126,9 +126,12 @@ def run_job(
     import time
     import numpy as np
     import torch
+    import jax
+    jax.config.update("jax_platform_name", "gpu")
+    jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 
 
-    from data.datasets import JeongDataset, BCICIVDataset
+    from data.datasets import BCICIVDataset
     from data.synthetic import SyntheticDataset
     from models.specialists import build_backbone
     from models.foundations import build_foundation_model, FOUNDATION_NAMES
@@ -145,6 +148,9 @@ def run_job(
     from adaptation.foundation_lora import FoundationLoRAAdapter
     from adaptation.foundation_ea import FoundationEAAdapter
     from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
+    from adaptation.linear_probe import LinearProbeAdapter
+    from adaptation.foundation_loso import FoundationLOSOAdapter
+    from adaptation.foundation_tta import FoundationTTAAdapter
     from evaluation.protocols import loso_evaluation, k_minute_sweep
     from evaluation.results import save_result
 
@@ -157,12 +163,15 @@ def run_job(
         "ea_lora": EALoRAAdapter,
         "cld": CLDAdapter,
         "ea_cld": EACLDAdapter,
-        "foundation_cld": FoundationCLDAdapter,
-        "foundation_ea_cld": FoundationEACLDAdapter,
+        "linear_probe": LinearProbeAdapter,
+        "foundation_loso": FoundationLOSOAdapter,
+        "foundation_ea": FoundationEAAdapter,
+        "foundation_tta": FoundationTTAAdapter,
         "foundation_finetune": FoundationFineTuneAdapter,
         "foundation_lora": FoundationLoRAAdapter,
-        "foundation_ea": FoundationEAAdapter,
         "foundation_ea_lora": FoundationEALoRAAdapter,
+        "foundation_cld": FoundationCLDAdapter,
+        "foundation_ea_cld": FoundationEACLDAdapter,
     }
 
     torch.manual_seed(seed)
@@ -178,8 +187,6 @@ def run_job(
         dataset = SyntheticDataset(n_subjects=9, seed=seed)
     elif dataset_name == "bciciv2a":
         dataset = BCICIVDataset("/data/bciciv2a", cache_dir="/data/bciciv2a_cache")
-    elif dataset_name == "jeong2020":
-        dataset = JeongDataset("/data/jeong2020", cache_dir="/data/jeong2020_cache")
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 
@@ -328,14 +335,13 @@ def main(
     backbone: str = BACKBONE,
     methods: str = "",   # comma-separated, empty = all
     n_subjects: str = "all",
+    checkpoint_path: str | None = CHECKPOINT_PATH,
     smoke: bool = False,  # quick sanity check: 1 subject, 2 methods, minimal k
 ):
     method_list = [m.strip() for m in methods.split(",")] if methods else METHODS
 
     if dataset == "bciciv2a":
         all_subjects = list(range(1, 10))
-    elif dataset == "jeong2020":
-        all_subjects = list(range(1, 31))
     elif dataset == "synthetic":
         all_subjects = list(range(1, 6))
     else:
@@ -352,5 +358,8 @@ def main(
     if n_subjects != "all":
         all_subjects = all_subjects[:int(n_subjects)]
 
-    print(f"Starting orchestrator: {len(method_list) * len(all_subjects)} jobs | Dataset: {dataset} | Backbone: {backbone}")
-    orchestrate.remote(dataset, backbone, method_list, all_subjects, k_minutes, N_REPEATS, SEED, CHECKPOINT_PATH)
+    print(
+        f"Starting orchestrator: {len(method_list) * len(all_subjects)} jobs | "
+        f"Dataset: {dataset} | Backbone: {backbone} | Checkpoint: {checkpoint_path}"
+    )
+    orchestrate.remote(dataset, backbone, method_list, all_subjects, k_minutes, N_REPEATS, SEED, checkpoint_path)

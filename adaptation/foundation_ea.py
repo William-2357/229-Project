@@ -12,19 +12,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from .base import BaseAdapter, train_epoch, evaluate_model
+from .base import BaseAdapter
 from .ea import compute_mean_covariance, matrix_sqrt_inv, euclidean_align
+from .linear_probe import train_linear_probe
 from models.foundations import FoundationBackbone, FoundationWithHead
-
-
-class _HeadWrapper(nn.Module):
-    """Thin nn.Module that applies a linear head to pre-extracted feature vectors."""
-    def __init__(self, head: nn.Module):
-        super().__init__()
-        self.head = head
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.head(x)
 
 
 class FoundationEAAdapter(BaseAdapter):
@@ -97,48 +88,30 @@ class FoundationEAAdapter(BaseAdapter):
         self._target_R_inv_sqrt = matrix_sqrt_inv(R_tgt)
 
         # Step 3: Linear probe on aligned source (backbone frozen)
+        # EA alignment changes input distribution, so the probe must be re-trained
+        # per subject (cannot reuse the unaligned source_cache from other adapters).
         model = FoundationWithHead(
             copy.deepcopy(self.backbone), n_classes
         ).to(self.device)
-        model.freeze_backbone()
 
-        # Pre-extract features once (backbone frozen, so features are constant across epochs)
-        model.eval()
-        feats = []
-        with torch.no_grad():
-            for start in range(0, len(X_src_aligned), self.batch_size):
-                xb = torch.FloatTensor(X_src_aligned[start: start + self.batch_size]).to(self.device)
-                feats.append(model.backbone.get_features(xb).cpu().numpy())
-        X_feat = np.concatenate(feats, axis=0)
+        cache_key = ("foundation_ea_probe", self.seed)
+        if source_cache is not None and cache_key in source_cache:
+            model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
+            model.freeze_backbone()
+        else:
+            model = train_linear_probe(
+                model, X_src_aligned, y_src,
+                device=self.device,
+                batch_size=self.batch_size,
+                lr=self.lr_probe,
+                weight_decay=self.weight_decay,
+                max_epochs=self.max_epochs_probe,
+                patience=self.patience_probe,
+                val_fraction=self.val_fraction_probe,
+            )
+            if source_cache is not None:
+                source_cache[cache_key] = copy.deepcopy(model.state_dict())
 
-        n_val = max(1, int(len(X_feat) * self.val_fraction_probe))
-        idx = np.random.permutation(len(X_feat))
-        val_idx, train_idx = idx[:n_val], idx[n_val:] if len(idx) > n_val else idx
-
-        X_tr, y_tr = X_feat[train_idx], y_src[train_idx]
-        X_val, y_val = X_feat[val_idx], y_src[val_idx]
-
-        head = _HeadWrapper(model.head)
-        optimizer = torch.optim.AdamW(
-            head.parameters(), lr=self.lr_probe, weight_decay=self.weight_decay
-        )
-        best_val_acc, best_state, patience_counter = -1.0, None, 0
-
-        for _ in range(self.max_epochs_probe):
-            train_epoch(head, X_tr, y_tr, optimizer, self.device, self.batch_size)
-            val_acc = evaluate_model(head, X_val, y_val, self.device)
-            if val_acc > best_val_acc:
-                best_val_acc = val_acc
-                best_state = copy.deepcopy(head.state_dict())
-                patience_counter = 0
-            else:
-                patience_counter += 1
-            if patience_counter >= self.patience_probe:
-                break
-
-        if best_state is not None:
-            head.load_state_dict(best_state)
-        # head.head IS model.head (same object) — no copy needed
         self._model = model
         self._fit_time = time.time() - t0
         return self

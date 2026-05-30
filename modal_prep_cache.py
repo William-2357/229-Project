@@ -4,7 +4,6 @@ Run once per dataset before training — saves preprocessed (X, y) arrays so
 experiment jobs skip the expensive resample/filter/epoch pipeline entirely.
 
 Usage:
-    modal run modal_prep_cache.py --dataset jeong2020
     modal run modal_prep_cache.py --dataset bciciv2a
 """
 
@@ -26,12 +25,10 @@ image = (
 )
 
 CACHE_DIRS = {
-    "jeong2020": "/data/jeong2020_cache",
     "bciciv2a":  "/data/bciciv2a_cache",
 }
 
 DATA_DIRS = {
-    "jeong2020": "/data/jeong2020",
     "bciciv2a":  "/data/bciciv2a",
 }
 
@@ -43,11 +40,9 @@ DATA_DIRS = {
     cpu=8,
 )
 def build_cache(dataset_name: str) -> None:
-    from data.datasets import JeongDataset, BCICIVDataset
+    from data.datasets import BCICIVDataset
 
-    if dataset_name == "jeong2020":
-        dataset = JeongDataset(DATA_DIRS["jeong2020"])
-    elif dataset_name == "bciciv2a":
+    if dataset_name == "bciciv2a":
         dataset = BCICIVDataset(DATA_DIRS["bciciv2a"])
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
@@ -60,7 +55,7 @@ def build_cache(dataset_name: str) -> None:
 
 
 @app.local_entrypoint()
-def main(dataset: str = "jeong2020") -> None:
+def main(dataset: str = "bciciv2a") -> None:
     call = build_cache.spawn(dataset)
     print(f"Spawned cache build: {call.object_id}")
     print("Safe to disconnect — job will continue on Modal.")

@@ -28,7 +28,6 @@ LABELS = {
 }
 DATASET_LABELS = {
     'bciciv2a': 'BCI Competition IV 2a',
-    'jeong2020': 'Jeong 2020',
     'synthetic': 'Synthetic',
 }
 BACKBONE_LABELS = {

@@ -32,3 +32,13 @@ plot_neurogpt.json
 plot_neurogpt.py
 pretrained_weights.pth
 pytorch_model.bin
+
+
+AGENTS.md
+
+backbone_adaptation_comparison.png
+CBraMod_checkpoint.pth
+CLAUDE_SUMMARY.md
+modal_prep_jeong2020.py
+plot.py
+bca_vs_k_minutes_plot.png

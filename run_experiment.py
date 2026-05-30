@@ -2,7 +2,7 @@
 
 Usage:
     python run_experiment.py \\
-      --dataset jeong2020 \\
+      --dataset bciciv2a \\
       --backbone eegnet \\
       --methods all \\
       --k_minutes 0.5 1 2 5 10 15 30 \\
@@ -20,7 +20,7 @@ import numpy as np
 import torch
 from pathlib import Path
 
-from data.datasets import JeongDataset, BCICIVDataset
+from data.datasets import BCICIVDataset
 from data.synthetic import SyntheticDataset
 from models.specialists import build_backbone, BACKBONE_REGISTRY
 from models.foundations import build_foundation_model, FOUNDATION_NAMES
@@ -37,6 +37,9 @@ from adaptation.foundation_finetune import FoundationFineTuneAdapter
 from adaptation.foundation_lora import FoundationLoRAAdapter
 from adaptation.foundation_ea import FoundationEAAdapter
 from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
+from adaptation.linear_probe import LinearProbeAdapter
+from adaptation.foundation_loso import FoundationLOSOAdapter
+from adaptation.foundation_tta import FoundationTTAAdapter
 from evaluation.protocols import (
     within_subject_cv, loso_evaluation, k_minute_sweep, aggregate_across_subjects
 )
@@ -44,7 +47,6 @@ from evaluation.results import save_result, compile_summary_table, print_summary
 from evaluation.metrics import compute_k_star
 
 DATASET_REGISTRY = {
-    "jeong2020": JeongDataset,
     "bciciv2a": BCICIVDataset,
     "synthetic": SyntheticDataset,
 }
@@ -59,19 +61,19 @@ METHOD_REGISTRY = {
     "cld": CLDAdapter,
     "ea_cld": EACLDAdapter,
     # Foundation model adapters — require a FoundationBackbone
-    "foundation_cld": FoundationCLDAdapter,
-    "foundation_ea_cld": FoundationEACLDAdapter,
+    "linear_probe": LinearProbeAdapter,
+    "foundation_loso": FoundationLOSOAdapter,
+    "foundation_ea": FoundationEAAdapter,
+    "foundation_tta": FoundationTTAAdapter,
     "foundation_finetune": FoundationFineTuneAdapter,
     "foundation_lora": FoundationLoRAAdapter,
-    "foundation_ea": FoundationEAAdapter,
     "foundation_ea_lora": FoundationEALoRAAdapter,
+    "foundation_cld": FoundationCLDAdapter,
+    "foundation_ea_cld": FoundationEACLDAdapter,
 }
 
 ALL_METHODS = list(METHOD_REGISTRY.keys())
 K_MINUTES_DEFAULT = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
-
-FOUNDATION_METHODS = {"foundation_cld", "foundation_ea_cld"}
-
 
 def build_any_backbone(
     name: str,
@@ -91,8 +93,10 @@ def build_any_backbone(
 
 # Methods that require labeled calibration (K > 0)
 SUPERVISED_METHODS = {"finetune", "lora", "ea_lora", "cld", "ea_cld"}
-# Methods that are K=0 only
-UNSUPERVISED_METHODS = {"loso", "ea", "tta"}
+UNSUPERVISED_METHODS = {
+    "loso", "ea", "tta",
+    "foundation_loso", "foundation_ea", "foundation_tta",
+}
 
 
 def get_device(force_cpu: bool = False) -> str:
@@ -218,7 +222,7 @@ def compute_and_print_summary(
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="EEG Calibration Efficiency Benchmark")
-    p.add_argument("--dataset", choices=list(DATASET_REGISTRY), default="jeong2020",
+    p.add_argument("--dataset", choices=list(DATASET_REGISTRY), default="bciciv2a",
                    help="Dataset to use. 'synthetic' requires no data download.")
     p.add_argument("--backbone",
                    choices=list(BACKBONE_REGISTRY) + FOUNDATION_NAMES,

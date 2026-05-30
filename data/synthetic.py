@@ -9,7 +9,7 @@ from .datasets import BaseEEGDataset
 
 
 class SyntheticDataset(BaseEEGDataset):
-    """Drop-in replacement for JeongDataset / BCICIVDataset.
+    """Drop-in replacement for BCICIVDataset.
 
     Generates (C, T) arrays that look like preprocessed EEG:
     - Each class gets a small sinusoidal bump at a class-specific frequency

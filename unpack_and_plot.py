@@ -17,7 +17,6 @@ K_MINUTES = [0.0, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
 
 DATASET_LABELS = {
     "bciciv2a": "BCI Competition IV 2a",
-    "jeong2020": "Jeong 2020",
     "synthetic": "Synthetic",
 }
 BACKBONE_LABELS = {

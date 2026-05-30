@@ -17,6 +17,7 @@ import torch
 import torch.nn as nn
 
 import jax
+jax.config.update("jax_platform_name", "gpu")
 jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 import jax.numpy as jnp
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
