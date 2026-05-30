@@ -1,0 +1,18 @@
+{
+  "bca": 0.6954822954822955,
+  "std_bca": 0.04326296110899297,
+  "kappa": 0.570052211781101,
+  "ci_lo": 0.6438375350140055,
+  "ci_hi": 0.7526190476190476,
+  "fit_time": 1.5568724632263184,
+  "k_minutes": 5.0,
+  "n_cal_trials": 72,
+  "protocol": "k_minute_sweep",
+  "subject_id": 1,
+  "_meta": {
+    "dataset": "bciciv2a_cld_source_target",
+    "backbone": "conformer",
+    "method": "ea_lora",
+    "saved_at": "2026-05-29T12:59:02.619397"
+  }
+}

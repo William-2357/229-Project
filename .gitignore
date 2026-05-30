@@ -18,11 +18,11 @@ data/jeong2020_cache/
 data/synthetic_cache/
 
 # Individual per-subject result files — too many small files
-results/**/*.json
-!results/**/modal_summary.json
-results/**/*.csv
-results/
-results_*/
+#results/**/*.json
+#!results/**/modal_summary.json
+#results/**/*.csv
+#results/
+#results_*/
 
 MIRepNet.pth
 

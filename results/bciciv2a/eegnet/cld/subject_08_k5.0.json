@@ -1,0 +1,18 @@
+{
+  "bca": 0.525952380952381,
+  "std_bca": 0.0836368621873949,
+  "kappa": 0.36860584131192553,
+  "ci_lo": 0.4880357142857143,
+  "ci_hi": 0.5676587301587301,
+  "fit_time": 1.2620038986206055,
+  "k_minutes": 5.0,
+  "n_cal_trials": 72,
+  "protocol": "k_minute_sweep",
+  "subject_id": 8,
+  "_meta": {
+    "dataset": "bciciv2a",
+    "backbone": "eegnet",
+    "method": "cld",
+    "saved_at": "2026-05-29T12:59:02.179902"
+  }
+}

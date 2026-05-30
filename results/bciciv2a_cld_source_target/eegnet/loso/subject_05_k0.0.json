@@ -1,0 +1,19 @@
+{
+  "bca": 0.29642857142857143,
+  "kappa": 0.0623028391167193,
+  "ci_lo": 0.27083333333333337,
+  "ci_hi": 0.375,
+  "p_value": 0.185,
+  "significant": false,
+  "n_trials": 58,
+  "fit_time": 36.66603684425354,
+  "protocol": "loso",
+  "subject_id": 5,
+  "k_minutes": 0.0,
+  "_meta": {
+    "dataset": "bciciv2a_cld_source_target",
+    "backbone": "eegnet",
+    "method": "loso",
+    "saved_at": "2026-05-29T12:59:02.815165"
+  }
+}

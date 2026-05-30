@@ -1,0 +1,19 @@
+{
+  "bca": 0.2738095238095238,
+  "kappa": 0.037154150197628466,
+  "ci_lo": 0.2361111111111111,
+  "ci_hi": 0.2738095238095238,
+  "p_value": 0.405,
+  "significant": false,
+  "n_trials": 58,
+  "fit_time": 24.17658495903015,
+  "protocol": "loso",
+  "subject_id": 2,
+  "k_minutes": 0.0,
+  "_meta": {
+    "dataset": "bciciv2a",
+    "backbone": "conformer",
+    "method": "loso",
+    "saved_at": "2026-05-29T12:59:01.787309"
+  }
+}
