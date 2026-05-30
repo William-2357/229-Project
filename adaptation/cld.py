@@ -17,7 +17,7 @@ import torch
 import torch.nn as nn
 
 import jax
-jax.config.update("jax_platform_name", "cpu")
+jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 import jax.numpy as jnp
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
 from jaxcld.optimizers.admm import admm as _run_admm
@@ -74,13 +74,19 @@ def fit_cld_head(
     admm_iters: int,
     pcg_iters: int,
     seed: int,
+    norm_stats: tuple[np.ndarray, np.ndarray] | None = None,
 ) -> tuple["CVX_ReLU_MLP", np.ndarray, np.ndarray]:
     """Normalize features, build CVX_ReLU_MLP, run ADMM.
 
     Returns (fitted_model, feature_mean, feature_std).
+    If norm_stats=(mu, sigma) is provided, those statistics are used instead
+    of computing them from X_feat (useful when X_feat is a small labeled set).
     """
-    mu = X_feat.mean(axis=0, keepdims=True)
-    sigma = X_feat.std(axis=0, keepdims=True) + 1e-8
+    if norm_stats is not None:
+        mu, sigma = norm_stats
+    else:
+        mu = X_feat.mean(axis=0, keepdims=True)
+        sigma = X_feat.std(axis=0, keepdims=True) + 1e-8
     X_norm = ((X_feat - mu) / sigma).astype(np.float32)
 
     X_jax = jnp.array(X_norm)

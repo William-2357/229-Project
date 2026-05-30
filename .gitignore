@@ -23,3 +23,12 @@ results/**/*.json
 results/**/*.csv
 results/
 results_*/
+
+MIRepNet.pth
+
+neurogpt_plot.png
+neurogpt_results.json
+plot_neurogpt.json
+plot_neurogpt.py
+pretrained_weights.pth
+pytorch_model.bin

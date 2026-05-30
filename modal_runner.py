@@ -21,14 +21,34 @@ from pathlib import Path
 # Configuration — edit these before running
 # ---------------------------------------------------------------------------
 
-DATASET = "jeong2020"       # jeong2020 | bciciv2a | synthetic
-BACKBONE = "eegnet"        # eegnet | shallowconv
-METHODS = ["loso", "ea", "tta", "finetune", "lora", "ea_lora", "cld", "ea_cld"]  # or subset
-K_MINUTES = [0, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
+#DATASET = "jeong2020"       # jeong2020 | bciciv2a | synthetic
+#BACKBONE = "eegnet"        # eegnet | shallowconv
+#METHODS = ["loso", "ea", "tta", "finetune", "lora", "ea_lora", "cld", "ea_cld"]  # or subset
+#K_MINUTES = [0, 0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
+#N_REPEATS = 5
+#SEED = 42
+#GPU = "A10G"                 # T4 | A10G | A100
+#MAX_CONCURRENCY = 20       # max simultaneous GPUs
+#CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
+
+DATASET = "bciciv2a"          # or jeong2020
+BACKBONE = "mirepnet"         # mirepnet | neurogpt | reve | cbramod
+METHODS = [
+    "foundation_ea",          # K=0 unsupervised
+    "foundation_finetune",    # K=0 linear probe + K>0 full finetune
+    "foundation_lora",        # K=0 linear probe + K>0 LoRA
+    "foundation_ea_lora",     # K=0 linear probe + K>0 EA+LoRA
+    "foundation_cld",         # K=0 source features + K>0 CLD head
+    "foundation_ea_cld",      # same + EA alignment
+]
+CHECKPOINT_PATH = "/data/MIRepNet.pth"  # path inside container (mounted from eeg-data volume)
+GPU = "A10G"
+MAX_CONCURRENCY = 20
+K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
 N_REPEATS = 5
 SEED = 42
-GPU = "A10G"                 # T4 | A10G | A100
-MAX_CONCURRENCY = 20       # max simultaneous GPUs
+
+
 
 # ---------------------------------------------------------------------------
 # Modal resources
@@ -38,6 +58,9 @@ app = modal.App("eeg-experiments")
 
 # Volume stores raw data (npz files); mount at /data inside container
 data_volume = modal.Volume.from_name("eeg-data", create_if_missing=True)
+
+# Volume caches JAX XLA compilation artifacts so GPU kernels survive container restarts
+jax_cache_volume = modal.Volume.from_name("jax-xla-cache", create_if_missing=True)
 
 # Image: Python 3.11 + all dependencies from requirements.txt
 image = (
@@ -69,8 +92,10 @@ image = (
 # Unsupervised methods (K=0 only): loso, ea, tta
 # ---------------------------------------------------------------------------
 
-UNSUPERVISED = {"loso", "ea", "tta"}
-SUPERVISED = {"finetune", "lora", "ea_lora", "cld", "ea_cld"}
+UNSUPERVISED = {"loso", "ea", "tta", "foundation_ea"}
+SUPERVISED = {"finetune", "lora", "ea_lora", "cld", "ea_cld",
+              "foundation_finetune", "foundation_lora", "foundation_ea_lora",
+              "foundation_cld", "foundation_ea_cld"}
 
 
 # ---------------------------------------------------------------------------
@@ -80,7 +105,7 @@ SUPERVISED = {"finetune", "lora", "ea_lora", "cld", "ea_cld"}
 @app.function(
     image=image,
     gpu=GPU,
-    volumes={"/data": data_volume},
+    volumes={"/data": data_volume, "/root/.cache/jax_xla": jax_cache_volume},
 
     timeout=7200,
     max_containers=MAX_CONCURRENCY,
@@ -93,6 +118,7 @@ def run_job(
     k_minutes: list,
     n_repeats: int,
     seed: int,
+    checkpoint_path: str | None = None,
 ) -> dict:
     """Run one (method, subject) experiment and return serializable results."""
     import sys
@@ -105,6 +131,7 @@ def run_job(
     from data.datasets import JeongDataset, BCICIVDataset
     from data.synthetic import SyntheticDataset
     from models.specialists import build_backbone
+    from models.foundations import build_foundation_model, FOUNDATION_NAMES
     from adaptation.loso import LOSOAdapter
     from adaptation.ea import EAAdapter
     from adaptation.tta import TTAAdapter
@@ -113,6 +140,11 @@ def run_job(
     from adaptation.ea_lora import EALoRAAdapter
     from adaptation.cld import CLDAdapter
     from adaptation.stacked import EACLDAdapter
+    from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
+    from adaptation.foundation_finetune import FoundationFineTuneAdapter
+    from adaptation.foundation_lora import FoundationLoRAAdapter
+    from adaptation.foundation_ea import FoundationEAAdapter
+    from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
     from evaluation.protocols import loso_evaluation, k_minute_sweep
     from evaluation.results import save_result
 
@@ -125,6 +157,12 @@ def run_job(
         "ea_lora": EALoRAAdapter,
         "cld": CLDAdapter,
         "ea_cld": EACLDAdapter,
+        "foundation_cld": FoundationCLDAdapter,
+        "foundation_ea_cld": FoundationEACLDAdapter,
+        "foundation_finetune": FoundationFineTuneAdapter,
+        "foundation_lora": FoundationLoRAAdapter,
+        "foundation_ea": FoundationEAAdapter,
+        "foundation_ea_lora": FoundationEALoRAAdapter,
     }
 
     torch.manual_seed(seed)
@@ -145,13 +183,24 @@ def run_job(
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 
-    n_times = int(4.0 * 200)
-    backbone = build_backbone(
-        backbone_name,
-        n_channels=dataset.n_channels,
-        n_classes=dataset.n_classes,
-        n_times=n_times,
-    )
+    input_sfreq = getattr(dataset, "target_sfreq", 200.0)
+    n_times = int(4.0 * input_sfreq)
+    if backbone_name in FOUNDATION_NAMES:
+        backbone = build_foundation_model(
+            backbone_name,
+            n_channels=dataset.n_channels,
+            n_times=n_times,
+            checkpoint_path=checkpoint_path,
+            input_sfreq=input_sfreq,
+            freeze=True,
+        )
+    else:
+        backbone = build_backbone(
+            backbone_name,
+            n_channels=dataset.n_channels,
+            n_classes=dataset.n_classes,
+            n_times=n_times,
+        )
 
     adapter_class = METHOD_REGISTRY[method]
     common_kwargs = dict(backbone=copy.deepcopy(backbone), device=device, seed=seed)
@@ -231,6 +280,7 @@ def orchestrate(
     k_minutes: list,
     n_repeats: int,
     seed: int,
+    checkpoint_path: str | None = None,
 ) -> dict:
     # Load any previously completed results so restarts are idempotent
     out_path = Path("/project/results") / dataset / backbone / "modal_summary.json"
@@ -258,7 +308,7 @@ def orchestrate(
         pending_jobs,
         run_job.starmap(
             [
-                (method, subj, dataset, backbone, k_minutes, n_repeats, seed)
+                (method, subj, dataset, backbone, k_minutes, n_repeats, seed, checkpoint_path)
                 for method, subj in pending_jobs
             ]
         ),
@@ -303,4 +353,4 @@ def main(
         all_subjects = all_subjects[:int(n_subjects)]
 
     print(f"Starting orchestrator: {len(method_list) * len(all_subjects)} jobs | Dataset: {dataset} | Backbone: {backbone}")
-    orchestrate.remote(dataset, backbone, method_list, all_subjects, k_minutes, N_REPEATS, SEED)
+    orchestrate.remote(dataset, backbone, method_list, all_subjects, k_minutes, N_REPEATS, SEED, CHECKPOINT_PATH)

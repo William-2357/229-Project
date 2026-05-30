@@ -22,7 +22,8 @@ from pathlib import Path
 
 from data.datasets import JeongDataset, BCICIVDataset
 from data.synthetic import SyntheticDataset
-from models.specialists import build_backbone
+from models.specialists import build_backbone, BACKBONE_REGISTRY
+from models.foundations import build_foundation_model, FOUNDATION_NAMES
 from adaptation.loso import LOSOAdapter
 from adaptation.ea import EAAdapter
 from adaptation.tta import TTAAdapter
@@ -31,6 +32,11 @@ from adaptation.lora import LoRAAdapter
 from adaptation.ea_lora import EALoRAAdapter
 from adaptation.cld import CLDAdapter
 from adaptation.stacked import EACLDAdapter
+from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
+from adaptation.foundation_finetune import FoundationFineTuneAdapter
+from adaptation.foundation_lora import FoundationLoRAAdapter
+from adaptation.foundation_ea import FoundationEAAdapter
+from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
 from evaluation.protocols import (
     within_subject_cv, loso_evaluation, k_minute_sweep, aggregate_across_subjects
 )
@@ -52,10 +58,36 @@ METHOD_REGISTRY = {
     "ea_lora": EALoRAAdapter,
     "cld": CLDAdapter,
     "ea_cld": EACLDAdapter,
+    # Foundation model adapters — require a FoundationBackbone
+    "foundation_cld": FoundationCLDAdapter,
+    "foundation_ea_cld": FoundationEACLDAdapter,
+    "foundation_finetune": FoundationFineTuneAdapter,
+    "foundation_lora": FoundationLoRAAdapter,
+    "foundation_ea": FoundationEAAdapter,
+    "foundation_ea_lora": FoundationEALoRAAdapter,
 }
 
 ALL_METHODS = list(METHOD_REGISTRY.keys())
 K_MINUTES_DEFAULT = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
+
+FOUNDATION_METHODS = {"foundation_cld", "foundation_ea_cld"}
+
+
+def build_any_backbone(
+    name: str,
+    n_channels: int,
+    n_classes: int,
+    n_times: int,
+    checkpoint_path: str | None = None,
+    input_sfreq: float = 200.0,
+):
+    """Dispatch to specialist or foundation backbone builder by name."""
+    if name in FOUNDATION_NAMES:
+        return build_foundation_model(
+            name, n_channels=n_channels, n_times=n_times,
+            checkpoint_path=checkpoint_path, input_sfreq=input_sfreq, freeze=True,
+        )
+    return build_backbone(name, n_channels=n_channels, n_classes=n_classes, n_times=n_times)
 
 # Methods that require labeled calibration (K > 0)
 SUPERVISED_METHODS = {"finetune", "lora", "ea_lora", "cld", "ea_cld"}
@@ -188,7 +220,11 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="EEG Calibration Efficiency Benchmark")
     p.add_argument("--dataset", choices=list(DATASET_REGISTRY), default="jeong2020",
                    help="Dataset to use. 'synthetic' requires no data download.")
-    p.add_argument("--backbone", choices=["eegnet", "shallowconv", "deep4net", "conformer"], default="eegnet")
+    p.add_argument("--backbone",
+                   choices=list(BACKBONE_REGISTRY) + FOUNDATION_NAMES,
+                   default="eegnet")
+    p.add_argument("--checkpoint_path", default=None,
+                   help="Path to pretrained weights for foundation backbones")
     p.add_argument("--methods", nargs="+", default=["all"],
                    help="Methods to run, or 'all'")
     p.add_argument("--k_minutes", nargs="+", type=float, default=K_MINUTES_DEFAULT)
@@ -238,9 +274,9 @@ def main() -> None:
         subjects = all_subj[:int(args.n_subjects)]
     print(f"Running {len(subjects)} subjects: {subjects}")
 
-    # Determine n_times for backbone construction
-    # 4-second epochs at 200 Hz = 800 samples
-    n_times = int(4.0 * 200)
+    # Determine n_times for backbone construction from the dataset's actual target_sfreq
+    input_sfreq = getattr(dataset, "target_sfreq", 200.0)
+    n_times = int(4.0 * input_sfreq)
 
     print(f"\nBackbone: {args.backbone}")
     print(f"Methods: {methods}")
@@ -254,11 +290,13 @@ def main() -> None:
     for subject_id in subjects:
         print(f"\nSubject {subject_id}/{len(subjects)}")
         # Build fresh backbone per subject (avoid cross-contamination)
-        backbone = build_backbone(
+        backbone = build_any_backbone(
             args.backbone,
             n_channels=dataset.n_channels,
             n_classes=dataset.n_classes,
             n_times=n_times,
+            checkpoint_path=getattr(args, "checkpoint_path", None),
+            input_sfreq=input_sfreq,
         )
 
         for method_name in methods:

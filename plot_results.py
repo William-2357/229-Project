@@ -58,6 +58,7 @@ def load_results(json_path: str) -> pd.DataFrame:
     )
 
 
+json_paths = [Path('results/bciciv2a/mirepnet/modal_summary.json')]
 for json_path in sorted(Path('results').glob('*/*/modal_summary.json')):
     backbone = json_path.parent.name
     dataset = json_path.parent.parent.name
