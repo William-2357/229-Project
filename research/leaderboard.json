@@ -28,10 +28,10 @@
     }
   },
   "proxy_best": {
-    "tag": "iter1_combined_convex",
-    "score": 0.5755,
-    "low_k_score": 0.5691,
-    "iter": 1,
+    "tag": "iter2_250hz",
+    "score": 0.5919,
+    "low_k_score": 0.5946,
+    "iter": 2,
     "dataset": "bciciv2a"
   },
   "full_best": {
@@ -49,6 +49,15 @@
       "tag": "iter1_combined_convex",
       "score": 0.5755,
       "low_k_score": 0.5691,
+      "dataset": "bciciv2a",
+      "new_best": true
+    },
+    {
+      "iter": 2,
+      "mode": "proxy",
+      "tag": "iter2_250hz",
+      "score": 0.5919,
+      "low_k_score": 0.5946,
       "dataset": "bciciv2a",
       "new_best": true
     }
@@ -72,6 +81,34 @@
       "1.0": 0.56,
       "2.0": 0.556,
       "score": 0.557
+    }
+  },
+  "regime": "250Hz native (corrected input) \u2014 official",
+  "bars_to_beat_local_proxy14_250hz": {
+    "note": "SAME 250Hz source-FT backbone. subj1-4, K=[.5,1,2]. CONVEX MUST EXCEED THESE.",
+    "sft_finetune": {
+      "score": 0.6014,
+      "per_k": {
+        "0.5": 0.596,
+        "1.0": 0.607,
+        "2.0": 0.601
+      }
+    },
+    "sft_lora": {
+      "score": 0.5997,
+      "per_k": {
+        "0.5": 0.592,
+        "1.0": 0.607,
+        "2.0": 0.601
+      }
+    },
+    "convex_iter2": {
+      "score": 0.5919,
+      "per_k": {
+        "0.5": 0.591,
+        "1.0": 0.598,
+        "2.0": 0.587
+      }
     }
   }
 }

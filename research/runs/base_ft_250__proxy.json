@@ -1,0 +1,31 @@
+{
+  "tag": "base_ft_250",
+  "method": "foundation_sft_finetune",
+  "mode": "proxy",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "n_repeats": 3,
+  "seed": 42,
+  "score": 0.6014,
+  "low_k_score": 0.6014,
+  "per_k": {
+    "0.5": 0.5956,
+    "1.0": 0.6073,
+    "2.0": 0.6014
+  },
+  "k_star": 0.5,
+  "ceiling": 0.6073,
+  "elapsed_sec": 22.4,
+  "hparams": null
+}

@@ -83,4 +83,13 @@ User flagged possible MIRepNet input issues. Findings:
 ## iter 2 — corrected input @250Hz (2026-05-31)
 - change: harness now feeds MIRepNet native 250 Hz (no convex_calib code change). Re-running
   convex + sft_lora + sft_finetune proxy at 250 Hz for the official, corrected comparison.
-- decision: PENDING 250Hz proxy.
+- result (proxy, subj1-4, 250Hz, same cached source-FT backbone):
+    sft_finetune 0.6014  (.596/.607/.601)
+    sft_lora     0.5997  (.592/.607/.601)
+    convex       0.5919  (.591/.598/.587)   <- now BEHIND by ~0.008-0.010
+- decision: HONEST NEGATIVE. The 200Hz "win" did NOT survive the input fix — the better
+  250Hz backbone helps direct calibration (lora/finetune) more than the source∪cal convex
+  head. The combined-fit (cal_balance=1.0) likely dilutes target signal now that features
+  are stronger. iter-1 method is NOT above LoRA at the correct input. Must keep iterating.
+- new bar to beat (proxy): lora 0.5997 / finetune 0.6014. Next: sweep cal_balance (more
+  target emphasis) + beta/n_neurons on the cached 250Hz features.

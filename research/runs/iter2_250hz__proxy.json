@@ -1,0 +1,50 @@
+{
+  "tag": "iter2_250hz",
+  "method": "convex_calib",
+  "mode": "proxy",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "n_repeats": 3,
+  "seed": 42,
+  "score": 0.5919,
+  "low_k_score": 0.5946,
+  "per_k": {
+    "0.5": 0.5909,
+    "1.0": 0.5984,
+    "2.0": 0.5865
+  },
+  "k_star": 0.5,
+  "ceiling": 0.5984,
+  "elapsed_sec": 450.9,
+  "hparams": {
+    "lr_src": 0.001,
+    "weight_decay": 0.0001,
+    "max_epochs_src": 200,
+    "patience_src": 25,
+    "val_fraction_src": 0.1,
+    "ft_batch_size": 32,
+    "use_ea": false,
+    "ea_epsilon": 1e-06,
+    "n_neurons": 32,
+    "rank": 20,
+    "beta": 0.001,
+    "rho": 0.01,
+    "gamma_ratio": 1.0,
+    "admm_iters": 50,
+    "pcg_iters": 10,
+    "max_feat_dim": null,
+    "source_cap": 800,
+    "cal_balance": 1.0
+  }
+}
