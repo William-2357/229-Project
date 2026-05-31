@@ -1,0 +1,13 @@
+{
+  "metric": "mean test BCA over (subject, K>0) cells on source-pretrained MIRepNet; higher is better",
+  "backbone": "mirepnet (source-fine-tuned, frozen)",
+  "bars_to_beat": {
+    "note": "from results/bciciv2a/mirepnet/modal_summary.json (teammate's runs). Will be re-measured locally for a same-pipeline comparison.",
+    "foundation_sft_lora_all9":     {"0.5": 0.428, "1.0": 0.432, "2.0": 0.423, "5.0": 0.457, "10.0": 0.480, "15.0": 0.528, "30.0": 0.518},
+    "foundation_sft_lora_proxy14":  {"0.5": 0.462, "1.0": 0.466, "2.0": 0.458},
+    "foundation_sft_cld_all9":      {"0.5": 0.357, "1.0": 0.394, "2.0": 0.428, "5.0": 0.444, "10.0": 0.474, "15.0": 0.488, "30.0": 0.491}
+  },
+  "proxy_best": {"tag": null, "score": null, "low_k_score": null, "iter": null},
+  "full_best": {"tag": null, "score": null, "low_k_score": null, "per_k": null, "k_star": null, "iter": null},
+  "history": []
+}

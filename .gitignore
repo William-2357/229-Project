@@ -57,13 +57,9 @@ results/bciciv2a/cbramod/comparison.png
 labram-base.pth
 
 
-modal_runner.py
-.gitignore
-adaptation/foundation_source_cld.py
-.gitignore
-adaptation/foundation_source_lora.py
-adaptation/foundation_source_finetune.py
-run_experiment.py
-modal_runner.py
-modal_runner.py
-run_experiment.py
+# Source-FT checkpoints (large binaries, regenerated locally + disk-cached)
+data/sft_checkpoints/
+MIRepNet.pth
+
+# NOTE: the reconstructed foundation_source_*.py files are intentionally TRACKED
+# (a teammate had gitignored them, which is why they were missing from the repo).
