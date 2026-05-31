@@ -43,6 +43,9 @@ REPO = Path(__file__).resolve().parent.parent
 PROXY_K = [0.5, 1.0, 2.0]
 FULL_K = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
 CKPT = {"mirepnet": str(REPO / "MIRepNet.pth")}
+# Backbone-native sampling rate. MIRepNet was pretrained at 250 Hz; feeding native 250 Hz
+# avoids a lossy 250->200->250 round-trip (+0.03-0.05 BCA, verified). Default 200 Hz.
+BACKBONE_SFREQ = {"mirepnet": 250.0}
 
 METHODS = {
     "convex_calib": ConvexCalibAdapter,
@@ -57,8 +60,10 @@ def build_dataset(name: str, backbone: str, data_root: Path, seed: int):
     data_dir = data_root / "bciciv2a"
     cfg = BACKBONE_PREPROCESS_CONFIGS.get(backbone)
     suffix = BACKBONE_CACHE_SUFFIX.get(backbone, "default")
-    cache_dir = str(data_root / f"bciciv2a_{suffix}_cache")
-    return BCICIVDataset(str(data_dir), cache_dir=cache_dir, preprocess_config=cfg), "bciciv2a"
+    tsf = BACKBONE_SFREQ.get(backbone, 200.0)
+    cache_dir = str(data_root / f"bciciv2a_{suffix}{int(tsf)}_cache")
+    return BCICIVDataset(str(data_dir), cache_dir=cache_dir, target_sfreq=tsf,
+                         preprocess_config=cfg), "bciciv2a"
 
 
 def get_device() -> str:

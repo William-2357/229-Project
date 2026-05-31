@@ -63,3 +63,24 @@ Per user direction + teammate's `bf55826`:
 - caveat: convex (like CLD baselines) uses the unlabeled target pool for feature
   normalization; plain lora/finetune don't. Stricter bar = ea_lora (run later).
 - decision: KEPT — proxy beats bar. Promoting to full 9-subject sweep (convex + baselines).
+- full sweep (200Hz) ran convex subj1-8 (~0.50-0.64, flat, no dip) then STOPPED to fix the
+  data-input issues below before establishing official numbers.
+
+## AUDIT (2026-05-31) — MIRepNet data input
+User flagged possible MIRepNet input issues. Findings:
+- channel map 22→45: CORRECT — MOABB returns the exact assumed order, no scrambling.
+- sampling rate: BUG-ish. BCIC-IV-2a is native 250 Hz; repo downsampled to 200 (default
+  target_sfreq, not overridden by MIREPNET cfg) then MIRepNet upsamples 200→250 — a lossy
+  round-trip. Native 250 Hz zero-shot LOSO: subj1 +0.051, subj2 +0.012. → FIXED: run_local
+  now builds MIRepNet data at target_sfreq=250 (cache bciciv2a_mirepnet250_cache).
+- EA normalization: MIRepNet pretrained with EA, get_features uses per-channel z-score
+  ("approx EA"). Tested external EA @250Hz: subj1 -0.001, subj2 -0.013 → EA does NOT help;
+  keep z-score, use_ea=False. (Matches the plot's weak EA variants.)
+- CAVEAT: source-FT is GPU-nondeterministic (~±0.05 single-subject zero-shot across
+  "identical" runs). Mitigated for comparison by sharing the SAME disk-cached source-FT
+  backbone between convex and baselines (disk cache key = backbone+split+seed+cfg).
+
+## iter 2 — corrected input @250Hz (2026-05-31)
+- change: harness now feeds MIRepNet native 250 Hz (no convex_calib code change). Re-running
+  convex + sft_lora + sft_finetune proxy at 250 Hz for the official, corrected comparison.
+- decision: PENDING 250Hz proxy.
