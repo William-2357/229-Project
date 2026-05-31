@@ -6,8 +6,8 @@ pretrained foundation backbone.
 
 For k=0:  trains only the linear classification head on source features
           (linear probe — backbone stays fully frozen).
-For k>0:  applies LoRA to the frozen backbone's Linear layers and fine-tunes
-          LoRA params + head on the calibration set.
+For k>0:  applies LoRA to the frozen backbone's Linear / compatible Conv2d
+          layers and fine-tunes LoRA params + head on the calibration set.
 
 Rank selection: without source data, CV-based rank selection is unreliable at
 small K. A fixed default rank (8) is used; override with rank= if needed.
@@ -26,16 +26,25 @@ from .linear_probe import train_linear_probe
 from models.foundations import FoundationBackbone, FoundationWithHead
 
 
-def _get_linear_target_modules(model: nn.Module, rank: int = 8) -> list[str]:
-    """Return names of nn.Linear layers eligible for LoRA.
+def _get_lora_target_modules(model: nn.Module, rank: int = 8) -> list[str]:
+    """Return names of backbone layers eligible for LoRA.
 
-    Skips the classification head (named 'head') — only the backbone's
-    attention and feed-forward layers should receive LoRA adapters.
+    Includes:
+      - nn.Linear layers in the backbone
+      - compatible nn.Conv2d layers (e.g. patch / temporal embedding convs)
+
+    Skips the classification head (named 'head'). For Conv2d, PEFT requires
+    the chosen rank to be compatible with the convolution groups.
     """
     targets = []
     for name, module in model.named_modules():
-        if isinstance(module, nn.Linear) and not name.endswith("head"):
+        if name.endswith("head"):
+            continue
+        if isinstance(module, nn.Linear):
             targets.append(name)
+        elif isinstance(module, nn.Conv2d):
+            if module.groups == 1 or rank % module.groups == 0:
+                targets.append(name)
     return targets
 
 
@@ -168,10 +177,12 @@ class FoundationLoRAAdapter(BaseAdapter):
             self._fit_time = time.time() - t0
             return self
 
-        # Step 2: Apply LoRA to backbone Linear layers (backbone stays frozen)
-        target_modules = _get_linear_target_modules(model, rank=self.rank)
+        # Step 2: Apply LoRA to backbone Linear / Conv2d layers
+        # (backbone stays frozen; patch-embedding convs are especially important
+        # for EEG foundation models like LaBraM).
+        target_modules = _get_lora_target_modules(model, rank=self.rank)
         if not target_modules:
-            # No eligible Linear layers — fall back to linear probe result
+            # No eligible backbone layers — fall back to linear probe result
             self._model = model
             self._fit_time = time.time() - t0
             return self

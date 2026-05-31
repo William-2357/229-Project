@@ -267,7 +267,11 @@ def main() -> None:
         dataset = dataset_cls(n_subjects=n_subj, seed=args.seed)
     else:
         data_dir = Path(args.data_dir) / args.dataset
-        dataset = dataset_cls(str(data_dir))
+        if args.backbone == "labram":
+            from data.preprocessing import LABRAM_PREPROCESS_CONFIG
+            dataset = dataset_cls(str(data_dir), preprocess_config=LABRAM_PREPROCESS_CONFIG)
+        else:
+            dataset = dataset_cls(str(data_dir))
     print(f"Dataset: {args.dataset} — {dataset.n_channels}ch, {dataset.n_classes} classes")
 
     # Resolve subjects

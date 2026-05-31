@@ -25,11 +25,13 @@ image = (
 )
 
 CACHE_DIRS = {
-    "bciciv2a":  "/data/bciciv2a_cache",
+    "bciciv2a":        "/data/bciciv2a_cache",
+    "bciciv2a_labram": "/data/bciciv2a_labram_cache",  # wider bandpass, no z-score (µV for LaBraM)
 }
 
 DATA_DIRS = {
-    "bciciv2a":  "/data/bciciv2a",
+    "bciciv2a":        "/data/bciciv2a",
+    "bciciv2a_labram": "/data/bciciv2a",  # same raw data, different preprocessing
 }
 
 
@@ -41,9 +43,15 @@ DATA_DIRS = {
 )
 def build_cache(dataset_name: str) -> None:
     from data.datasets import BCICIVDataset
+    from data.preprocessing import LABRAM_PREPROCESS_CONFIG
 
     if dataset_name == "bciciv2a":
         dataset = BCICIVDataset(DATA_DIRS["bciciv2a"])
+    elif dataset_name == "bciciv2a_labram":
+        dataset = BCICIVDataset(
+            DATA_DIRS["bciciv2a_labram"],
+            preprocess_config=LABRAM_PREPROCESS_CONFIG,
+        )
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 

@@ -690,6 +690,356 @@ class CBraModBackbone(FoundationBackbone):
 
 
 # ---------------------------------------------------------------------------
+# LaBraM — Large Brain Model (Jiang et al. 2024)
+# ---------------------------------------------------------------------------
+
+# Standard 10-20 electrode list used by LaBraM for positional embedding lookup.
+# Channel at index i maps to pos_embed slot i+1 (slot 0 is always the CLS token).
+_LABRAM_STANDARD_1020: list[str] = [
+    'FP1','FPZ','FP2',
+    'AF9','AF7','AF5','AF3','AF1','AFZ','AF2','AF4','AF6','AF8','AF10',
+    'F9','F7','F5','F3','F1','FZ','F2','F4','F6','F8','F10',
+    'FT9','FT7','FC5','FC3','FC1','FCZ','FC2','FC4','FC6','FT8','FT10',
+    'T9','T7','C5','C3','C1','CZ','C2','C4','C6','T8','T10',
+    'TP9','TP7','CP5','CP3','CP1','CPZ','CP2','CP4','CP6','TP8','TP10',
+    'P9','P7','P5','P3','P1','PZ','P2','P4','P6','P8','P10',
+    'PO9','PO7','PO5','PO3','PO1','POZ','PO2','PO4','PO6','PO8','PO10',
+    'O1','OZ','O2','O9','CB1','CB2',
+    'IZ','O10','T3','T5','T4','T6','M1','M2','A1','A2',
+    'CFC1','CFC2','CFC3','CFC4','CFC5','CFC6','CFC7','CFC8',
+    'CCP1','CCP2','CCP3','CCP4','CCP5','CCP6','CCP7','CCP8',
+    'T1','T2','FTT9h','TTP7h','TPP9h','FTT10h','TPP8h','TPP10h',
+    'FP1-F7','F7-T7','T7-P7','P7-O1','FP2-F8','F8-T8','T8-P8','P8-O2',
+    'FP1-F3','F3-C3','C3-P3','P3-O1','FP2-F4','F4-C4','C4-P4','P4-O2',
+]
+
+# Pre-computed input_chans for BCIC-IV 2a (22 ch) → LaBraM pos_embed indices.
+# Format: [0 (CLS), chan1_pos, ...] where pos = 1 + index in _LABRAM_STANDARD_1020.
+# BCIC-IV 2a channel order (uppercased): FZ FC3 FC1 FCZ FC2 FC4 C5 C3 C1 CZ
+#   C2 C4 C6 CP3 CP1 CPZ CP2 CP4 P1 PZ P2 POZ
+_BCICIV2A_LABRAM_INPUT_CHANS: list[int] = [
+    0,   # CLS
+    20,  # FZ
+    29,  # FC3
+    30,  # FC1
+    31,  # FCZ
+    32,  # FC2
+    33,  # FC4
+    39,  # C5
+    40,  # C3
+    41,  # C1
+    42,  # CZ
+    43,  # C2
+    44,  # C4
+    45,  # C6
+    51,  # CP3
+    52,  # CP1
+    53,  # CPZ
+    54,  # CP2
+    55,  # CP4
+    63,  # P1
+    64,  # PZ
+    65,  # P2
+    75,  # POZ
+]
+
+
+def _labram_get_input_chans(ch_names: list[str]) -> list[int]:
+    """Map EEG channel names to LaBraM pos_embed indices (0 = CLS slot)."""
+    normalized = [n.upper().replace('EEG-', '') for n in ch_names]
+    return [0] + [_LABRAM_STANDARD_1020.index(n) + 1 for n in normalized]
+
+
+def _labram_drop_path(x: torch.Tensor, drop_prob: float, training: bool) -> torch.Tensor:
+    if drop_prob == 0. or not training:
+        return x
+    keep_prob = 1 - drop_prob
+    shape = (x.shape[0],) + (1,) * (x.ndim - 1)
+    mask = torch.rand(shape, dtype=x.dtype, device=x.device).floor_(keep_prob + keep_prob)
+    return x * mask / keep_prob
+
+
+class _LaBraMDropPath(nn.Module):
+    def __init__(self, drop_prob: float = 0.):
+        super().__init__()
+        self.drop_prob = drop_prob
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return _labram_drop_path(x, self.drop_prob, self.training)
+
+
+class _LaBraMMlp(nn.Module):
+    def __init__(self, in_features: int, hidden_features: int, drop: float = 0.):
+        super().__init__()
+        self.fc1  = nn.Linear(in_features, hidden_features)
+        self.act  = nn.GELU()
+        self.fc2  = nn.Linear(hidden_features, in_features)
+        self.drop = nn.Dropout(drop)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        x = self.fc1(x)
+        x = self.act(x)
+        x = self.fc2(x)
+        x = self.drop(x)
+        return x
+
+
+class _LaBraMAttention(nn.Module):
+    def __init__(self, dim: int, num_heads: int = 8, qk_norm=None,
+                 attn_drop: float = 0., proj_drop: float = 0.):
+        super().__init__()
+        self.num_heads = num_heads
+        head_dim = dim // num_heads
+        self.scale = head_dim ** -0.5
+        self.qkv = nn.Linear(dim, dim * 3, bias=False)
+        self.q_norm = qk_norm(head_dim) if qk_norm is not None else None
+        self.k_norm = qk_norm(head_dim) if qk_norm is not None else None
+        self.attn_drop = nn.Dropout(attn_drop)
+        self.proj = nn.Linear(dim, dim)
+        self.proj_drop = nn.Dropout(proj_drop)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        B, N, C = x.shape
+        qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
+        q, k, v = qkv.unbind(0)
+        if self.q_norm is not None:
+            q = self.q_norm(q).type_as(v)
+        if self.k_norm is not None:
+            k = self.k_norm(k).type_as(v)
+        attn = (q * self.scale) @ k.transpose(-2, -1)
+        attn = attn.softmax(dim=-1)
+        attn = self.attn_drop(attn)
+        x = (attn @ v).transpose(1, 2).reshape(B, N, C)
+        x = self.proj(x)
+        x = self.proj_drop(x)
+        return x
+
+
+class _LaBraMBlock(nn.Module):
+    def __init__(self, dim: int, num_heads: int, mlp_ratio: float = 4.,
+                 qk_norm=None, drop: float = 0., attn_drop: float = 0.,
+                 drop_path: float = 0., norm_layer=nn.LayerNorm,
+                 init_values: Optional[float] = None):
+        super().__init__()
+        self.norm1 = norm_layer(dim)
+        self.attn  = _LaBraMAttention(dim, num_heads=num_heads, qk_norm=qk_norm,
+                                       attn_drop=attn_drop, proj_drop=drop)
+        self.drop_path = _LaBraMDropPath(drop_path) if drop_path > 0. else nn.Identity()
+        self.norm2 = norm_layer(dim)
+        self.mlp   = _LaBraMMlp(dim, int(dim * mlp_ratio), drop=drop)
+        use_gamma = init_values is not None and init_values > 0
+        self.gamma_1 = nn.Parameter(init_values * torch.ones(dim)) if use_gamma else None
+        self.gamma_2 = nn.Parameter(init_values * torch.ones(dim)) if use_gamma else None
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if self.gamma_1 is None:
+            x = x + self.drop_path(self.attn(self.norm1(x)))
+            x = x + self.drop_path(self.mlp(self.norm2(x)))
+        else:
+            x = x + self.drop_path(self.gamma_1 * self.attn(self.norm1(x)))
+            x = x + self.drop_path(self.gamma_2 * self.mlp(self.norm2(x)))
+        return x
+
+
+class _LaBraMTemporalConv(nn.Module):
+    """Temporal patch embedding used in LaBraM (TemporalConv from modeling_finetune.py).
+
+    Input:  (B, C, P, 200) — C channels, P patches of 200 samples each.
+    Output: (B, C*P, embed_dim) — one token per (channel, patch) pair.
+    """
+
+    def __init__(self, out_chans: int = 8):
+        super().__init__()
+        self.conv1 = nn.Conv2d(1, out_chans, kernel_size=(1, 15), stride=(1, 8), padding=(0, 7))
+        self.gelu1 = nn.GELU()
+        self.norm1 = nn.GroupNorm(4, out_chans)
+        self.conv2 = nn.Conv2d(out_chans, out_chans, kernel_size=(1, 3), padding=(0, 1))
+        self.gelu2 = nn.GELU()
+        self.norm2 = nn.GroupNorm(4, out_chans)
+        self.conv3 = nn.Conv2d(out_chans, out_chans, kernel_size=(1, 3), padding=(0, 1))
+        self.gelu3 = nn.GELU()
+        self.norm3 = nn.GroupNorm(4, out_chans)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # x: (B, C, P, T=200)
+        B, C, P, T = x.shape
+        x = x.reshape(B, C * P, T).unsqueeze(1)          # (B, 1, C*P, 200)
+        x = self.gelu1(self.norm1(self.conv1(x)))          # (B, 8, C*P, 25)
+        x = self.gelu2(self.norm2(self.conv2(x)))          # (B, 8, C*P, 25)
+        x = self.gelu3(self.norm3(self.conv3(x)))          # (B, 8, C*P, 25)
+        _, OC, CP, T2 = x.shape
+        x = x.permute(0, 2, 3, 1).reshape(B, CP, T2 * OC)  # (B, C*P, 200)
+        return x
+
+
+class _LaBraMModel(nn.Module):
+    """Minimal NeuralTransformer backbone matching the LaBraM checkpoint layout.
+
+    Checkpoint keys (after stripping 'student.' prefix): patch_embed.*, cls_token,
+    pos_embed, time_embed, blocks.{0..11}.*, norm.*
+    """
+
+    def __init__(self, embed_dim: int = 200, depth: int = 12, num_heads: int = 10,
+                 mlp_ratio: float = 4., out_chans: int = 8, drop_rate: float = 0.,
+                 attn_drop_rate: float = 0., drop_path_rate: float = 0.,
+                 norm_layer=nn.LayerNorm, qk_norm=None, init_values: float = 0.1):
+        super().__init__()
+        self.patch_embed = _LaBraMTemporalConv(out_chans=out_chans)
+        self.cls_token   = nn.Parameter(torch.zeros(1, 1, embed_dim))
+        self.pos_embed   = nn.Parameter(torch.zeros(1, 129, embed_dim))   # 128 ch + CLS
+        self.time_embed  = nn.Parameter(torch.zeros(1, 16, embed_dim))    # up to 16 patches
+        self.pos_drop    = nn.Dropout(p=drop_rate)
+
+        dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]
+        self.blocks = nn.ModuleList([
+            _LaBraMBlock(
+                dim=embed_dim, num_heads=num_heads, mlp_ratio=mlp_ratio,
+                qk_norm=qk_norm, drop=drop_rate, attn_drop=attn_drop_rate,
+                drop_path=dpr[i], norm_layer=norm_layer, init_values=init_values,
+            )
+            for i in range(depth)
+        ])
+        self.norm = norm_layer(embed_dim)
+
+        nn.init.trunc_normal_(self.pos_embed,  std=.02)
+        nn.init.trunc_normal_(self.time_embed, std=.02)
+        nn.init.trunc_normal_(self.cls_token,  std=.02)
+
+    def forward_features(self, x: torch.Tensor,
+                          input_chans: Optional[list] = None) -> torch.Tensor:
+        """Return mean-pooled patch features: (B, embed_dim)."""
+        B, C, P, _ = x.shape  # last dim is patch_size (200)
+        x = self.patch_embed(x)                          # (B, C*P, 200)
+
+        cls = self.cls_token.expand(B, -1, -1)
+        x   = torch.cat((cls, x), dim=1)                 # (B, 1+C*P, 200)
+
+        # Channel positional embedding (one per electrode)
+        pos_used = self.pos_embed[:, input_chans] if input_chans is not None else self.pos_embed
+        pos_ch   = pos_used[:, 1:, :].unsqueeze(2).expand(B, -1, P, -1).flatten(1, 2)
+        pos_all  = torch.cat((pos_used[:, :1, :].expand(B, -1, -1), pos_ch), dim=1)
+        x = x + pos_all
+
+        # Temporal positional embedding (one per time patch)
+        t_emb = self.time_embed[:, :P, :].unsqueeze(1).expand(B, C, -1, -1).flatten(1, 2)
+        x[:, 1:, :] = x[:, 1:, :] + t_emb
+
+        x = self.pos_drop(x)
+        for blk in self.blocks:
+            x = blk(x)
+        x = self.norm(x)
+        return x[:, 1:].mean(dim=1)   # mean-pool all patch tokens, skip CLS
+
+
+class LaBraMBackbone(FoundationBackbone):
+    """LaBraM: Large Brain Model (Jiang et al. 2024).
+
+    Pretrained weights (base variant, ~5 M backbone params):
+        https://huggingface.co/935963004/LaBraM  (labram-base.pth)
+    Upload to Modal:
+        modal volume put eeg-data ./labram-base.pth /labram-base.pth
+
+    Input requirements:
+        - Any EEG montage whose channel names appear in the standard 10-20 list
+        - Any sampling rate (internally resampled to 200 Hz)
+        - Signal assumed to be in µV (divided by 100 before the model)
+        - Epoch length must be ≥ 1 s (one 200-sample patch at 200 Hz)
+
+    Channel mapping:
+        - Pass channel_names=['Fz','FC3',...] to look up positions automatically.
+        - Pass input_chans=[0, 20, 29, ...] directly to bypass the lookup.
+        - If n_channels == 22, BCIC-IV 2a positions are used by default.
+
+    Checkpoint loading:
+        The released labram-base.pth is a pretraining checkpoint where all
+        weights live under 'student.*'. This wrapper strips that prefix and
+        loads patch_embed, cls_token, pos_embed, time_embed, blocks, and norm.
+        The pretraining lm_head is discarded.
+    """
+
+    _EMB_DIM      = 200
+    _PATCH_SIZE   = 200
+    _TARGET_SFREQ = 200.0
+
+    def __init__(self, n_channels: int, n_times: int,
+                 input_sfreq: float = 200.0,
+                 channel_names: Optional[list] = None,
+                 input_chans: Optional[list] = None,
+                 checkpoint_path: Optional[str] = None, **kwargs):
+        super().__init__()
+        self.input_sfreq = input_sfreq
+
+        # Resolve input_chans
+        if input_chans is not None:
+            self.input_chans = input_chans
+        elif channel_names is not None:
+            self.input_chans = _labram_get_input_chans(channel_names)
+        elif n_channels == 22:
+            self.input_chans = _BCICIV2A_LABRAM_INPUT_CHANS
+        else:
+            raise ValueError(
+                "LaBraM requires either channel_names, explicit input_chans, or "
+                f"the 22-channel BCIC-IV 2a layout; got n_channels={n_channels}."
+            )
+
+        norm_layer = lambda d: nn.LayerNorm(d, eps=1e-6)
+        qk_norm    = lambda d: nn.LayerNorm(d, eps=1e-6)
+        self.model = _LaBraMModel(
+            embed_dim=self._EMB_DIM, depth=12, num_heads=10, mlp_ratio=4.,
+            out_chans=8, norm_layer=norm_layer, qk_norm=qk_norm, init_values=0.1,
+        )
+
+        if checkpoint_path is not None:
+            state = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+            if isinstance(state, dict) and 'model' in state:
+                state = state['model']
+            # Strip 'student.' prefix; discard lm_head, mask_token, logit_scale, etc.
+            state = {
+                k.removeprefix('student.'): v
+                for k, v in state.items()
+                if k.startswith('student.') and not k.startswith('student.lm_head')
+                and not k.startswith('student.mask_token')
+            }
+            missing, unexpected = self.model.load_state_dict(state, strict=False)
+            if missing or unexpected:
+                print(
+                    f"[LaBraM] loaded with {len(missing)} missing and "
+                    f"{len(unexpected)} unexpected keys"
+                )
+
+    @property
+    def feature_dim(self) -> int:
+        return self._EMB_DIM
+
+    def get_features(self, X: torch.Tensor) -> torch.Tensor:
+        """Extract 200-dim features from (B, C, T) EEG input."""
+        B, C, T = X.shape
+
+        # 1. Resample to 200 Hz
+        if self.input_sfreq != self._TARGET_SFREQ:
+            target_len = int(T * self._TARGET_SFREQ / self.input_sfreq)
+            X = F.interpolate(X, size=target_len, mode='linear', align_corners=False)
+
+        # 2. LaBraM pretraining expects EEG in microvolts, scaled by 100 µV.
+        # Our BCIC pipeline preserves MNE's native volt units, so convert V -> µV
+        # before applying the released checkpoint's input normalization.
+        X = (X * 1e6) / 100.0
+
+        # 3. Pad/trim to a multiple of patch_size (200 samples)
+        T2 = X.shape[-1]
+        n_patches = max(1, (T2 + self._PATCH_SIZE - 1) // self._PATCH_SIZE)
+        target_len = n_patches * self._PATCH_SIZE
+        if T2 < target_len:
+            X = F.pad(X, (0, target_len - T2))
+        elif T2 > target_len:
+            X = X[:, :, :target_len]
+
+        # 4. Reshape to (B, C, P, 200) and extract features
+        X = X.reshape(B, C, n_patches, self._PATCH_SIZE)
+        return self.model.forward_features(X, input_chans=self.input_chans)
+
+
+# ---------------------------------------------------------------------------
 # Classification head wrapper (for finetune / LoRA on foundation backbones)
 # ---------------------------------------------------------------------------
 
@@ -732,6 +1082,7 @@ FOUNDATION_REGISTRY: dict[str, type[FoundationBackbone]] = {
     "neurogpt": NeuroGPTBackbone,
     "reve":     REVEBackbone,
     "cbramod":  CBraModBackbone,
+    "labram":   LaBraMBackbone,
 }
 
 FOUNDATION_NAMES = list(FOUNDATION_REGISTRY)

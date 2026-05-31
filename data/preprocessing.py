@@ -102,23 +102,31 @@ def preprocess_pipeline(
     tmin: float = 0.0,
     target_sfreq: float = 200.0,
     notch_freqs: tuple = (50.0, 60.0),
+    l_freq: float = 4.0,
+    h_freq: float = 40.0,
+    apply_zscore: bool = True,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Full preprocessing pipeline returning (X, y).
 
     Steps:
         1. Common-average reference
-        2. Bandpass 4-40 Hz (zero-phase FIR)
+        2. Bandpass (default 4–40 Hz for specialist models; use 0.1–75 Hz for LaBraM)
         3. Notch 50/60 Hz
         4. Resample to target_sfreq
         5. Epoch (4 s aligned to cue)
-        6. Per-channel, per-trial z-score
+        6. Per-channel, per-trial z-score (skipped for LaBraM — µV scale preserved)
+
+    Args:
+        l_freq: bandpass lower cutoff in Hz
+        h_freq: bandpass upper cutoff in Hz
+        apply_zscore: if False, skip z-scoring (use for LaBraM which normalises via ÷100 in µV)
 
     Returns:
         X: (N, C, T) float32
         y: (N,) int32
     """
     data = common_average_reference(raw)
-    data = bandpass_filter(data, sfreq, l_freq=4.0, h_freq=40.0)
+    data = bandpass_filter(data, sfreq, l_freq=l_freq, h_freq=h_freq)
     data = notch_filter(data, sfreq, freqs=notch_freqs)
     data = resample(data, sfreq, target_sfreq)
 
@@ -132,5 +140,16 @@ def preprocess_pipeline(
     n_valid = len(X)
     y = labels[:n_valid].astype(np.int32)
 
-    X = zscore_per_trial(X)
+    if apply_zscore:
+        X = zscore_per_trial(X)
     return X, y
+
+
+# Preprocessing config for LaBraM: wider bandpass + µV scale (no z-score).
+# LaBraM was pretrained on data bandpassed 0.1–75 Hz, normalised by dividing by 100 µV.
+# The ÷100 step is applied inside LaBraMBackbone.get_features(); store raw µV here.
+LABRAM_PREPROCESS_CONFIG: dict = {
+    "l_freq": 0.1,
+    "h_freq": 75.0,
+    "apply_zscore": False,
+}

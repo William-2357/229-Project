@@ -11,11 +11,12 @@ class BaseEEGDataset(ABC):
     """Base class: subclasses must implement _load_raw_subject()."""
 
     def __init__(self, data_dir: str, target_sfreq: float = 200.0, epoch_len_sec: float = 4.0,
-                 cache_dir: str | None = None):
+                 cache_dir: str | None = None, preprocess_config: dict | None = None):
         self.data_dir = Path(data_dir)
         self.target_sfreq = target_sfreq
         self.epoch_len_sec = epoch_len_sec
         self.cache_dir = Path(cache_dir) if cache_dir else None
+        self.preprocess_config: dict = preprocess_config or {}
         self._cache: dict = {}
 
     @property
@@ -79,6 +80,7 @@ class BaseEEGDataset(ABC):
                     tmin=0.0,
                     target_sfreq=self.target_sfreq,
                     notch_freqs=self._notch_freqs,
+                    **self.preprocess_config,
                 )
                 path = self._cache_path(subject_id, sess)
                 if path is not None:
@@ -135,6 +137,7 @@ class BaseEEGDataset(ABC):
                     tmin=0.0,
                     target_sfreq=self.target_sfreq,
                     notch_freqs=self._notch_freqs,
+                    **self.preprocess_config,
                 )
                 np.savez_compressed(path, X=X, y=y)
                 print(f"    saved {path.name}  X={X.shape}")

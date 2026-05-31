@@ -32,7 +32,7 @@ from pathlib import Path
 #CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
 
 DATASET = "bciciv2a"
-BACKBONE = "cbramod"          # mirepnet | neurogpt | reve | cbramod
+BACKBONE = "labram"          # mirepnet | neurogpt | reve | cbramod
 METHODS = [
     "foundation_ea",          # K=0 unsupervised
     "foundation_finetune",    # K=0 linear probe + K>0 full finetune
@@ -41,7 +41,7 @@ METHODS = [
     "foundation_cld",         # K=0 source features + K>0 CLD head
     "foundation_ea_cld",      # same + EA alignment
 ]
-CHECKPOINT_PATH = "/data/CBraMod_checkpoint.pth"  # path inside container (mounted from eeg-data volume)
+CHECKPOINT_PATH = "/data/LaBraM.pth"  # path inside container (mounted from eeg-data volume)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -182,11 +182,19 @@ def run_job(
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"[{method}] subject={subject_id} device={device}", flush=True)
 
-    # Load dataset
+    # Load dataset — LaBraM uses a separate cache with wider bandpass and no z-score
     if dataset_name == "synthetic":
         dataset = SyntheticDataset(n_subjects=9, seed=seed)
     elif dataset_name == "bciciv2a":
-        dataset = BCICIVDataset("/data/bciciv2a", cache_dir="/data/bciciv2a_cache")
+        if backbone_name == "labram":
+            from data.preprocessing import LABRAM_PREPROCESS_CONFIG
+            dataset = BCICIVDataset(
+                "/data/bciciv2a",
+                cache_dir="/data/bciciv2a_labram_cache",
+                preprocess_config=LABRAM_PREPROCESS_CONFIG,
+            )
+        else:
+            dataset = BCICIVDataset("/data/bciciv2a", cache_dir="/data/bciciv2a_cache")
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 
