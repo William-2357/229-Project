@@ -26,6 +26,35 @@ from jaxcld.optimizers.admm import admm as _run_admm
 from .base import BaseAdapter, train_epoch, evaluate_model
 
 
+def maybe_reduce_features(
+    X_feat: np.ndarray,
+    max_feat_dim: int | None,
+    seed: int,
+    pca=None,
+) -> tuple[np.ndarray, object]:
+    """PCA-reduce feature matrix when d > max_feat_dim.
+
+    Pass pca=None to fit a new PCA on X_feat (training time).
+    Pass a previously fitted PCA to transform only (inference time).
+    Returns (X_out, pca_or_none). When max_feat_dim is None or d <= max_feat_dim,
+    returns (X_feat, None) unchanged.
+
+    This is needed for large-feature-dim backbones (e.g. NeuroGPT 768-dim) where
+    the CLD ADMM weight tensors become too large for XLA to compile in reasonable
+    time on GPU.
+    """
+    if max_feat_dim is None or X_feat.shape[1] <= max_feat_dim:
+        return X_feat, None
+    from sklearn.decomposition import PCA
+    if pca is None:
+        n_components = min(max_feat_dim, X_feat.shape[0] - 1, X_feat.shape[1])
+        pca = PCA(n_components=n_components, random_state=seed)
+        X_out = pca.fit_transform(X_feat).astype(np.float32)
+    else:
+        X_out = pca.transform(X_feat).astype(np.float32)
+    return X_out, pca
+
+
 def extract_penultimate_features(
     model: nn.Module,
     X: np.ndarray,

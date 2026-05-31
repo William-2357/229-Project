@@ -34,14 +34,18 @@ from pathlib import Path
 DATASET = "bciciv2a"
 BACKBONE = "labram"          # mirepnet | neurogpt | reve | cbramod
 METHODS = [
-    "foundation_ea",          # K=0 unsupervised
-    "foundation_finetune",    # K=0 linear probe + K>0 full finetune
-    "foundation_lora",        # K=0 linear probe + K>0 LoRA
-    "foundation_ea_lora",     # K=0 linear probe + K>0 EA+LoRA
-    "foundation_cld",         # K=0 source features + K>0 CLD head
-    "foundation_ea_cld",      # same + EA alignment
+    "foundation_sft_loso",     # K=0 zero-shot: source-finetuned backbone, no target adapt
+    "foundation_sft_ea",       # K=0 zero-shot: EA + source-finetuned backbone
+    "foundation_sft_tta",      # K=0 zero-shot: source-finetuned backbone + T3A
+    "foundation_sft_finetune", # K>0: source-finetuned backbone + target finetune
+    "foundation_sft_lora",     # K>0: source-finetuned backbone + LoRA
+    "foundation_sft_ea_lora",  # K>0: EA + source-finetuned backbone + LoRA
+    "foundation_sft_cld",              # K>0: source-finetuned backbone + CLD head
+    "foundation_sft_ea_cld",           # K>0: EA + source-finetuned backbone + CLD head
+    "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM
+    "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM
 ]
-CHECKPOINT_PATH = "/data/LaBraM.pth"  # path inside container (mounted from eeg-data volume)
+CHECKPOINT_PATH = "/data/labram-base.pth"  # path inside container (mounted from eeg-data volume)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -92,10 +96,19 @@ image = (
 # Unsupervised methods (K=0 only): loso, ea, tta
 # ---------------------------------------------------------------------------
 
-UNSUPERVISED = {"loso", "ea", "tta", "foundation_loso", "foundation_ea", "foundation_tta"}
-SUPERVISED = {"finetune", "lora", "ea_lora", "cld", "ea_cld",
-              "foundation_finetune", "foundation_lora", "foundation_ea_lora",
-              "foundation_cld", "foundation_ea_cld"}
+UNSUPERVISED = {
+    "loso", "ea", "tta",
+    "linear_probe", "foundation_loso", "foundation_ea", "foundation_tta",
+    "foundation_sft_loso", "foundation_sft_ea", "foundation_sft_tta",
+}
+SUPERVISED = {
+    "finetune", "lora", "ea_lora", "cld", "ea_cld",
+    "foundation_finetune", "foundation_lora", "foundation_ea_lora",
+    "foundation_cld", "foundation_ea_cld",
+    "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
+    "foundation_sft_cld", "foundation_sft_ea_cld",
+    "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -144,13 +157,25 @@ def run_job(
     from adaptation.cld import CLDAdapter
     from adaptation.stacked import EACLDAdapter
     from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
+    from adaptation.foundation_source_cld import (
+        FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
+    )
     from adaptation.foundation_finetune import FoundationFineTuneAdapter
     from adaptation.foundation_lora import FoundationLoRAAdapter
+    from adaptation.foundation_source_lora import (
+        FoundationSourceFineTuneLoRAAdapter, FoundationSourceFineTuneEALoRAAdapter
+    )
     from adaptation.foundation_ea import FoundationEAAdapter
     from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
     from adaptation.linear_probe import LinearProbeAdapter
     from adaptation.foundation_loso import FoundationLOSOAdapter
     from adaptation.foundation_tta import FoundationTTAAdapter
+    from adaptation.foundation_source_loso import FoundationSFTLOSOAdapter, FoundationSFTEAAdapter
+    from adaptation.foundation_source_tta import FoundationSFTTTAAdapter
+    from adaptation.foundation_sft_finetune import FoundationSFTFineTuneAdapter
+    from adaptation.foundation_sft_anchored_cld import (
+        FoundationSFTAnchoredCLDAdapter, FoundationSFTAnchoredEACLDAdapter
+    )
     from evaluation.protocols import loso_evaluation, k_minute_sweep
     from evaluation.results import save_result
 
@@ -172,6 +197,16 @@ def run_job(
         "foundation_ea_lora": FoundationEALoRAAdapter,
         "foundation_cld": FoundationCLDAdapter,
         "foundation_ea_cld": FoundationEACLDAdapter,
+        "foundation_sft_loso": FoundationSFTLOSOAdapter,
+        "foundation_sft_ea": FoundationSFTEAAdapter,
+        "foundation_sft_tta": FoundationSFTTTAAdapter,
+        "foundation_sft_finetune": FoundationSFTFineTuneAdapter,
+        "foundation_sft_lora": FoundationSourceFineTuneLoRAAdapter,
+        "foundation_sft_ea_lora": FoundationSourceFineTuneEALoRAAdapter,
+        "foundation_sft_cld": FoundationSourceFineTuneCLDAdapter,
+        "foundation_sft_ea_cld": FoundationSourceFineTuneEACLDAdapter,
+        "foundation_sft_anchored_cld": FoundationSFTAnchoredCLDAdapter,
+        "foundation_sft_ea_anchored_cld": FoundationSFTAnchoredEACLDAdapter,
     }
 
     torch.manual_seed(seed)
@@ -182,19 +217,20 @@ def run_job(
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"[{method}] subject={subject_id} device={device}", flush=True)
 
-    # Load dataset — LaBraM uses a separate cache with wider bandpass and no z-score
+    # Load dataset — each foundation backbone has its own preprocessing config and
+    # cache directory to avoid mixing differently-filtered data.
     if dataset_name == "synthetic":
         dataset = SyntheticDataset(n_subjects=9, seed=seed)
     elif dataset_name == "bciciv2a":
-        if backbone_name == "labram":
-            from data.preprocessing import LABRAM_PREPROCESS_CONFIG
-            dataset = BCICIVDataset(
-                "/data/bciciv2a",
-                cache_dir="/data/bciciv2a_labram_cache",
-                preprocess_config=LABRAM_PREPROCESS_CONFIG,
-            )
-        else:
-            dataset = BCICIVDataset("/data/bciciv2a", cache_dir="/data/bciciv2a_cache")
+        from data.preprocessing import BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX
+        preprocess_cfg = BACKBONE_PREPROCESS_CONFIGS.get(backbone_name)
+        cache_suffix   = BACKBONE_CACHE_SUFFIX.get(backbone_name)
+        cache_dir      = f"/data/bciciv2a_{cache_suffix}_cache" if cache_suffix else "/data/bciciv2a_cache"
+        dataset = BCICIVDataset(
+            "/data/bciciv2a",
+            cache_dir=cache_dir,
+            **({"preprocess_config": preprocess_cfg} if preprocess_cfg else {}),
+        )
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 

@@ -19,7 +19,7 @@ jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 import jax.numpy as jnp
 
 from .base import BaseAdapter
-from .cld import fit_cld_head
+from .cld import fit_cld_head, maybe_reduce_features
 from .ea import compute_mean_covariance, matrix_sqrt_inv, euclidean_align
 from models.foundations import FoundationBackbone
 
@@ -63,6 +63,7 @@ class FoundationCLDAdapter(BaseAdapter):
         pcg_iters: int = 10,
         n_neurons: int | None = None,
         batch_size: int = 32,
+        max_feat_dim: int = 256,
     ):
         if not isinstance(backbone, FoundationBackbone):
             raise TypeError(
@@ -79,9 +80,11 @@ class FoundationCLDAdapter(BaseAdapter):
         self.pcg_iters = pcg_iters
         self.n_neurons = n_neurons
         self.batch_size = batch_size
+        self.max_feat_dim = max_feat_dim
         self._cld_model = None
         self._feat_mu: np.ndarray | None = None
         self._feat_sigma: np.ndarray | None = None
+        self._feat_pca = None
 
     def fit(self, source_data, target_unlabeled=None, target_labeled=None,
             source_cache: dict | None = None) -> "FoundationCLDAdapter":
@@ -118,11 +121,16 @@ class FoundationCLDAdapter(BaseAdapter):
                 )
                 if source_cache is not None:
                     source_cache[tgt_cache_key] = X_unlab
+            # PCA fitted on the large unlabeled set; applied to the (possibly small) fit features.
+            X_unlab, self._feat_pca = maybe_reduce_features(X_unlab, self.max_feat_dim, self.seed)
+            if self._feat_pca is not None:
+                X_feat = self._feat_pca.transform(X_feat).astype(np.float32)
             norm_stats = (
                 X_unlab.mean(axis=0, keepdims=True),
                 X_unlab.std(axis=0, keepdims=True) + 1e-8,
             )
         else:
+            X_feat, self._feat_pca = maybe_reduce_features(X_feat, self.max_feat_dim, self.seed)
             norm_stats = None
 
         self._cld_model, self._feat_mu, self._feat_sigma = fit_cld_head(
@@ -136,6 +144,8 @@ class FoundationCLDAdapter(BaseAdapter):
         return self
 
     def _predict_from_features(self, X_feat: np.ndarray) -> np.ndarray:
+        if self._feat_pca is not None:
+            X_feat = self._feat_pca.transform(X_feat).astype(np.float32)
         X_norm = ((X_feat - self._feat_mu) / self._feat_sigma).astype(np.float32)
         return np.array(self._cld_model.stacked_predict(
             jnp.array(X_norm), self._cld_model.theta1, self._cld_model.theta2

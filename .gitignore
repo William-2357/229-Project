@@ -57,3 +57,13 @@ results/bciciv2a/cbramod/comparison.png
 labram-base.pth
 
 
+modal_runner.py
+.gitignore
+adaptation/foundation_source_cld.py
+.gitignore
+adaptation/foundation_source_lora.py
+adaptation/foundation_source_finetune.py
+run_experiment.py
+modal_runner.py
+modal_runner.py
+run_experiment.py

@@ -1,0 +1,6329 @@
+{
+  "foundation_sft_loso/subject_01": {
+    "0.0": {
+      "bca": 0.5326617826617827,
+      "kappa": 0.3581027667984189,
+      "ci_lo": 0.46904761904761905,
+      "ci_hi": 0.5378151260504201,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 134.03088974952698,
+      "protocol": "loso",
+      "subject_id": 1,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:45:20.766392"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_02": {
+    "0.0": {
+      "bca": 0.3547619047619047,
+      "kappa": 0.14807463279078992,
+      "ci_lo": 0.3375,
+      "ci_hi": 0.3923611111111111,
+      "p_value": 0.035,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 208.07913851737976,
+      "protocol": "loso",
+      "subject_id": 2,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:32.180763"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_03": {
+    "0.0": {
+      "bca": 0.47023809523809523,
+      "kappa": 0.2924045651318379,
+      "ci_lo": 0.4548611111111111,
+      "ci_hi": 0.47023809523809523,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 228.95846366882324,
+      "protocol": "loso",
+      "subject_id": 3,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:47:00.106090"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_04": {
+    "0.0": {
+      "bca": 0.41796016483516485,
+      "kappa": 0.2313253012048192,
+      "ci_lo": 0.3839285714285714,
+      "ci_hi": 0.42648524720893144,
+      "p_value": 0.01,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 210.79163670539856,
+      "protocol": "loso",
+      "subject_id": 4,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:35.797197"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_05": {
+    "0.0": {
+      "bca": 0.2488095238095238,
+      "kappa": -0.0019630938358852212,
+      "ci_lo": 0.23333333333333334,
+      "ci_hi": 0.25,
+      "p_value": 0.57,
+      "significant": false,
+      "n_trials": 58,
+      "fit_time": 186.0245761871338,
+      "protocol": "loso",
+      "subject_id": 5,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:11.248083"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_06": {
+    "0.0": {
+      "bca": 0.4316418875242405,
+      "kappa": 0.23805732484076436,
+      "ci_lo": 0.3808275058275058,
+      "ci_hi": 0.4538690476190476,
+      "p_value": 0.005,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 187.580806016922,
+      "protocol": "loso",
+      "subject_id": 6,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:14.717151"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_07": {
+    "0.0": {
+      "bca": 0.4476190476190476,
+      "kappa": 0.2617342879872713,
+      "ci_lo": 0.283234126984127,
+      "ci_hi": 0.5589285714285714,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 172.81949496269226,
+      "protocol": "loso",
+      "subject_id": 7,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:04.440561"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_08": {
+    "0.0": {
+      "bca": 0.3678571428571429,
+      "kappa": 0.15545060999606453,
+      "ci_lo": 0.3678571428571429,
+      "ci_hi": 0.41666666666666663,
+      "p_value": 0.005,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 221.18515014648438,
+      "protocol": "loso",
+      "subject_id": 8,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:52.964769"
+      }
+    }
+  },
+  "foundation_sft_loso/subject_09": {
+    "0.0": {
+      "bca": 0.4897382029734971,
+      "kappa": 0.3141505715411903,
+      "ci_lo": 0.47619047619047616,
+      "ci_hi": 0.49067599067599066,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 208.64357805252075,
+      "protocol": "loso",
+      "subject_id": 9,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_loso",
+        "saved_at": "2026-05-31T06:46:40.350691"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_01": {
+    "0.0": {
+      "bca": 0.5233516483516484,
+      "kappa": 0.35014005602240894,
+      "ci_lo": 0.39845938375350143,
+      "ci_hi": 0.5964285714285714,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 74.26025867462158,
+      "protocol": "loso",
+      "subject_id": 1,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:44:26.285079"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_02": {
+    "0.0": {
+      "bca": 0.3726190476190476,
+      "kappa": 0.17175723919079733,
+      "ci_lo": 0.325,
+      "ci_hi": 0.4558531746031746,
+      "p_value": 0.01,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 184.76006984710693,
+      "protocol": "loso",
+      "subject_id": 2,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:47:33.836614"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_03": {
+    "0.0": {
+      "bca": 0.46785714285714286,
+      "kappa": 0.29100946372239744,
+      "ci_lo": 0.45039682539682535,
+      "ci_hi": 0.4875,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 157.37980008125305,
+      "protocol": "loso",
+      "subject_id": 3,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:48:00.013758"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_04": {
+    "0.0": {
+      "bca": 0.3856684981684982,
+      "kappa": 0.18572001604492572,
+      "ci_lo": 0.3526785714285714,
+      "ci_hi": 0.4001694577352472,
+      "p_value": 0.025,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 250.45857572555542,
+      "protocol": "loso",
+      "subject_id": 4,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:50:17.687927"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_05": {
+    "0.0": {
+      "bca": 0.2476190476190476,
+      "kappa": -0.0015698587127157548,
+      "ci_lo": 0.21875,
+      "ci_hi": 0.25833333333333336,
+      "p_value": 0.62,
+      "significant": false,
+      "n_trials": 58,
+      "fit_time": 154.71603345870972,
+      "protocol": "loso",
+      "subject_id": 5,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:48:48.097031"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_06": {
+    "0.0": {
+      "bca": 0.3745151906916613,
+      "kappa": 0.16077170418006426,
+      "ci_lo": 0.3353729603729604,
+      "ci_hi": 0.40625,
+      "p_value": 0.01,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 117.50763320922852,
+      "protocol": "loso",
+      "subject_id": 6,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:48:14.219954"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_07": {
+    "0.0": {
+      "bca": 0.4821428571428571,
+      "kappa": 0.30870083432657924,
+      "ci_lo": 0.4350198412698413,
+      "ci_hi": 0.5339285714285714,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 176.98694515228271,
+      "protocol": "loso",
+      "subject_id": 7,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:49:31.680881"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_08": {
+    "0.0": {
+      "bca": 0.3333333333333333,
+      "kappa": 0.1111984282907662,
+      "ci_lo": 0.3333333333333333,
+      "ci_hi": 0.375,
+      "p_value": 0.005,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 137.35257053375244,
+      "protocol": "loso",
+      "subject_id": 8,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:48:55.393996"
+      }
+    }
+  },
+  "foundation_sft_ea/subject_09": {
+    "0.0": {
+      "bca": 0.4571751777634131,
+      "kappa": 0.2698662470495673,
+      "ci_lo": 0.40327380952380953,
+      "ci_hi": 0.4836829836829837,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 172.95994925498962,
+      "protocol": "loso",
+      "subject_id": 9,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea",
+        "saved_at": "2026-05-31T06:49:36.385558"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_01": {
+    "0.0": {
+      "bca": 0.46291208791208793,
+      "kappa": 0.2564102564102564,
+      "ci_lo": 0.45833333333333337,
+      "ci_hi": 0.47058823529411764,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 249.94228959083557,
+      "protocol": "loso",
+      "subject_id": 1,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:51:06.511128"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_02": {
+    "0.0": {
+      "bca": 0.35714285714285715,
+      "kappa": 0.14841269841269844,
+      "ci_lo": 0.3402777777777778,
+      "ci_hi": 0.4041666666666667,
+      "p_value": 0.005,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 223.9401195049286,
+      "protocol": "loso",
+      "subject_id": 2,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:50:46.786934"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_03": {
+    "0.0": {
+      "bca": 0.35714285714285715,
+      "kappa": 0.13636363636363635,
+      "ci_lo": 0.3125,
+      "ci_hi": 0.41666666666666663,
+      "p_value": 0.005,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 256.1332883834839,
+      "protocol": "loso",
+      "subject_id": 3,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:51:53.293764"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_04": {
+    "0.0": {
+      "bca": 0.39107142857142857,
+      "kappa": 0.20483870967741935,
+      "ci_lo": 0.3375,
+      "ci_hi": 0.44956140350877194,
+      "p_value": 0.01,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 184.80264806747437,
+      "protocol": "loso",
+      "subject_id": 4,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:51:06.654338"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_05": {
+    "0.0": {
+      "bca": 0.25,
+      "kappa": 0.0,
+      "ci_lo": 0.25,
+      "ci_hi": 0.25,
+      "p_value": 1.0,
+      "significant": false,
+      "n_trials": 58,
+      "fit_time": 161.016371011734,
+      "protocol": "loso",
+      "subject_id": 5,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:50:57.180260"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_06": {
+    "0.0": {
+      "bca": 0.41895604395604397,
+      "kappa": 0.2076502732240436,
+      "ci_lo": 0.32837995337995335,
+      "ci_hi": 0.48214285714285715,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 191.07791829109192,
+      "protocol": "loso",
+      "subject_id": 6,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:52:01.410163"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_07": {
+    "0.0": {
+      "bca": 0.26785714285714285,
+      "kappa": 0.023647294589178247,
+      "ci_lo": 0.26071428571428573,
+      "ci_hi": 0.2777777777777778,
+      "p_value": 0.33,
+      "significant": false,
+      "n_trials": 58,
+      "fit_time": 172.90514087677002,
+      "protocol": "loso",
+      "subject_id": 7,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:51:50.484590"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_08": {
+    "0.0": {
+      "bca": 0.25,
+      "kappa": 0.0,
+      "ci_lo": 0.25,
+      "ci_hi": 0.25,
+      "p_value": 1.0,
+      "significant": false,
+      "n_trials": 58,
+      "fit_time": 143.6058897972107,
+      "protocol": "loso",
+      "subject_id": 8,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:51:57.509231"
+      }
+    }
+  },
+  "foundation_sft_tta/subject_09": {
+    "0.0": {
+      "bca": 0.41208791208791207,
+      "kappa": 0.20485703094398755,
+      "ci_lo": 0.39285714285714285,
+      "ci_hi": 0.41229603729603725,
+      "p_value": 0.0,
+      "significant": true,
+      "n_trials": 58,
+      "fit_time": 221.8810818195343,
+      "protocol": "loso",
+      "subject_id": 9,
+      "k_minutes": 0.0,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_tta",
+        "saved_at": "2026-05-31T06:53:21.116598"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_01": {
+    "0.5": {
+      "bca": 0.5441697191697191,
+      "std_bca": 0.0068041381743977475,
+      "kappa": 0.3806609632372573,
+      "ci_lo": 0.5393589743589743,
+      "ci_hi": 0.6642857142857143,
+      "fit_time": 51.647934913635254,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.038187"
+      }
+    },
+    "1.0": {
+      "bca": 0.546947496947497,
+      "std_bca": 0.0068041381743977475,
+      "kappa": 0.3850708672385574,
+      "ci_lo": 0.5397313797313796,
+      "ci_hi": 0.6690476190476191,
+      "fit_time": 0.5402364730834961,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.040123"
+      }
+    },
+    "2.0": {
+      "bca": 0.5413919413919414,
+      "std_bca": 0.005555555555555581,
+      "kappa": 0.3762510592359572,
+      "ci_lo": 0.5389865689865689,
+      "ci_hi": 0.6595238095238095,
+      "fit_time": 0.6830076694488525,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.041380"
+      }
+    },
+    "5.0": {
+      "bca": 0.5836996336996337,
+      "std_bca": 0.019011385028454942,
+      "kappa": 0.42830197620773064,
+      "ci_lo": 0.5751526251526251,
+      "ci_hi": 0.6672268907563025,
+      "fit_time": 2.428888463973999,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.042495"
+      }
+    },
+    "10.0": {
+      "bca": 0.5693833943833944,
+      "std_bca": 0.026303757279443046,
+      "kappa": 0.4102121300679439,
+      "ci_lo": 0.5676984126984127,
+      "ci_hi": 0.6552380952380952,
+      "fit_time": 3.0075737953186037,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.043613"
+      }
+    },
+    "15.0": {
+      "bca": 0.6813186813186813,
+      "std_bca": 0.048991865690805325,
+      "kappa": 0.5419431135844672,
+      "ci_lo": 0.6813186813186813,
+      "ci_hi": 0.7224229691876751,
+      "fit_time": 6.750146865844727,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.044917"
+      }
+    },
+    "30.0": {
+      "bca": 0.7142551892551893,
+      "std_bca": 0.02448602192874416,
+      "kappa": 0.5847144649511717,
+      "ci_lo": 0.7130090497737557,
+      "ci_hi": 0.7661764705882353,
+      "fit_time": 10.306973695755005,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:17.046218"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_02": {
+    "0.5": {
+      "bca": 0.27976190476190477,
+      "std_bca": 0.017284468012268125,
+      "kappa": 0.04413161930434264,
+      "ci_lo": 0.25,
+      "ci_hi": 0.32251984126984123,
+      "fit_time": 37.067931938171384,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.504046"
+      }
+    },
+    "1.0": {
+      "bca": 0.2859523809523809,
+      "std_bca": 0.006666666666666665,
+      "kappa": 0.05295007013133692,
+      "ci_lo": 0.2745238095238095,
+      "ci_hi": 0.325297619047619,
+      "fit_time": 0.527160930633545,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.505385"
+      }
+    },
+    "2.0": {
+      "bca": 0.2666666666666666,
+      "std_bca": 0.024350986048658277,
+      "kappa": 0.026164096029780138,
+      "ci_lo": 0.2542857142857143,
+      "ci_hi": 0.30238095238095236,
+      "fit_time": 0.729032325744629,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.506004"
+      }
+    },
+    "5.0": {
+      "bca": 0.24023809523809522,
+      "std_bca": 0.044040539971686665,
+      "kappa": -0.010354543921756965,
+      "ci_lo": 0.2099801587301587,
+      "ci_hi": 0.27888888888888885,
+      "fit_time": 1.6492677688598634,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.506556"
+      }
+    },
+    "10.0": {
+      "bca": 0.19571428571428573,
+      "std_bca": 0.020490028546619198,
+      "kappa": -0.06973598253036557,
+      "ci_lo": 0.16779761904761906,
+      "ci_hi": 0.236984126984127,
+      "fit_time": 3.096735715866089,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.507107"
+      }
+    },
+    "15.0": {
+      "bca": 0.20952380952380953,
+      "std_bca": 0.03828079807336555,
+      "kappa": -0.05209647846292516,
+      "ci_lo": 0.12946428571428573,
+      "ci_hi": 0.2942857142857143,
+      "fit_time": 5.166361951828003,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.507672"
+      }
+    },
+    "30.0": {
+      "bca": 0.20309523809523808,
+      "std_bca": 0.03823338048381223,
+      "kappa": -0.06077776953378311,
+      "ci_lo": 0.14055555555555554,
+      "ci_hi": 0.2633333333333333,
+      "fit_time": 5.199401235580444,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:56.508225"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_03": {
+    "0.5": {
+      "bca": 0.48285714285714293,
+      "std_bca": 0.05275085839324787,
+      "kappa": 0.30958006591067466,
+      "ci_lo": 0.4622619047619049,
+      "ci_hi": 0.5015873015873015,
+      "fit_time": 40.10626354217529,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.820082"
+      }
+    },
+    "1.0": {
+      "bca": 0.4345238095238095,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.2464566929133858,
+      "ci_lo": 0.42361111111111105,
+      "ci_hi": 0.44345238095238093,
+      "fit_time": 0.3848635196685791,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.822750"
+      }
+    },
+    "2.0": {
+      "bca": 0.46571428571428564,
+      "std_bca": 0.046622914378283066,
+      "kappa": 0.2871838887437649,
+      "ci_lo": 0.45327380952380947,
+      "ci_hi": 0.47630952380952374,
+      "fit_time": 0.5690646648406983,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.823352"
+      }
+    },
+    "5.0": {
+      "bca": 0.5228571428571429,
+      "std_bca": 0.03190298502514676,
+      "kappa": 0.3636072070368378,
+      "ci_lo": 0.49400793650793656,
+      "ci_hi": 0.5541468253968255,
+      "fit_time": 1.6767249584197998,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.823835"
+      }
+    },
+    "10.0": {
+      "bca": 0.5647619047619047,
+      "std_bca": 0.03805503831351485,
+      "kappa": 0.4183619591102639,
+      "ci_lo": 0.5342261904761904,
+      "ci_hi": 0.6058333333333333,
+      "fit_time": 3.1053279876708983,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.824280"
+      }
+    },
+    "15.0": {
+      "bca": 0.5716666666666667,
+      "std_bca": 0.02817583274759432,
+      "kappa": 0.42749081558714075,
+      "ci_lo": 0.5640476190476191,
+      "ci_hi": 0.593611111111111,
+      "fit_time": 4.258789587020874,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.824671"
+      }
+    },
+    "30.0": {
+      "bca": 0.5997619047619047,
+      "std_bca": 0.016960003636674395,
+      "kappa": 0.46408198406212653,
+      "ci_lo": 0.5733134920634921,
+      "ci_hi": 0.6479761904761905,
+      "fit_time": 5.754936695098877,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:04.825045"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_04": {
+    "0.5": {
+      "bca": 0.4041666666666666,
+      "std_bca": 0.007654655446197431,
+      "kappa": 0.2215736512702275,
+      "ci_lo": 0.38125,
+      "ci_hi": 0.41228070175438597,
+      "fit_time": 47.737126398086545,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.647285"
+      }
+    },
+    "1.0": {
+      "bca": 0.4090086996336996,
+      "std_bca": 0.007847723547849293,
+      "kappa": 0.22641871092418908,
+      "ci_lo": 0.38495614035087716,
+      "ci_hi": 0.4175031328320801,
+      "fit_time": 0.5692227363586426,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.652055"
+      }
+    },
+    "2.0": {
+      "bca": 0.39194139194139194,
+      "std_bca": 0.005700549450549453,
+      "kappa": 0.20318440076521366,
+      "ci_lo": 0.36339285714285713,
+      "ci_hi": 0.40603070175438594,
+      "fit_time": 0.7091872692108154,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.652826"
+      }
+    },
+    "5.0": {
+      "bca": 0.4790750915750916,
+      "std_bca": 0.04267758932574794,
+      "kappa": 0.3085086300251794,
+      "ci_lo": 0.4319204260651629,
+      "ci_hi": 0.5060052447552448,
+      "fit_time": 2.654064178466797,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.653537"
+      }
+    },
+    "10.0": {
+      "bca": 0.47354624542124546,
+      "std_bca": 0.0186127007216796,
+      "kappa": 0.2998945990913054,
+      "ci_lo": 0.4019642857142857,
+      "ci_hi": 0.5187400318979266,
+      "fit_time": 4.6760814666748045,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.654097"
+      }
+    },
+    "15.0": {
+      "bca": 0.4951144688644688,
+      "std_bca": 0.0174064313741017,
+      "kappa": 0.3279776055536106,
+      "ci_lo": 0.4396428571428571,
+      "ci_hi": 0.5249900318979266,
+      "fit_time": 6.1469714641571045,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.654636"
+      }
+    },
+    "30.0": {
+      "bca": 0.500260989010989,
+      "std_bca": 0.022804373756085745,
+      "kappa": 0.33333233974505666,
+      "ci_lo": 0.4133928571428571,
+      "ci_hi": 0.561353668261563,
+      "fit_time": 5.732604217529297,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.655298"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_05": {
+    "0.5": {
+      "bca": 0.22095238095238093,
+      "std_bca": 0.00816496580927726,
+      "kappa": -0.037497893011789164,
+      "ci_lo": 0.2125,
+      "ci_hi": 0.22458333333333336,
+      "fit_time": 39.197559690475465,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.139037"
+      }
+    },
+    "1.0": {
+      "bca": 0.22095238095238093,
+      "std_bca": 0.00816496580927726,
+      "kappa": -0.03733708720836315,
+      "ci_lo": 0.2125,
+      "ci_hi": 0.22458333333333336,
+      "fit_time": 0.3729494571685791,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.139736"
+      }
+    },
+    "2.0": {
+      "bca": 0.23976190476190476,
+      "std_bca": 0.022682867359646777,
+      "kappa": -0.012795662031369925,
+      "ci_lo": 0.22152777777777777,
+      "ci_hi": 0.25422619047619044,
+      "fit_time": 0.6440332412719727,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.140165"
+      }
+    },
+    "5.0": {
+      "bca": 0.2571428571428571,
+      "std_bca": 0.013127665478181174,
+      "kappa": 0.009776511585116476,
+      "ci_lo": 0.22980158730158734,
+      "ci_hi": 0.2671428571428572,
+      "fit_time": 1.3230195999145509,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.140525"
+      }
+    },
+    "10.0": {
+      "bca": 0.2519047619047619,
+      "std_bca": 0.016053340791464366,
+      "kappa": 0.0019845623097662912,
+      "ci_lo": 0.20944444444444446,
+      "ci_hi": 0.2833333333333333,
+      "fit_time": 2.5654101848602293,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.140885"
+      }
+    },
+    "15.0": {
+      "bca": 0.2719047619047619,
+      "std_bca": 0.04194532668652138,
+      "kappa": 0.028572887407344472,
+      "ci_lo": 0.25053571428571425,
+      "ci_hi": 0.30452380952380953,
+      "fit_time": 3.7994497299194334,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.141243"
+      }
+    },
+    "30.0": {
+      "bca": 0.22904761904761903,
+      "std_bca": 0.022010613807465825,
+      "kappa": -0.02803970591761058,
+      "ci_lo": 0.19646825396825396,
+      "ci_hi": 0.2690079365079365,
+      "fit_time": 6.442351007461548,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:56:07.141782"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_06": {
+    "0.5": {
+      "bca": 0.5074660633484163,
+      "std_bca": 0.02872758682431171,
+      "kappa": 0.33181365849535355,
+      "ci_lo": 0.4343822843822844,
+      "ci_hi": 0.5699404761904762,
+      "fit_time": 43.22783432006836,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.502207"
+      }
+    },
+    "1.0": {
+      "bca": 0.5279896574014221,
+      "std_bca": 0.00588235294117645,
+      "kappa": 0.35874273961427167,
+      "ci_lo": 0.4427738927738928,
+      "ci_hi": 0.5967261904761905,
+      "fit_time": 0.49485149383544924,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.503141"
+      }
+    },
+    "2.0": {
+      "bca": 0.5173561732385261,
+      "std_bca": 0.009421114395319936,
+      "kappa": 0.34556437894629094,
+      "ci_lo": 0.4382284382284382,
+      "ci_hi": 0.5824404761904761,
+      "fit_time": 0.6287649631500244,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.503708"
+      }
+    },
+    "5.0": {
+      "bca": 0.48977052359405304,
+      "std_bca": 0.0160047946995824,
+      "kappa": 0.3103141723039917,
+      "ci_lo": 0.4131701631701632,
+      "ci_hi": 0.5607142857142857,
+      "fit_time": 1.5580923080444335,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.504358"
+      }
+    },
+    "10.0": {
+      "bca": 0.46423723335488043,
+      "std_bca": 0.015019580508186888,
+      "kappa": 0.27396531589655504,
+      "ci_lo": 0.4231934731934732,
+      "ci_hi": 0.49554514113337633,
+      "fit_time": 3.1497477531433105,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.504884"
+      }
+    },
+    "15.0": {
+      "bca": 0.4343083387201035,
+      "std_bca": 0.03170807721802673,
+      "kappa": 0.23415065204772612,
+      "ci_lo": 0.38613053613053616,
+      "ci_hi": 0.4648809523809524,
+      "fit_time": 6.188756799697876,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.505356"
+      }
+    },
+    "30.0": {
+      "bca": 0.44321266968325795,
+      "std_bca": 0.04417246925882068,
+      "kappa": 0.24669045970054468,
+      "ci_lo": 0.3945221445221445,
+      "ci_hi": 0.481547619047619,
+      "fit_time": 5.58251371383667,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:30.505812"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_07": {
+    "0.5": {
+      "bca": 0.4685714285714285,
+      "std_bca": 0.006190476190476191,
+      "kappa": 0.2907277863733803,
+      "ci_lo": 0.3517857142857143,
+      "ci_hi": 0.5664285714285714,
+      "fit_time": 43.419507122039796,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.557609"
+      }
+    },
+    "1.0": {
+      "bca": 0.47904761904761906,
+      "std_bca": 0.006190476190476191,
+      "kappa": 0.3049258476302596,
+      "ci_lo": 0.40109126984126986,
+      "ci_hi": 0.5622619047619047,
+      "fit_time": 0.625532579421997,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.559112"
+      }
+    },
+    "2.0": {
+      "bca": 0.4821428571428571,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.3092497022628027,
+      "ci_lo": 0.3993055555555556,
+      "ci_hi": 0.575595238095238,
+      "fit_time": 0.7049922943115234,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.559851"
+      }
+    },
+    "5.0": {
+      "bca": 0.4585714285714285,
+      "std_bca": 0.018076431329621237,
+      "kappa": 0.27670466865817606,
+      "ci_lo": 0.37609126984126984,
+      "ci_hi": 0.5155952380952381,
+      "fit_time": 1.871429681777954,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.560448"
+      }
+    },
+    "10.0": {
+      "bca": 0.4730952380952381,
+      "std_bca": 0.01803247259882047,
+      "kappa": 0.2952059525974908,
+      "ci_lo": 0.4409126984126984,
+      "ci_hi": 0.5091666666666665,
+      "fit_time": 4.116408491134644,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.561025"
+      }
+    },
+    "15.0": {
+      "bca": 0.4985714285714285,
+      "std_bca": 0.03436663730476387,
+      "kappa": 0.32753782514056257,
+      "ci_lo": 0.47095238095238096,
+      "ci_hi": 0.5480952380952381,
+      "fit_time": 9.255559253692628,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.561648"
+      }
+    },
+    "30.0": {
+      "bca": 0.505,
+      "std_bca": 0.02037627894793775,
+      "kappa": 0.3367242633507187,
+      "ci_lo": 0.4895238095238096,
+      "ci_hi": 0.5346428571428572,
+      "fit_time": 9.19309492111206,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:58:22.562296"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_08": {
+    "0.5": {
+      "bca": 0.4111904761904762,
+      "std_bca": 0.028107342025473738,
+      "kappa": 0.21288643609241115,
+      "ci_lo": 0.4111904761904762,
+      "ci_hi": 0.4920634920634921,
+      "fit_time": 22.920179748535155,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.673924"
+      }
+    },
+    "1.0": {
+      "bca": 0.40095238095238095,
+      "std_bca": 0.0004761904761904745,
+      "kappa": 0.1992110453648916,
+      "ci_lo": 0.40095238095238095,
+      "ci_hi": 0.4858134920634921,
+      "fit_time": 0.43767895698547366,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.675461"
+      }
+    },
+    "2.0": {
+      "bca": 0.4045238095238095,
+      "std_bca": 0.017059984873974157,
+      "kappa": 0.20366775136248863,
+      "ci_lo": 0.4045238095238095,
+      "ci_hi": 0.4920634920634921,
+      "fit_time": 0.5773377895355225,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.676012"
+      }
+    },
+    "5.0": {
+      "bca": 0.5011904761904762,
+      "std_bca": 0.04006089469104142,
+      "kappa": 0.33439138196781926,
+      "ci_lo": 0.5011904761904762,
+      "ci_hi": 0.5595238095238095,
+      "fit_time": 1.6770580768585206,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.676464"
+      }
+    },
+    "10.0": {
+      "bca": 0.48547619047619045,
+      "std_bca": 0.025824279738964277,
+      "kappa": 0.3121039890590163,
+      "ci_lo": 0.48547619047619045,
+      "ci_hi": 0.5606150793650794,
+      "fit_time": 2.523182010650635,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.676896"
+      }
+    },
+    "15.0": {
+      "bca": 0.49642857142857144,
+      "std_bca": 0.029498837365152072,
+      "kappa": 0.32634269619857553,
+      "ci_lo": 0.49642857142857144,
+      "ci_hi": 0.5630357142857143,
+      "fit_time": 4.294586133956909,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.677306"
+      }
+    },
+    "30.0": {
+      "bca": 0.5064285714285715,
+      "std_bca": 0.012293648231833874,
+      "kappa": 0.3399792370584085,
+      "ci_lo": 0.5064285714285715,
+      "ci_hi": 0.5662301587301588,
+      "fit_time": 5.253256702423096,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:55:39.677921"
+      }
+    }
+  },
+  "foundation_sft_finetune/subject_09": {
+    "0.5": {
+      "bca": 0.5130575307045895,
+      "std_bca": 0.01100487466698219,
+      "kappa": 0.35225326583391636,
+      "ci_lo": 0.48613053613053614,
+      "ci_hi": 0.520426632191338,
+      "fit_time": 40.11143083572388,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.107725"
+      }
+    },
+    "1.0": {
+      "bca": 0.518939883645766,
+      "std_bca": 0.00588235294117645,
+      "kappa": 0.361278193481521,
+      "ci_lo": 0.4952214452214451,
+      "ci_hi": 0.520426632191338,
+      "fit_time": 0.5074851989746094,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.110981"
+      }
+    },
+    "2.0": {
+      "bca": 0.5153684550743375,
+      "std_bca": 0.012314580579624266,
+      "kappa": 0.35662029447688914,
+      "ci_lo": 0.48904845154845156,
+      "ci_hi": 0.5206210456210456,
+      "fit_time": 0.6147545337677002,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.111487"
+      }
+    },
+    "5.0": {
+      "bca": 0.4888817065287654,
+      "std_bca": 0.025632595544377423,
+      "kappa": 0.3188958586670627,
+      "ci_lo": 0.45297619047619053,
+      "ci_hi": 0.5118175941705354,
+      "fit_time": 1.6625587940216064,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.111900"
+      }
+    },
+    "10.0": {
+      "bca": 0.46394634776987714,
+      "std_bca": 0.028968337720782642,
+      "kappa": 0.28689182931052387,
+      "ci_lo": 0.4258928571428572,
+      "ci_hi": 0.49748290924761507,
+      "fit_time": 3.13397159576416,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.112296"
+      }
+    },
+    "15.0": {
+      "bca": 0.5926632191338074,
+      "std_bca": 0.02253227141981575,
+      "kappa": 0.46073083736637777,
+      "ci_lo": 0.5571428571428572,
+      "ci_hi": 0.6048162621692034,
+      "fit_time": 8.848869228363037,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.112689"
+      }
+    },
+    "30.0": {
+      "bca": 0.5217840982546865,
+      "std_bca": 0.04164965639175215,
+      "kappa": 0.36585483841347005,
+      "ci_lo": 0.4794642857142857,
+      "ci_hi": 0.5476689976689977,
+      "fit_time": 5.578718757629394,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_finetune",
+        "saved_at": "2026-05-31T06:57:39.113051"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_01": {
+    "0.5": {
+      "bca": 0.511080586080586,
+      "std_bca": 0.02153748035441719,
+      "kappa": 0.3297663204894455,
+      "ci_lo": 0.4747737556561086,
+      "ci_hi": 0.5241262658909718,
+      "fit_time": 97.52192811965942,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.496226"
+      }
+    },
+    "1.0": {
+      "bca": 0.5172161172161173,
+      "std_bca": 0.025443011211489716,
+      "kappa": 0.33782381122301663,
+      "ci_lo": 0.45963585434173665,
+      "ci_hi": 0.5346297493356317,
+      "fit_time": 1.2322461128234863,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.499135"
+      }
+    },
+    "2.0": {
+      "bca": 0.5297924297924298,
+      "std_bca": 0.026608898649465314,
+      "kappa": 0.352598795993393,
+      "ci_lo": 0.5010924369747899,
+      "ci_hi": 0.5398128995187819,
+      "fit_time": 1.3208255290985107,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.500159"
+      }
+    },
+    "5.0": {
+      "bca": 0.6272893772893773,
+      "std_bca": 0.04350325570577586,
+      "kappa": 0.47591973653440167,
+      "ci_lo": 0.6127041585865116,
+      "ci_hi": 0.6620638511814982,
+      "fit_time": 3.511602592468262,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.501203"
+      }
+    },
+    "10.0": {
+      "bca": 0.6634004884004885,
+      "std_bca": 0.04393172319300626,
+      "kappa": 0.5134456137109156,
+      "ci_lo": 0.6544803562450622,
+      "ci_hi": 0.7197759103641457,
+      "fit_time": 7.69892144203186,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.501993"
+      }
+    },
+    "15.0": {
+      "bca": 0.6615689865689866,
+      "std_bca": 0.058332414859721037,
+      "kappa": 0.5120184890600886,
+      "ci_lo": 0.6409893701070172,
+      "ci_hi": 0.7103081232492996,
+      "fit_time": 12.246213150024413,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.502635"
+      }
+    },
+    "30.0": {
+      "bca": 0.6634310134310135,
+      "std_bca": 0.02539370666255287,
+      "kappa": 0.5118429152253914,
+      "ci_lo": 0.6578837175896,
+      "ci_hi": 0.7095378151260505,
+      "fit_time": 11.343801069259644,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:05:19.503174"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_02": {
+    "0.5": {
+      "bca": 0.36809523809523803,
+      "std_bca": 0.008464947064110082,
+      "kappa": 0.16354772672253357,
+      "ci_lo": 0.35829365079365083,
+      "ci_hi": 0.38476190476190475,
+      "fit_time": 98.70062527656555,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.149867"
+      }
+    },
+    "1.0": {
+      "bca": 0.38595238095238094,
+      "std_bca": 0.008464947064110108,
+      "kappa": 0.18678388137713148,
+      "ci_lo": 0.37569444444444444,
+      "ci_hi": 0.4083333333333333,
+      "fit_time": 0.8884678840637207,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.150866"
+      }
+    },
+    "2.0": {
+      "bca": 0.3826190476190476,
+      "std_bca": 0.00837066468154619,
+      "kappa": 0.18264652587020164,
+      "ci_lo": 0.3642063492063492,
+      "ci_hi": 0.406031746031746,
+      "fit_time": 1.08404860496521,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.151297"
+      }
+    },
+    "5.0": {
+      "bca": 0.3685714285714285,
+      "std_bca": 0.028873404187725337,
+      "kappa": 0.16270539673870524,
+      "ci_lo": 0.3417460317460318,
+      "ci_hi": 0.38571428571428573,
+      "fit_time": 3.6005951881408693,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.151714"
+      }
+    },
+    "10.0": {
+      "bca": 0.31761904761904763,
+      "std_bca": 0.02647464880746215,
+      "kappa": 0.09127634938585652,
+      "ci_lo": 0.2738492063492063,
+      "ci_hi": 0.34311507936507935,
+      "fit_time": 6.587129783630371,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.152093"
+      }
+    },
+    "15.0": {
+      "bca": 0.3592857142857143,
+      "std_bca": 0.05650637593707413,
+      "kappa": 0.1463638556270584,
+      "ci_lo": 0.3246031746031746,
+      "ci_hi": 0.3846031746031746,
+      "fit_time": 10.815489864349365,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.152485"
+      }
+    },
+    "30.0": {
+      "bca": 0.38499999999999995,
+      "std_bca": 0.05829979599580025,
+      "kappa": 0.17969319839411407,
+      "ci_lo": 0.33984126984126983,
+      "ci_hi": 0.4155555555555555,
+      "fit_time": 11.57330355644226,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:07:21.152868"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_03": {
+    "0.5": {
+      "bca": 0.47190476190476194,
+      "std_bca": 0.006326347740755461,
+      "kappa": 0.2959188163262262,
+      "ci_lo": 0.450813492063492,
+      "ci_hi": 0.47644841269841265,
+      "fit_time": 110.28575210571289,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.362498"
+      }
+    },
+    "1.0": {
+      "bca": 0.46880952380952384,
+      "std_bca": 0.010921280896361648,
+      "kappa": 0.2915105143637754,
+      "ci_lo": 0.44587301587301587,
+      "ci_hi": 0.4704761904761905,
+      "fit_time": 1.1220082759857177,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.363934"
+      }
+    },
+    "2.0": {
+      "bca": 0.46904761904761905,
+      "std_bca": 0.0,
+      "kappa": 0.2915681639085894,
+      "ci_lo": 0.45178571428571423,
+      "ci_hi": 0.46904761904761905,
+      "fit_time": 1.3355947971343993,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.364546"
+      }
+    },
+    "5.0": {
+      "bca": 0.5852380952380952,
+      "std_bca": 0.02740268288833152,
+      "kappa": 0.448557690578161,
+      "ci_lo": 0.5371428571428571,
+      "ci_hi": 0.6542261904761905,
+      "fit_time": 4.371717071533203,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.365086"
+      }
+    },
+    "10.0": {
+      "bca": 0.6135714285714287,
+      "std_bca": 0.07479980840796638,
+      "kappa": 0.48578162351987836,
+      "ci_lo": 0.5785714285714285,
+      "ci_hi": 0.6374801587301586,
+      "fit_time": 6.562752723693848,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.365616"
+      }
+    },
+    "15.0": {
+      "bca": 0.6666666666666667,
+      "std_bca": 0.025298669445979985,
+      "kappa": 0.554621195210457,
+      "ci_lo": 0.6106150793650793,
+      "ci_hi": 0.7129761904761904,
+      "fit_time": 12.031908750534058,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.366117"
+      }
+    },
+    "30.0": {
+      "bca": 0.6761904761904762,
+      "std_bca": 0.04871942904468309,
+      "kappa": 0.5680650690447919,
+      "ci_lo": 0.6118253968253968,
+      "ci_hi": 0.7464285714285714,
+      "fit_time": 12.181442975997925,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:59.366637"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_04": {
+    "0.5": {
+      "bca": 0.44769917582417584,
+      "std_bca": 0.009000528931243128,
+      "kappa": 0.2710625929279767,
+      "ci_lo": 0.40767686261107317,
+      "ci_hi": 0.4602896117040854,
+      "fit_time": 91.98356132507324,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.823089"
+      }
+    },
+    "1.0": {
+      "bca": 0.46027014652014653,
+      "std_bca": 0.013999442724406702,
+      "kappa": 0.2849135299898487,
+      "ci_lo": 0.42237981316928686,
+      "ci_hi": 0.47367334419966,
+      "fit_time": 0.8204162120819092,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.824063"
+      }
+    },
+    "2.0": {
+      "bca": 0.45329899267399265,
+      "std_bca": 0.013333708339380817,
+      "kappa": 0.27586259714668787,
+      "ci_lo": 0.4161298131692869,
+      "ci_hi": 0.4662193398706556,
+      "fit_time": 1.0050725936889648,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.824535"
+      }
+    },
+    "5.0": {
+      "bca": 0.4635119047619048,
+      "std_bca": 0.03448155589008887,
+      "kappa": 0.28900635327107355,
+      "ci_lo": 0.4177970494417863,
+      "ci_hi": 0.49121480493191017,
+      "fit_time": 2.5646121501922607,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.824917"
+      }
+    },
+    "10.0": {
+      "bca": 0.4844665750915752,
+      "std_bca": 0.04306459133116068,
+      "kappa": 0.31336112100333235,
+      "ci_lo": 0.4069642857142857,
+      "ci_hi": 0.5580641945773525,
+      "fit_time": 6.560654640197754,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.825296"
+      }
+    },
+    "15.0": {
+      "bca": 0.5022596153846154,
+      "std_bca": 0.03961990053308166,
+      "kappa": 0.33882099963049406,
+      "ci_lo": 0.4350888585099112,
+      "ci_hi": 0.5641171109592162,
+      "fit_time": 11.372832489013671,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.825667"
+      }
+    },
+    "30.0": {
+      "bca": 0.4965865384615384,
+      "std_bca": 0.04314775073972,
+      "kappa": 0.32834689198856504,
+      "ci_lo": 0.44187042124542125,
+      "ci_hi": 0.529994019138756,
+      "fit_time": 8.695205736160279,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:48.826028"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_05": {
+    "0.5": {
+      "bca": 0.23166666666666663,
+      "std_bca": 0.01055704727495017,
+      "kappa": -0.023763447519051482,
+      "ci_lo": 0.2104166666666667,
+      "ci_hi": 0.2480952380952381,
+      "fit_time": 84.52275204658508,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:14.998800"
+      }
+    },
+    "1.0": {
+      "bca": 0.23499999999999996,
+      "std_bca": 0.02792523221218238,
+      "kappa": -0.019369561772863773,
+      "ci_lo": 0.21875,
+      "ci_hi": 0.2450595238095238,
+      "fit_time": 0.8083622932434082,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:14.999475"
+      }
+    },
+    "2.0": {
+      "bca": 0.24999999999999994,
+      "std_bca": 0.043799170619302545,
+      "kappa": -0.0004270908990837041,
+      "ci_lo": 0.2359126984126984,
+      "ci_hi": 0.2558333333333333,
+      "fit_time": 1.241395854949951,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:14.999927"
+      }
+    },
+    "5.0": {
+      "bca": 0.3028571428571428,
+      "std_bca": 0.04198585227648977,
+      "kappa": 0.06913482819314291,
+      "ci_lo": 0.2619444444444444,
+      "ci_hi": 0.32505952380952385,
+      "fit_time": 2.6331395149230956,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:15.000308"
+      }
+    },
+    "10.0": {
+      "bca": 0.33571428571428574,
+      "std_bca": 0.02804070575321388,
+      "kappa": 0.11233510583147303,
+      "ci_lo": 0.29212301587301587,
+      "ci_hi": 0.35543650793650794,
+      "fit_time": 4.381076288223267,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:15.000667"
+      }
+    },
+    "15.0": {
+      "bca": 0.4004761904761905,
+      "std_bca": 0.06429717710854019,
+      "kappa": 0.19793225613929194,
+      "ci_lo": 0.35378968253968257,
+      "ci_hi": 0.423234126984127,
+      "fit_time": 10.733460521697998,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:15.001003"
+      }
+    },
+    "30.0": {
+      "bca": 0.37023809523809526,
+      "std_bca": 0.028161745333461777,
+      "kappa": 0.15790785734881424,
+      "ci_lo": 0.2948214285714286,
+      "ci_hi": 0.4042063492063492,
+      "fit_time": 11.397993421554565,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:06:15.001358"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_06": {
+    "0.5": {
+      "bca": 0.39072398190045243,
+      "std_bca": 0.007493506426915281,
+      "kappa": 0.1824938865231052,
+      "ci_lo": 0.36037296037296035,
+      "ci_hi": 0.4125,
+      "fit_time": 95.9663106918335,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.244084"
+      }
+    },
+    "1.0": {
+      "bca": 0.3963154492566257,
+      "std_bca": 0.02022851306430609,
+      "kappa": 0.18858782308743285,
+      "ci_lo": 0.3617923742923743,
+      "ci_hi": 0.42432775557775554,
+      "fit_time": 1.4190996646881104,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.245504"
+      }
+    },
+    "2.0": {
+      "bca": 0.4029896574014221,
+      "std_bca": 0.031457138794898844,
+      "kappa": 0.19706617405720556,
+      "ci_lo": 0.35833333333333334,
+      "ci_hi": 0.43184523809523806,
+      "fit_time": 1.6651628494262696,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.246118"
+      }
+    },
+    "5.0": {
+      "bca": 0.3738849385908209,
+      "std_bca": 0.0330288199400069,
+      "kappa": 0.16154954943110386,
+      "ci_lo": 0.31917249417249416,
+      "ci_hi": 0.4228625541125542,
+      "fit_time": 4.55826849937439,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.246634"
+      }
+    },
+    "10.0": {
+      "bca": 0.4042824822236586,
+      "std_bca": 0.025632901195130772,
+      "kappa": 0.20135272898822404,
+      "ci_lo": 0.3626186313686314,
+      "ci_hi": 0.4454045954045954,
+      "fit_time": 8.90593671798706,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.247237"
+      }
+    },
+    "15.0": {
+      "bca": 0.4245798319327731,
+      "std_bca": 0.02239305920034594,
+      "kappa": 0.22639159127224592,
+      "ci_lo": 0.38248834498834505,
+      "ci_hi": 0.4531036365595188,
+      "fit_time": 11.102851629257202,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.247938"
+      }
+    },
+    "30.0": {
+      "bca": 0.38846153846153847,
+      "std_bca": 0.017765069588516737,
+      "kappa": 0.17694169939248444,
+      "ci_lo": 0.34804778554778554,
+      "ci_hi": 0.41537837162837166,
+      "fit_time": 8.698772716522218,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:02.248504"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_07": {
+    "0.5": {
+      "bca": 0.440952380952381,
+      "std_bca": 0.017261494247992257,
+      "kappa": 0.25280229989160174,
+      "ci_lo": 0.30466269841269844,
+      "ci_hi": 0.5389285714285715,
+      "fit_time": 86.91380114555359,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.375821"
+      }
+    },
+    "1.0": {
+      "bca": 0.44833333333333336,
+      "std_bca": 0.019786272985063556,
+      "kappa": 0.26228083946115,
+      "ci_lo": 0.2991071428571429,
+      "ci_hi": 0.5522619047619048,
+      "fit_time": 1.0635015964508057,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.376785"
+      }
+    },
+    "2.0": {
+      "bca": 0.42714285714285716,
+      "std_bca": 0.0332516004763735,
+      "kappa": 0.23407784886143396,
+      "ci_lo": 0.2984126984126984,
+      "ci_hi": 0.5332142857142858,
+      "fit_time": 1.5374847888946532,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.377219"
+      }
+    },
+    "5.0": {
+      "bca": 0.4476190476190475,
+      "std_bca": 0.020019831437693265,
+      "kappa": 0.26211826922019044,
+      "ci_lo": 0.34017857142857144,
+      "ci_hi": 0.5615476190476191,
+      "fit_time": 3.314062166213989,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.377626"
+      }
+    },
+    "10.0": {
+      "bca": 0.5292857142857142,
+      "std_bca": 0.04212065597618284,
+      "kappa": 0.3690719249368942,
+      "ci_lo": 0.5194444444444445,
+      "ci_hi": 0.5717261904761906,
+      "fit_time": 9.413396072387695,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.377984"
+      }
+    },
+    "15.0": {
+      "bca": 0.6154761904761903,
+      "std_bca": 0.030210898905832166,
+      "kappa": 0.48486155396637215,
+      "ci_lo": 0.5971230158730159,
+      "ci_hi": 0.6549801587301587,
+      "fit_time": 14.781230211257935,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.378354"
+      }
+    },
+    "30.0": {
+      "bca": 0.6319047619047619,
+      "std_bca": 0.06379175303361746,
+      "kappa": 0.5072682289773527,
+      "ci_lo": 0.6002579365079365,
+      "ci_hi": 0.6893650793650794,
+      "fit_time": 15.65362229347229,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:09.378731"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_08": {
+    "0.5": {
+      "bca": 0.46238095238095245,
+      "std_bca": 0.01333333333333333,
+      "kappa": 0.2814764134332026,
+      "ci_lo": 0.46238095238095245,
+      "ci_hi": 0.5455357142857142,
+      "fit_time": 101.63508000373841,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.185247"
+      }
+    },
+    "1.0": {
+      "bca": 0.45904761904761904,
+      "std_bca": 0.00816496580927726,
+      "kappa": 0.2770037326296133,
+      "ci_lo": 0.45904761904761904,
+      "ci_hi": 0.5344246031746032,
+      "fit_time": 1.1542937755584717,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.186641"
+      }
+    },
+    "2.0": {
+      "bca": 0.4597619047619047,
+      "std_bca": 0.029741898037385105,
+      "kappa": 0.2772226212196857,
+      "ci_lo": 0.4478174603174603,
+      "ci_hi": 0.5301190476190476,
+      "fit_time": 1.7476391792297363,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.187384"
+      }
+    },
+    "5.0": {
+      "bca": 0.5016666666666666,
+      "std_bca": 0.06288419331364188,
+      "kappa": 0.3352379360196465,
+      "ci_lo": 0.4961904761904762,
+      "ci_hi": 0.5594444444444445,
+      "fit_time": 3.6751060962677,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.187956"
+      }
+    },
+    "10.0": {
+      "bca": 0.5333333333333333,
+      "std_bca": 0.05659459201907005,
+      "kappa": 0.37607178545100123,
+      "ci_lo": 0.5016666666666666,
+      "ci_hi": 0.6028968253968254,
+      "fit_time": 7.188801050186157,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.188544"
+      }
+    },
+    "15.0": {
+      "bca": 0.5476190476190477,
+      "std_bca": 0.045406953027261734,
+      "kappa": 0.39447784164536537,
+      "ci_lo": 0.5214285714285714,
+      "ci_hi": 0.6113690476190478,
+      "fit_time": 10.236257219314576,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.189279"
+      }
+    },
+    "30.0": {
+      "bca": 0.6126190476190476,
+      "std_bca": 0.09884996303865652,
+      "kappa": 0.4813981863539,
+      "ci_lo": 0.5953968253968254,
+      "ci_hi": 0.6717857142857143,
+      "fit_time": 11.645434284210205,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:09:41.189918"
+      }
+    }
+  },
+  "foundation_sft_lora/subject_09": {
+    "0.5": {
+      "bca": 0.5111667744020686,
+      "std_bca": 0.021838636966245512,
+      "kappa": 0.35213921245417035,
+      "ci_lo": 0.48079212454212455,
+      "ci_hi": 0.515934555640438,
+      "fit_time": 95.71304354667663,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.831134"
+      }
+    },
+    "1.0": {
+      "bca": 0.5388978668390433,
+      "std_bca": 0.00803828843265086,
+      "kappa": 0.39233697783781063,
+      "ci_lo": 0.5107163669663669,
+      "ci_hi": 0.540613308260367,
+      "fit_time": 0.8287561416625977,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.832506"
+      }
+    },
+    "2.0": {
+      "bca": 0.5353264382676148,
+      "std_bca": 0.014023797704435827,
+      "kappa": 0.38778492933098235,
+      "ci_lo": 0.5044663669663669,
+      "ci_hi": 0.5406133082603671,
+      "fit_time": 1.139454174041748,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.832919"
+      }
+    },
+    "5.0": {
+      "bca": 0.531819650937298,
+      "std_bca": 0.05517600422846432,
+      "kappa": 0.37504570310575586,
+      "ci_lo": 0.5008928571428573,
+      "ci_hi": 0.54238800415271,
+      "fit_time": 3.345827341079712,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.833354"
+      }
+    },
+    "10.0": {
+      "bca": 0.5474143503555269,
+      "std_bca": 0.021119639873511262,
+      "kappa": 0.40051084676280563,
+      "ci_lo": 0.4695741758241758,
+      "ci_hi": 0.5910214785214786,
+      "fit_time": 6.7199891090393065,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.833717"
+      }
+    },
+    "15.0": {
+      "bca": 0.5307045895281189,
+      "std_bca": 0.028826886313260518,
+      "kappa": 0.3788034309603342,
+      "ci_lo": 0.45565476190476184,
+      "ci_hi": 0.5831585081585082,
+      "fit_time": 10.728563690185547,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.834086"
+      }
+    },
+    "30.0": {
+      "bca": 0.5127020038784744,
+      "std_bca": 0.019850058486118035,
+      "kappa": 0.3528175138992614,
+      "ci_lo": 0.4479270729270729,
+      "ci_hi": 0.5644547854106678,
+      "fit_time": 10.25946660041809,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_lora",
+        "saved_at": "2026-05-31T07:08:57.834461"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_01": {
+    "0.5": {
+      "bca": 0.5778388278388278,
+      "std_bca": 0.008279545267278934,
+      "kappa": 0.41939542485692216,
+      "ci_lo": 0.5517226890756302,
+      "ci_hi": 0.5892314874667816,
+      "fit_time": 101.44300150871277,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.890241"
+      }
+    },
+    "1.0": {
+      "bca": 0.5671550671550672,
+      "std_bca": 0.008241758241758256,
+      "kappa": 0.40449043319700034,
+      "ci_lo": 0.5319327731092437,
+      "ci_hi": 0.5897619047619047,
+      "fit_time": 1.4773099899291993,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.891830"
+      }
+    },
+    "2.0": {
+      "bca": 0.5855616605616605,
+      "std_bca": 0.018420939136527717,
+      "kappa": 0.42800599784105087,
+      "ci_lo": 0.5495798319327732,
+      "ci_hi": 0.6002136752136751,
+      "fit_time": 1.6856807231903077,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.892695"
+      }
+    },
+    "5.0": {
+      "bca": 0.6077838827838827,
+      "std_bca": 0.0625324751897024,
+      "kappa": 0.4531546871803741,
+      "ci_lo": 0.5746911585146879,
+      "ci_hi": 0.6730392156862746,
+      "fit_time": 4.1714025974273685,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.893312"
+      }
+    },
+    "10.0": {
+      "bca": 0.6860805860805861,
+      "std_bca": 0.03867262365890625,
+      "kappa": 0.5438417138303897,
+      "ci_lo": 0.6836935286935287,
+      "ci_hi": 0.7283613445378151,
+      "fit_time": 7.182586240768432,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.893853"
+      }
+    },
+    "15.0": {
+      "bca": 0.6558302808302809,
+      "std_bca": 0.05547793084927823,
+      "kappa": 0.507244585516602,
+      "ci_lo": 0.627896286719816,
+      "ci_hi": 0.701890756302521,
+      "fit_time": 12.32587423324585,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.894373"
+      }
+    },
+    "30.0": {
+      "bca": 0.6900183150183151,
+      "std_bca": 0.02928924001040408,
+      "kappa": 0.5520057142936874,
+      "ci_lo": 0.6790943043884219,
+      "ci_hi": 0.7473669467787115,
+      "fit_time": 13.60241632461548,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:10:55.894881"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_02": {
+    "0.5": {
+      "bca": 0.309047619047619,
+      "std_bca": 0.015893637398360604,
+      "kappa": 0.0854341411905146,
+      "ci_lo": 0.30255952380952383,
+      "ci_hi": 0.3355952380952381,
+      "fit_time": 114.61510109901428,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.413089"
+      }
+    },
+    "1.0": {
+      "bca": 0.34238095238095234,
+      "std_bca": 0.012857142857142831,
+      "kappa": 0.13103448275862067,
+      "ci_lo": 0.3292857142857143,
+      "ci_hi": 0.39315476190476184,
+      "fit_time": 1.5066744804382324,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.414347"
+      }
+    },
+    "2.0": {
+      "bca": 0.32261904761904764,
+      "std_bca": 0.010540925533894614,
+      "kappa": 0.10401826426699719,
+      "ci_lo": 0.314047619047619,
+      "ci_hi": 0.36279761904761904,
+      "fit_time": 1.6432517051696778,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.415135"
+      }
+    },
+    "5.0": {
+      "bca": 0.3097619047619048,
+      "std_bca": 0.07223905263514732,
+      "kappa": 0.0824131314887658,
+      "ci_lo": 0.279484126984127,
+      "ci_hi": 0.3294246031746032,
+      "fit_time": 4.319709920883179,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.415779"
+      }
+    },
+    "10.0": {
+      "bca": 0.3433333333333333,
+      "std_bca": 0.050673468931135356,
+      "kappa": 0.12364074635994349,
+      "ci_lo": 0.29196428571428573,
+      "ci_hi": 0.37785714285714284,
+      "fit_time": 9.494463872909545,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.416310"
+      }
+    },
+    "15.0": {
+      "bca": 0.36380952380952386,
+      "std_bca": 0.07193707883044458,
+      "kappa": 0.15425236039134332,
+      "ci_lo": 0.3131150793650793,
+      "ci_hi": 0.4204761904761905,
+      "fit_time": 12.435851621627808,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.416861"
+      }
+    },
+    "30.0": {
+      "bca": 0.39999999999999997,
+      "std_bca": 0.09023463996400223,
+      "kappa": 0.20152707332756892,
+      "ci_lo": 0.358015873015873,
+      "ci_hi": 0.44125,
+      "fit_time": 14.45478687286377,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:15.417370"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_03": {
+    "0.5": {
+      "bca": 0.4935714285714286,
+      "std_bca": 0.02121053090601914,
+      "kappa": 0.32387651654300986,
+      "ci_lo": 0.4676388888888889,
+      "ci_hi": 0.5094246031746031,
+      "fit_time": 92.1907738685608,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.335477"
+      }
+    },
+    "1.0": {
+      "bca": 0.5216666666666666,
+      "std_bca": 0.01092128089636163,
+      "kappa": 0.3606820428438181,
+      "ci_lo": 0.45486111111111105,
+      "ci_hi": 0.5741666666666666,
+      "fit_time": 0.9669105529785156,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.336460"
+      }
+    },
+    "2.0": {
+      "bca": 0.5069047619047619,
+      "std_bca": 0.02514583315720655,
+      "kappa": 0.34186876151392853,
+      "ci_lo": 0.47484126984126984,
+      "ci_hi": 0.5259722222222223,
+      "fit_time": 1.2057708740234374,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.336911"
+      }
+    },
+    "5.0": {
+      "bca": 0.5545238095238094,
+      "std_bca": 0.035246138078278956,
+      "kappa": 0.407367083950561,
+      "ci_lo": 0.5111507936507935,
+      "ci_hi": 0.6164285714285714,
+      "fit_time": 3.231991243362427,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.337325"
+      }
+    },
+    "10.0": {
+      "bca": 0.665952380952381,
+      "std_bca": 0.061604583567728896,
+      "kappa": 0.5545395068635806,
+      "ci_lo": 0.6138888888888889,
+      "ci_hi": 0.7197619047619048,
+      "fit_time": 6.314992761611938,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.337687"
+      }
+    },
+    "15.0": {
+      "bca": 0.6585714285714286,
+      "std_bca": 0.04984897827358785,
+      "kappa": 0.5449006072170481,
+      "ci_lo": 0.6119642857142857,
+      "ci_hi": 0.696468253968254,
+      "fit_time": 9.874118852615357,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.338022"
+      }
+    },
+    "30.0": {
+      "bca": 0.6847619047619047,
+      "std_bca": 0.03967984117808899,
+      "kappa": 0.5777237058847129,
+      "ci_lo": 0.6083333333333333,
+      "ci_hi": 0.7680952380952382,
+      "fit_time": 11.387266063690186,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:10.338369"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_04": {
+    "0.5": {
+      "bca": 0.4302655677655677,
+      "std_bca": 0.015256531183422892,
+      "kappa": 0.2469920167491301,
+      "ci_lo": 0.3732142857142858,
+      "ci_hi": 0.4528010366826156,
+      "fit_time": 91.95342955589294,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.908009"
+      }
+    },
+    "1.0": {
+      "bca": 0.45750686813186814,
+      "std_bca": 0.02471795017679906,
+      "kappa": 0.2810853548682644,
+      "ci_lo": 0.40392857142857147,
+      "ci_hi": 0.48794856459330144,
+      "fit_time": 1.16046142578125,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.908880"
+      }
+    },
+    "2.0": {
+      "bca": 0.44517399267399266,
+      "std_bca": 0.013882783882783878,
+      "kappa": 0.265634077278206,
+      "ci_lo": 0.40214285714285714,
+      "ci_hi": 0.4618919457735247,
+      "fit_time": 1.2024835109710694,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.909825"
+      }
+    },
+    "5.0": {
+      "bca": 0.4603594322344322,
+      "std_bca": 0.036410303481803796,
+      "kappa": 0.2812507519160419,
+      "ci_lo": 0.38785714285714284,
+      "ci_hi": 0.515749601275917,
+      "fit_time": 3.214284610748291,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.910312"
+      }
+    },
+    "10.0": {
+      "bca": 0.4943246336996337,
+      "std_bca": 0.04205875227597042,
+      "kappa": 0.3262023375310156,
+      "ci_lo": 0.4178389154704944,
+      "ci_hi": 0.5566193893825473,
+      "fit_time": 5.7134791851043705,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.910712"
+      }
+    },
+    "15.0": {
+      "bca": 0.5523282967032966,
+      "std_bca": 0.04622222505602405,
+      "kappa": 0.4032052739071723,
+      "ci_lo": 0.4541071428571429,
+      "ci_hi": 0.6477173046251994,
+      "fit_time": 10.57788348197937,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.911075"
+      }
+    },
+    "30.0": {
+      "bca": 0.5056387362637362,
+      "std_bca": 0.03319119471137884,
+      "kappa": 0.33850343339925726,
+      "ci_lo": 0.42214285714285715,
+      "ci_hi": 0.5732755183413077,
+      "fit_time": 7.218352603912353,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:17:22.911441"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_05": {
+    "0.5": {
+      "bca": 0.24761904761904757,
+      "std_bca": 2.7755575615628914e-17,
+      "kappa": -0.0028293237449185773,
+      "ci_lo": 0.21875,
+      "ci_hi": 0.25833333333333336,
+      "fit_time": 99.04962482452393,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.315042"
+      }
+    },
+    "1.0": {
+      "bca": 0.25142857142857145,
+      "std_bca": 0.007619047619047624,
+      "kappa": 0.001961366004768439,
+      "ci_lo": 0.22430555555555554,
+      "ci_hi": 0.2638095238095238,
+      "fit_time": 1.2951397895812988,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.317155"
+      }
+    },
+    "2.0": {
+      "bca": 0.24761904761904757,
+      "std_bca": 2.7755575615628914e-17,
+      "kappa": -0.0028293237449185773,
+      "ci_lo": 0.21875,
+      "ci_hi": 0.25833333333333336,
+      "fit_time": 1.388151502609253,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.317640"
+      }
+    },
+    "5.0": {
+      "bca": 0.2542857142857143,
+      "std_bca": 0.008164965809277272,
+      "kappa": 0.005666315336312166,
+      "ci_lo": 0.2345833333333333,
+      "ci_hi": 0.2675,
+      "fit_time": 2.806310510635376,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.318024"
+      }
+    },
+    "10.0": {
+      "bca": 0.34261904761904766,
+      "std_bca": 0.039400265892262094,
+      "kappa": 0.12156274396967019,
+      "ci_lo": 0.31823412698412695,
+      "ci_hi": 0.36726190476190473,
+      "fit_time": 6.268248128890991,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.318401"
+      }
+    },
+    "15.0": {
+      "bca": 0.3497619047619048,
+      "std_bca": 0.06485812180227563,
+      "kappa": 0.13129422137730046,
+      "ci_lo": 0.29462301587301587,
+      "ci_hi": 0.37549603174603174,
+      "fit_time": 11.186699485778808,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.318764"
+      }
+    },
+    "30.0": {
+      "bca": 0.36928571428571433,
+      "std_bca": 0.073387425937379,
+      "kappa": 0.15521260622298227,
+      "ci_lo": 0.3003968253968254,
+      "ci_hi": 0.41571428571428565,
+      "fit_time": 11.922361803054809,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:19:05.319116"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_06": {
+    "0.5": {
+      "bca": 0.4730284421460892,
+      "std_bca": 0.014326495593836476,
+      "kappa": 0.2957688418645123,
+      "ci_lo": 0.4316100566100566,
+      "ci_hi": 0.4877356711915536,
+      "fit_time": 81.19020147323609,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.022699"
+      }
+    },
+    "1.0": {
+      "bca": 0.4898998060762767,
+      "std_bca": 0.008422917426788936,
+      "kappa": 0.3189471404035931,
+      "ci_lo": 0.43613053613053615,
+      "ci_hi": 0.5205357142857142,
+      "fit_time": 1.1186985492706298,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.024196"
+      }
+    },
+    "2.0": {
+      "bca": 0.43878474466709766,
+      "std_bca": 0.05295118939118157,
+      "kappa": 0.2482859989027903,
+      "ci_lo": 0.3806089743589744,
+      "ci_hi": 0.47194888444888444,
+      "fit_time": 1.587278699874878,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.024648"
+      }
+    },
+    "5.0": {
+      "bca": 0.4171622495151907,
+      "std_bca": 0.05576699000892419,
+      "kappa": 0.22005066227835463,
+      "ci_lo": 0.34015151515151515,
+      "ci_hi": 0.47706668331668334,
+      "fit_time": 3.924384117126465,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.025032"
+      }
+    },
+    "10.0": {
+      "bca": 0.440513897866839,
+      "std_bca": 0.015996699253049886,
+      "kappa": 0.24849562310153556,
+      "ci_lo": 0.3623168498168498,
+      "ci_hi": 0.4909111721611721,
+      "fit_time": 5.847596883773804,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.025422"
+      }
+    },
+    "15.0": {
+      "bca": 0.4444893341952166,
+      "std_bca": 0.015086755377724746,
+      "kappa": 0.2592598242480747,
+      "ci_lo": 0.37006118881118877,
+      "ci_hi": 0.4967823842823843,
+      "fit_time": 8.479201507568359,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.025777"
+      }
+    },
+    "30.0": {
+      "bca": 0.43133484162895924,
+      "std_bca": 0.019550262219090828,
+      "kappa": 0.2361204592645171,
+      "ci_lo": 0.37115384615384617,
+      "ci_hi": 0.468560116354234,
+      "fit_time": 7.4297527313232425,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:18:40.026124"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_07": {
+    "0.5": {
+      "bca": 0.4742857142857142,
+      "std_bca": 0.0362859017617954,
+      "kappa": 0.29833695125474957,
+      "ci_lo": 0.420734126984127,
+      "ci_hi": 0.525595238095238,
+      "fit_time": 90.1469437122345,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.047950"
+      }
+    },
+    "1.0": {
+      "bca": 0.4966666666666667,
+      "std_bca": 0.02459882193960363,
+      "kappa": 0.32722115691832737,
+      "ci_lo": 0.44878968253968254,
+      "ci_hi": 0.5531349206349206,
+      "fit_time": 0.9773790836334229,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.048807"
+      }
+    },
+    "2.0": {
+      "bca": 0.5097619047619047,
+      "std_bca": 0.013809523809523805,
+      "kappa": 0.34526942355395224,
+      "ci_lo": 0.46359126984126986,
+      "ci_hi": 0.570595238095238,
+      "fit_time": 1.2564822673797607,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.049260"
+      }
+    },
+    "5.0": {
+      "bca": 0.45690476190476187,
+      "std_bca": 0.03520590550338006,
+      "kappa": 0.27545539390305596,
+      "ci_lo": 0.4018253968253968,
+      "ci_hi": 0.5163492063492063,
+      "fit_time": 2.695788621902466,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.049629"
+      }
+    },
+    "10.0": {
+      "bca": 0.5645238095238094,
+      "std_bca": 0.050273627696072964,
+      "kappa": 0.4158391662228178,
+      "ci_lo": 0.548313492063492,
+      "ci_hi": 0.6125,
+      "fit_time": 8.796427822113037,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.049995"
+      }
+    },
+    "15.0": {
+      "bca": 0.6269047619047619,
+      "std_bca": 0.05682251478015599,
+      "kappa": 0.4986968796304489,
+      "ci_lo": 0.6119444444444444,
+      "ci_hi": 0.6721825396825396,
+      "fit_time": 13.377579545974731,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.050361"
+      }
+    },
+    "30.0": {
+      "bca": 0.5538095238095239,
+      "std_bca": 0.06437119537223772,
+      "kappa": 0.40181257147316163,
+      "ci_lo": 0.5312896825396826,
+      "ci_hi": 0.6020833333333333,
+      "fit_time": 10.835519409179687,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:41:28.050706"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_08": {
+    "0.5": {
+      "bca": 0.3333333333333333,
+      "std_bca": 0.0,
+      "kappa": 0.1111984282907662,
+      "ci_lo": 0.3333333333333333,
+      "ci_hi": 0.375,
+      "fit_time": 80.84640541076661,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.883202"
+      }
+    },
+    "1.0": {
+      "bca": 0.3333333333333333,
+      "std_bca": 0.0,
+      "kappa": 0.11112855395336767,
+      "ci_lo": 0.3333333333333333,
+      "ci_hi": 0.375,
+      "fit_time": 1.2310349464416503,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.884252"
+      }
+    },
+    "2.0": {
+      "bca": 0.34738095238095235,
+      "std_bca": 0.028095238095238107,
+      "kappa": 0.12930479060744585,
+      "ci_lo": 0.34738095238095235,
+      "ci_hi": 0.3921626984126984,
+      "fit_time": 1.595459508895874,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.884719"
+      }
+    },
+    "5.0": {
+      "bca": 0.5292857142857142,
+      "std_bca": 0.09416237724262201,
+      "kappa": 0.3714855805006886,
+      "ci_lo": 0.5257142857142857,
+      "ci_hi": 0.5772222222222222,
+      "fit_time": 4.960550594329834,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.885102"
+      }
+    },
+    "10.0": {
+      "bca": 0.5138095238095237,
+      "std_bca": 0.07307468301027487,
+      "kappa": 0.3496223665920791,
+      "ci_lo": 0.4714484126984127,
+      "ci_hi": 0.5819246031746032,
+      "fit_time": 5.89938530921936,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.885462"
+      }
+    },
+    "15.0": {
+      "bca": 0.5711904761904762,
+      "std_bca": 0.048089344287623674,
+      "kappa": 0.42640300114570406,
+      "ci_lo": 0.5532539682539683,
+      "ci_hi": 0.6180357142857142,
+      "fit_time": 10.00606632232666,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.886121"
+      }
+    },
+    "30.0": {
+      "bca": 0.5207142857142857,
+      "std_bca": 0.09768754855587865,
+      "kappa": 0.35883548188498016,
+      "ci_lo": 0.48144841269841276,
+      "ci_hi": 0.5776190476190476,
+      "fit_time": 10.45865626335144,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:40:42.886699"
+      }
+    }
+  },
+  "foundation_sft_ea_lora/subject_09": {
+    "0.5": {
+      "bca": 0.459486102133161,
+      "std_bca": 0.011242931227108953,
+      "kappa": 0.2738174605287795,
+      "ci_lo": 0.4168498168498168,
+      "ci_hi": 0.4662127088597677,
+      "fit_time": 106.25632467269898,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.193866"
+      }
+    },
+    "1.0": {
+      "bca": 0.4601163542340013,
+      "std_bca": 0.011004874666982183,
+      "kappa": 0.2735877851344216,
+      "ci_lo": 0.4095238095238095,
+      "ci_hi": 0.4703962703962704,
+      "fit_time": 1.4238947868347167,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.195412"
+      }
+    },
+    "2.0": {
+      "bca": 0.4571751777634131,
+      "std_bca": 0.009300816647554059,
+      "kappa": 0.2691290505720514,
+      "ci_lo": 0.4011904761904762,
+      "ci_hi": 0.4703962703962704,
+      "fit_time": 1.7031837463378907,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.196144"
+      }
+    },
+    "5.0": {
+      "bca": 0.523884938590821,
+      "std_bca": 0.048126304809100164,
+      "kappa": 0.36625796563365043,
+      "ci_lo": 0.4738095238095238,
+      "ci_hi": 0.5470906544435957,
+      "fit_time": 4.815032005310059,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.196686"
+      }
+    },
+    "10.0": {
+      "bca": 0.5642210730446025,
+      "std_bca": 0.022978313304558254,
+      "kappa": 0.42026550729107737,
+      "ci_lo": 0.5068494005994006,
+      "ci_hi": 0.5915468110321052,
+      "fit_time": 9.285889148712158,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.197249"
+      }
+    },
+    "15.0": {
+      "bca": 0.515142210730446,
+      "std_bca": 0.07668787680640834,
+      "kappa": 0.35375328254825184,
+      "ci_lo": 0.41398809523809527,
+      "ci_hi": 0.5896270396270396,
+      "fit_time": 19.122528791427612,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.197811"
+      }
+    },
+    "30.0": {
+      "bca": 0.5286683904330963,
+      "std_bca": 0.02407758247033596,
+      "kappa": 0.3741906250842864,
+      "ci_lo": 0.4619526307026307,
+      "ci_hi": 0.5668269230769231,
+      "fit_time": 12.703691911697387,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_lora",
+        "saved_at": "2026-05-31T07:44:29.198326"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_01": {
+    "0.5": {
+      "bca": 0.44511599511599514,
+      "std_bca": 0.09630512161658317,
+      "kappa": 0.24152291479920826,
+      "ci_lo": 0.4167471091000503,
+      "ci_hi": 0.482433024491848,
+      "fit_time": 44.9596031665802,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.097277"
+      }
+    },
+    "1.0": {
+      "bca": 0.48782051282051275,
+      "std_bca": 0.04096538706420881,
+      "kappa": 0.2946200166369037,
+      "ci_lo": 0.45553221288515405,
+      "ci_hi": 0.5106913021618904,
+      "fit_time": 16.05343379974365,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.103132"
+      }
+    },
+    "2.0": {
+      "bca": 0.5158424908424907,
+      "std_bca": 0.10000800364833475,
+      "kappa": 0.33854243537887835,
+      "ci_lo": 0.4598319327731092,
+      "ci_hi": 0.5486285283344106,
+      "fit_time": 16.35053496360779,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.103781"
+      }
+    },
+    "5.0": {
+      "bca": 0.5649267399267399,
+      "std_bca": 0.03603357996945658,
+      "kappa": 0.38966659114027663,
+      "ci_lo": 0.5075490196078432,
+      "ci_hi": 0.6102521008403361,
+      "fit_time": 16.91562533378601,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.104236"
+      }
+    },
+    "10.0": {
+      "bca": 0.6155372405372406,
+      "std_bca": 0.0249624957780771,
+      "kappa": 0.4530949686275287,
+      "ci_lo": 0.5719747899159664,
+      "ci_hi": 0.6497109100050277,
+      "fit_time": 17.019159603118897,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.104630"
+      }
+    },
+    "15.0": {
+      "bca": 0.6244505494505495,
+      "std_bca": 0.01831746015468187,
+      "kappa": 0.4595191837654144,
+      "ci_lo": 0.5657142857142856,
+      "ci_hi": 0.6514005602240897,
+      "fit_time": 16.54638752937317,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.105050"
+      }
+    },
+    "30.0": {
+      "bca": 0.6522588522588523,
+      "std_bca": 0.0071428571428571175,
+      "kappa": 0.4956857831621294,
+      "ci_lo": 0.6007142857142856,
+      "ci_hi": 0.6876750700280112,
+      "fit_time": 17.085445880889893,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:31.105449"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_02": {
+    "0.5": {
+      "bca": 0.2878571428571428,
+      "std_bca": 0.08281950431380632,
+      "kappa": 0.04854708019709251,
+      "ci_lo": 0.22793650793650794,
+      "ci_hi": 0.3432539682539682,
+      "fit_time": 35.60465440750122,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.874601"
+      }
+    },
+    "1.0": {
+      "bca": 0.2523809523809524,
+      "std_bca": 0.06815099282570468,
+      "kappa": 0.0023998894996011045,
+      "ci_lo": 0.2208333333333333,
+      "ci_hi": 0.2843253968253968,
+      "fit_time": 1.574198055267334,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.875893"
+      }
+    },
+    "2.0": {
+      "bca": 0.2671428571428571,
+      "std_bca": 0.042602417612085795,
+      "kappa": 0.023353709315360516,
+      "ci_lo": 0.21089285714285713,
+      "ci_hi": 0.3236309523809523,
+      "fit_time": 1.5852614402770997,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.876496"
+      }
+    },
+    "5.0": {
+      "bca": 0.2473809523809524,
+      "std_bca": 0.047244959178736244,
+      "kappa": -0.005471349148894888,
+      "ci_lo": 0.2220436507936508,
+      "ci_hi": 0.29527777777777775,
+      "fit_time": 13.79578161239624,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.876915"
+      }
+    },
+    "10.0": {
+      "bca": 0.2607142857142858,
+      "std_bca": 0.0390287410812274,
+      "kappa": 0.014812195304450926,
+      "ci_lo": 0.21690476190476193,
+      "ci_hi": 0.3179563492063492,
+      "fit_time": 29.156849956512453,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.877323"
+      }
+    },
+    "15.0": {
+      "bca": 0.18880952380952382,
+      "std_bca": 0.024427689578439243,
+      "kappa": -0.07970298134729656,
+      "ci_lo": 0.15583333333333332,
+      "ci_hi": 0.24119047619047623,
+      "fit_time": 28.830971050262452,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.877738"
+      }
+    },
+    "30.0": {
+      "bca": 0.20476190476190476,
+      "std_bca": 0.0,
+      "kappa": -0.05747126436781613,
+      "ci_lo": 0.1884920634920635,
+      "ci_hi": 0.2654761904761905,
+      "fit_time": 28.586776542663575,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:43:04.878167"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_03": {
+    "0.5": {
+      "bca": 0.4064285714285714,
+      "std_bca": 0.09070647385436705,
+      "kappa": 0.20839242363653768,
+      "ci_lo": 0.34944444444444445,
+      "ci_hi": 0.47523809523809524,
+      "fit_time": 50.809215259552005,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.962488"
+      }
+    },
+    "1.0": {
+      "bca": 0.45904761904761904,
+      "std_bca": 0.09525773606998612,
+      "kappa": 0.28127129126680356,
+      "ci_lo": 0.4447222222222222,
+      "ci_hi": 0.4853373015873016,
+      "fit_time": 2.3598880767822266,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.963837"
+      }
+    },
+    "2.0": {
+      "bca": 0.5257142857142857,
+      "std_bca": 0.06962647344931856,
+      "kappa": 0.3696784123173497,
+      "ci_lo": 0.5102182539682539,
+      "ci_hi": 0.5542857142857143,
+      "fit_time": 1.9699166774749757,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.964744"
+      }
+    },
+    "5.0": {
+      "bca": 0.5014285714285714,
+      "std_bca": 0.03393504533056205,
+      "kappa": 0.33770140345890687,
+      "ci_lo": 0.4616468253968254,
+      "ci_hi": 0.5881944444444445,
+      "fit_time": 20.34996657371521,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.965403"
+      }
+    },
+    "10.0": {
+      "bca": 0.5602380952380953,
+      "std_bca": 0.06199901250036494,
+      "kappa": 0.4156191761502484,
+      "ci_lo": 0.5410317460317461,
+      "ci_hi": 0.6129761904761905,
+      "fit_time": 45.3317111492157,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.966277"
+      }
+    },
+    "15.0": {
+      "bca": 0.575952380952381,
+      "std_bca": 0.026485352988066705,
+      "kappa": 0.43465191126558816,
+      "ci_lo": 0.5557539682539683,
+      "ci_hi": 0.6563095238095238,
+      "fit_time": 42.652474308013915,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.967085"
+      }
+    },
+    "30.0": {
+      "bca": 0.5869047619047619,
+      "std_bca": 0.0,
+      "kappa": 0.44871287128712867,
+      "ci_lo": 0.5510912698412699,
+      "ci_hi": 0.6827380952380953,
+      "fit_time": 47.486462354660034,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:49:26.967676"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_04": {
+    "0.5": {
+      "bca": 0.27604853479853475,
+      "std_bca": 0.06500682705287189,
+      "kappa": 0.036859788307097616,
+      "ci_lo": 0.22446570972886765,
+      "ci_hi": 0.3373444976076555,
+      "fit_time": 44.540467262268066,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.297067"
+      }
+    },
+    "1.0": {
+      "bca": 0.3191094322344322,
+      "std_bca": 0.07449406221832054,
+      "kappa": 0.09210004566887704,
+      "ci_lo": 0.26119133059922534,
+      "ci_hi": 0.3620562770562771,
+      "fit_time": 1.3955488681793213,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.298368"
+      }
+    },
+    "2.0": {
+      "bca": 0.35437957875457876,
+      "std_bca": 0.05178273487201029,
+      "kappa": 0.1360368417902869,
+      "ci_lo": 0.28135964912280703,
+      "ci_hi": 0.4385714285714286,
+      "fit_time": 1.3836150169372559,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.299062"
+      }
+    },
+    "5.0": {
+      "bca": 0.37111492673992674,
+      "std_bca": 0.03421412019022834,
+      "kappa": 0.16180251229238726,
+      "ci_lo": 0.3342190704032809,
+      "ci_hi": 0.38992673992673993,
+      "fit_time": 11.689061975479126,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.299535"
+      }
+    },
+    "10.0": {
+      "bca": 0.38349130036630036,
+      "std_bca": 0.05944306671491108,
+      "kappa": 0.1847852744834843,
+      "ci_lo": 0.3302494873547505,
+      "ci_hi": 0.415929311916154,
+      "fit_time": 24.454554271697997,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.299927"
+      }
+    },
+    "15.0": {
+      "bca": 0.4024633699633699,
+      "std_bca": 0.024489830021399695,
+      "kappa": 0.2081285650709936,
+      "ci_lo": 0.3705357142857143,
+      "ci_hi": 0.41893269011690065,
+      "fit_time": 24.623781538009645,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.300345"
+      }
+    },
+    "30.0": {
+      "bca": 0.40091575091575093,
+      "std_bca": 0.0062499999999999995,
+      "kappa": 0.2085243202512613,
+      "ci_lo": 0.3821428571428572,
+      "ci_hi": 0.4040240680372259,
+      "fit_time": 24.263933753967287,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:42.300722"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_05": {
+    "0.5": {
+      "bca": 0.2611904761904762,
+      "std_bca": 0.06269007378743402,
+      "kappa": 0.013048907163636114,
+      "ci_lo": 0.2323015873015873,
+      "ci_hi": 0.29617063492063495,
+      "fit_time": 36.86462845802307,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.192902"
+      }
+    },
+    "1.0": {
+      "bca": 0.27928571428571425,
+      "std_bca": 0.051456121368636545,
+      "kappa": 0.038330081605254106,
+      "ci_lo": 0.21660714285714283,
+      "ci_hi": 0.34285714285714286,
+      "fit_time": 1.5168702602386475,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.194234"
+      }
+    },
+    "2.0": {
+      "bca": 0.24904761904761905,
+      "std_bca": 0.04423319979064166,
+      "kappa": -0.0013023654483782288,
+      "ci_lo": 0.22000000000000003,
+      "ci_hi": 0.3256150793650794,
+      "fit_time": 1.3430689334869386,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.195170"
+      }
+    },
+    "5.0": {
+      "bca": 0.27666666666666667,
+      "std_bca": 0.023911685584311986,
+      "kappa": 0.03457480963341899,
+      "ci_lo": 0.2159325396825397,
+      "ci_hi": 0.3388888888888889,
+      "fit_time": 11.842612886428833,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.195755"
+      }
+    },
+    "10.0": {
+      "bca": 0.28214285714285714,
+      "std_bca": 0.03575394623257431,
+      "kappa": 0.039647117593384705,
+      "ci_lo": 0.2344444444444444,
+      "ci_hi": 0.3263095238095238,
+      "fit_time": 24.80701789855957,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.196162"
+      }
+    },
+    "15.0": {
+      "bca": 0.3035714285714286,
+      "std_bca": 0.00874817765279706,
+      "kappa": 0.06843627689510359,
+      "ci_lo": 0.2688095238095238,
+      "ci_hi": 0.33323412698412697,
+      "fit_time": 24.394837045669554,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.196553"
+      }
+    },
+    "30.0": {
+      "bca": 0.29642857142857143,
+      "std_bca": 0.0,
+      "kappa": 0.05881418134660312,
+      "ci_lo": 0.2654761904761905,
+      "ci_hi": 0.3189484126984127,
+      "fit_time": 24.303071975708008,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:42:22.196942"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_06": {
+    "0.5": {
+      "bca": 0.2854072398190045,
+      "std_bca": 0.07832403096575066,
+      "kappa": 0.043759510449566295,
+      "ci_lo": 0.2518608842138254,
+      "ci_hi": 0.3178300865800866,
+      "fit_time": 6.685575819015503,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.687717"
+      }
+    },
+    "1.0": {
+      "bca": 0.28640917905623786,
+      "std_bca": 0.06820444737620701,
+      "kappa": 0.039744151152643827,
+      "ci_lo": 0.2273824215000686,
+      "ci_hi": 0.34464285714285714,
+      "fit_time": 2.0448145866394043,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.689354"
+      }
+    },
+    "2.0": {
+      "bca": 0.2914511958629606,
+      "std_bca": 0.04070967879664804,
+      "kappa": 0.05888614494786844,
+      "ci_lo": 0.23156267751855988,
+      "ci_hi": 0.35468697968697965,
+      "fit_time": 1.9348582744598388,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.690484"
+      }
+    },
+    "5.0": {
+      "bca": 0.3561247575953458,
+      "std_bca": 0.05602783535369216,
+      "kappa": 0.14177846958325646,
+      "ci_lo": 0.32753582202111614,
+      "ci_hi": 0.3860243922743922,
+      "fit_time": 1.934373378753662,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.691248"
+      }
+    },
+    "10.0": {
+      "bca": 0.3382352941176471,
+      "std_bca": 0.04032740590590596,
+      "kappa": 0.1176165865676719,
+      "ci_lo": 0.2755244755244755,
+      "ci_hi": 0.39080343675931906,
+      "fit_time": 2.076572608947754,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.691836"
+      }
+    },
+    "15.0": {
+      "bca": 0.3563186813186813,
+      "std_bca": 0.023038470695386993,
+      "kappa": 0.14695011868647637,
+      "ci_lo": 0.24865967365967365,
+      "ci_hi": 0.44226190476190474,
+      "fit_time": 35.79524168968201,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.692373"
+      }
+    },
+    "30.0": {
+      "bca": 0.35883968972204267,
+      "std_bca": 0.0,
+      "kappa": 0.14739769566944783,
+      "ci_lo": 0.22872960372960374,
+      "ci_hi": 0.45982142857142855,
+      "fit_time": 35.20270290374756,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:45:58.692905"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_07": {
+    "0.5": {
+      "bca": 0.3052380952380952,
+      "std_bca": 0.10473376245381634,
+      "kappa": 0.07026705140897342,
+      "ci_lo": 0.25375,
+      "ci_hi": 0.3603571428571429,
+      "fit_time": 24.826429891586304,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.307617"
+      }
+    },
+    "1.0": {
+      "bca": 0.2816666666666667,
+      "std_bca": 0.06285714285714288,
+      "kappa": 0.04065465222045663,
+      "ci_lo": 0.24001984126984127,
+      "ci_hi": 0.3331349206349207,
+      "fit_time": 1.7262572288513183,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.309072"
+      }
+    },
+    "2.0": {
+      "bca": 0.3714285714285714,
+      "std_bca": 0.07120202167885727,
+      "kappa": 0.15854736744222425,
+      "ci_lo": 0.3276984126984127,
+      "ci_hi": 0.4220833333333333,
+      "fit_time": 1.5423479080200195,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.309629"
+      }
+    },
+    "5.0": {
+      "bca": 0.4616666666666666,
+      "std_bca": 0.06707105245258572,
+      "kappa": 0.27834220368836393,
+      "ci_lo": 0.42724206349206345,
+      "ci_hi": 0.5478968253968255,
+      "fit_time": 12.072750091552734,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.310663"
+      }
+    },
+    "10.0": {
+      "bca": 0.4197619047619048,
+      "std_bca": 0.03197575612228484,
+      "kappa": 0.22263419541792367,
+      "ci_lo": 0.36658730158730163,
+      "ci_hi": 0.49142857142857144,
+      "fit_time": 25.150309133529664,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.311469"
+      }
+    },
+    "15.0": {
+      "bca": 0.4780952380952381,
+      "std_bca": 0.030075490808834503,
+      "kappa": 0.30037219623572864,
+      "ci_lo": 0.46136904761904757,
+      "ci_hi": 0.5177380952380952,
+      "fit_time": 24.707246351242066,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.311890"
+      }
+    },
+    "30.0": {
+      "bca": 0.4511904761904761,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.26349206349206356,
+      "ci_lo": 0.4386904761904762,
+      "ci_hi": 0.48511904761904756,
+      "fit_time": 24.81746072769165,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:41:47.312282"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_08": {
+    "0.5": {
+      "bca": 0.35071428571428565,
+      "std_bca": 0.051714373410431655,
+      "kappa": 0.13214251791098214,
+      "ci_lo": 0.3284126984126984,
+      "ci_hi": 0.4,
+      "fit_time": 26.86453471183777,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.829447"
+      }
+    },
+    "1.0": {
+      "bca": 0.40714285714285714,
+      "std_bca": 0.0814689401466398,
+      "kappa": 0.20859924183224993,
+      "ci_lo": 0.38341269841269837,
+      "ci_hi": 0.44833333333333336,
+      "fit_time": 1.701404619216919,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.830959"
+      }
+    },
+    "2.0": {
+      "bca": 0.4223809523809523,
+      "std_bca": 0.08588739133848286,
+      "kappa": 0.22878139008205017,
+      "ci_lo": 0.3970238095238095,
+      "ci_hi": 0.44936507936507936,
+      "fit_time": 1.6507222652435303,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.831496"
+      }
+    },
+    "5.0": {
+      "bca": 0.44571428571428573,
+      "std_bca": 0.03673617406944781,
+      "kappa": 0.25937251766789304,
+      "ci_lo": 0.41248015873015864,
+      "ci_hi": 0.4909920634920635,
+      "fit_time": 14.01143798828125,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.831893"
+      }
+    },
+    "10.0": {
+      "bca": 0.5014285714285714,
+      "std_bca": 0.009885971186679342,
+      "kappa": 0.3335455433856832,
+      "ci_lo": 0.4430952380952381,
+      "ci_hi": 0.5709722222222222,
+      "fit_time": 29.1031542301178,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.832292"
+      }
+    },
+    "15.0": {
+      "bca": 0.46333333333333326,
+      "std_bca": 0.013114704146590904,
+      "kappa": 0.28304092434490735,
+      "ci_lo": 0.46333333333333326,
+      "ci_hi": 0.48948412698412697,
+      "fit_time": 28.40029110908508,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.832786"
+      }
+    },
+    "30.0": {
+      "bca": 0.4666666666666667,
+      "std_bca": 0.0,
+      "kappa": 0.2876386687797148,
+      "ci_lo": 0.4666666666666667,
+      "ci_hi": 0.4885912698412699,
+      "fit_time": 28.64917345046997,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:04.833848"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_09": {
+    "0.5": {
+      "bca": 0.34578215901745313,
+      "std_bca": 0.100868568698777,
+      "kappa": 0.12783525100393564,
+      "ci_lo": 0.31399017649017646,
+      "ci_hi": 0.36239654952890243,
+      "fit_time": 33.58407497406006,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.204459"
+      }
+    },
+    "1.0": {
+      "bca": 0.4781997414350355,
+      "std_bca": 0.07504546734132285,
+      "kappa": 0.30806172706390955,
+      "ci_lo": 0.3910193972693972,
+      "ci_hi": 0.5368837045307634,
+      "fit_time": 14.583708572387696,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.205216"
+      }
+    },
+    "2.0": {
+      "bca": 0.4847123464770523,
+      "std_bca": 0.037584219522217806,
+      "kappa": 0.3165886439352302,
+      "ci_lo": 0.3851190476190477,
+      "ci_hi": 0.5416666666666666,
+      "fit_time": 15.516984558105468,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.205626"
+      }
+    },
+    "5.0": {
+      "bca": 0.4763089851325145,
+      "std_bca": 0.041288229705641326,
+      "kappa": 0.30562599453499956,
+      "ci_lo": 0.4130328005328005,
+      "ci_hi": 0.5328671328671328,
+      "fit_time": 15.148524951934814,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.205992"
+      }
+    },
+    "10.0": {
+      "bca": 0.5420652876535229,
+      "std_bca": 0.030625966769552142,
+      "kappa": 0.39905981943105523,
+      "ci_lo": 0.4157738095238095,
+      "ci_hi": 0.6292540792540793,
+      "fit_time": 15.528985738754272,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.206347"
+      }
+    },
+    "15.0": {
+      "bca": 0.5479638009049774,
+      "std_bca": 0.012686780214023034,
+      "kappa": 0.41496440262616774,
+      "ci_lo": 0.45029761904761906,
+      "ci_hi": 0.5973193473193473,
+      "fit_time": 14.88210563659668,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.206685"
+      }
+    },
+    "30.0": {
+      "bca": 0.548868778280543,
+      "std_bca": 0.007142857142857162,
+      "kappa": 0.4156826279672541,
+      "ci_lo": 0.44910714285714287,
+      "ci_hi": 0.5973193473193473,
+      "fit_time": 14.921512365341187,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-05-31T07:52:15.207012"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_01": {
+    "0.5": {
+      "bca": 0.4962759462759463,
+      "std_bca": 0.04532618602560748,
+      "kappa": 0.30735171344362017,
+      "ci_lo": 0.42974825827767005,
+      "ci_hi": 0.565406162464986,
+      "fit_time": 32.31767902374268,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.858652"
+      }
+    },
+    "1.0": {
+      "bca": 0.5032967032967032,
+      "std_bca": 0.04855951943361875,
+      "kappa": 0.31664837914438293,
+      "ci_lo": 0.4526330532212885,
+      "ci_hi": 0.5418965021906199,
+      "fit_time": 1.0293887615203858,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.859996"
+      }
+    },
+    "2.0": {
+      "bca": 0.5607753357753358,
+      "std_bca": 0.05479922310372388,
+      "kappa": 0.3964300217140836,
+      "ci_lo": 0.5240540831717302,
+      "ci_hi": 0.6371708683473389,
+      "fit_time": 1.0139780998229981,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.860676"
+      }
+    },
+    "5.0": {
+      "bca": 0.6013736263736262,
+      "std_bca": 0.035375520958884334,
+      "kappa": 0.43852472925514085,
+      "ci_lo": 0.5694257703081231,
+      "ci_hi": 0.6361344537815127,
+      "fit_time": 1.0071931838989259,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.861163"
+      }
+    },
+    "10.0": {
+      "bca": 0.6397435897435897,
+      "std_bca": 0.0392389264417543,
+      "kappa": 0.4926891401438942,
+      "ci_lo": 0.6120308123249301,
+      "ci_hi": 0.6875540472599296,
+      "fit_time": 1.0422089576721192,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.861833"
+      }
+    },
+    "15.0": {
+      "bca": 0.6613553113553113,
+      "std_bca": 0.006751761388705749,
+      "kappa": 0.5163122963487254,
+      "ci_lo": 0.6471978021978022,
+      "ci_hi": 0.6820728291316527,
+      "fit_time": 25.088048219680786,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.862423"
+      }
+    },
+    "30.0": {
+      "bca": 0.6608058608058608,
+      "std_bca": 0.0071428571428571175,
+      "kappa": 0.5166987302154296,
+      "ci_lo": 0.6557875457875457,
+      "ci_hi": 0.6820728291316527,
+      "fit_time": 0.9431991100311279,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:47:28.862806"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_02": {
+    "0.5": {
+      "bca": 0.3011904761904762,
+      "std_bca": 0.056237873472406594,
+      "kappa": 0.0672688265949408,
+      "ci_lo": 0.2417063492063492,
+      "ci_hi": 0.36335317460317457,
+      "fit_time": 31.469281673431396,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.162470"
+      }
+    },
+    "1.0": {
+      "bca": 0.2207142857142857,
+      "std_bca": 0.03464756145444048,
+      "kappa": -0.039401719039074856,
+      "ci_lo": 0.1973611111111111,
+      "ci_hi": 0.24458333333333332,
+      "fit_time": 0.8607325553894043,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.163387"
+      }
+    },
+    "2.0": {
+      "bca": 0.2469047619047619,
+      "std_bca": 0.008471641368884368,
+      "kappa": -0.004690741858943292,
+      "ci_lo": 0.200515873015873,
+      "ci_hi": 0.2990873015873016,
+      "fit_time": 0.8732881069183349,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.163947"
+      }
+    },
+    "5.0": {
+      "bca": 0.2578571428571429,
+      "std_bca": 0.06344512153595434,
+      "kappa": 0.008944736710861356,
+      "ci_lo": 0.23511904761904762,
+      "ci_hi": 0.2988293650793651,
+      "fit_time": 0.9059743404388427,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.164443"
+      }
+    },
+    "10.0": {
+      "bca": 0.2730952380952381,
+      "std_bca": 0.05317898584165922,
+      "kappa": 0.031736528886172885,
+      "ci_lo": 0.22595238095238096,
+      "ci_hi": 0.35047619047619044,
+      "fit_time": 0.9070499420166016,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.164828"
+      }
+    },
+    "15.0": {
+      "bca": 0.26976190476190476,
+      "std_bca": 0.012612307274427652,
+      "kappa": 0.028654318187813877,
+      "ci_lo": 0.22142857142857145,
+      "ci_hi": 0.3595238095238095,
+      "fit_time": 0.9532564163208008,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.165623"
+      }
+    },
+    "30.0": {
+      "bca": 0.27261904761904765,
+      "std_bca": 0.0,
+      "kappa": 0.032949583167923735,
+      "ci_lo": 0.20476190476190476,
+      "ci_hi": 0.37103174603174605,
+      "fit_time": 0.9774025917053223,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:56.166023"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_03": {
+    "0.5": {
+      "bca": 0.3595238095238095,
+      "std_bca": 0.10223411396865976,
+      "kappa": 0.14433294271382258,
+      "ci_lo": 0.30333333333333334,
+      "ci_hi": 0.42617063492063495,
+      "fit_time": 26.272318649291993,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.933818"
+      }
+    },
+    "1.0": {
+      "bca": 0.48880952380952386,
+      "std_bca": 0.09027735042633893,
+      "kappa": 0.3192342875076478,
+      "ci_lo": 0.46128968253968256,
+      "ci_hi": 0.5588095238095238,
+      "fit_time": 0.8892123699188232,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.935078"
+      }
+    },
+    "2.0": {
+      "bca": 0.5047619047619049,
+      "std_bca": 0.035674581104218346,
+      "kappa": 0.3420935687656084,
+      "ci_lo": 0.4800595238095238,
+      "ci_hi": 0.5625396825396825,
+      "fit_time": 0.873497486114502,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.935718"
+      }
+    },
+    "5.0": {
+      "bca": 0.5411904761904762,
+      "std_bca": 0.05298140691278452,
+      "kappa": 0.38932202325945203,
+      "ci_lo": 0.5157738095238095,
+      "ci_hi": 0.5971230158730159,
+      "fit_time": 0.9292339324951172,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.936209"
+      }
+    },
+    "10.0": {
+      "bca": 0.6190476190476191,
+      "std_bca": 0.060949590709944476,
+      "kappa": 0.4943252921097061,
+      "ci_lo": 0.5557539682539682,
+      "ci_hi": 0.699404761904762,
+      "fit_time": 0.8809145927429199,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.936604"
+      }
+    },
+    "15.0": {
+      "bca": 0.6252380952380953,
+      "std_bca": 0.025392608776942632,
+      "kappa": 0.5032949180772128,
+      "ci_lo": 0.5375992063492063,
+      "ci_hi": 0.726190476190476,
+      "fit_time": 0.9524539470672607,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.936983"
+      }
+    },
+    "30.0": {
+      "bca": 0.6178571428571429,
+      "std_bca": 0.0,
+      "kappa": 0.4943330236624952,
+      "ci_lo": 0.5362103174603174,
+      "ci_hi": 0.7244047619047619,
+      "fit_time": 0.9377497673034668,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:50.937401"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_04": {
+    "0.5": {
+      "bca": 0.31800366300366295,
+      "std_bca": 0.11166673585112376,
+      "kappa": 0.09546678284069085,
+      "ci_lo": 0.2727227158806106,
+      "ci_hi": 0.35453292321713376,
+      "fit_time": 14.95041799545288,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.335078"
+      }
+    },
+    "1.0": {
+      "bca": 0.29019001831501834,
+      "std_bca": 0.09060222640848752,
+      "kappa": 0.0494195870118175,
+      "ci_lo": 0.26484107997265893,
+      "ci_hi": 0.31613237639553426,
+      "fit_time": 1.0962594985961913,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.336448"
+      }
+    },
+    "2.0": {
+      "bca": 0.377135989010989,
+      "std_bca": 0.08042669664997451,
+      "kappa": 0.16934627238349648,
+      "ci_lo": 0.3496861252782305,
+      "ci_hi": 0.41377961950330366,
+      "fit_time": 1.091433048248291,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.337003"
+      }
+    },
+    "5.0": {
+      "bca": 0.38166895604395606,
+      "std_bca": 0.050788925029882984,
+      "kappa": 0.17787928386079607,
+      "ci_lo": 0.339348940533151,
+      "ci_hi": 0.42047020961494647,
+      "fit_time": 1.1032991409301758,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.337404"
+      }
+    },
+    "10.0": {
+      "bca": 0.42573031135531136,
+      "std_bca": 0.05384250619559881,
+      "kappa": 0.24226929374013978,
+      "ci_lo": 0.3456174527227159,
+      "ci_hi": 0.5199920255183412,
+      "fit_time": 1.4116241931915283,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.338271"
+      }
+    },
+    "15.0": {
+      "bca": 0.4095352564102564,
+      "std_bca": 0.017497149127671335,
+      "kappa": 0.22184894295630153,
+      "ci_lo": 0.3319677033492824,
+      "ci_hi": 0.51875,
+      "fit_time": 1.1254397869110107,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.338937"
+      }
+    },
+    "30.0": {
+      "bca": 0.4008470695970696,
+      "std_bca": 0.0,
+      "kappa": 0.21183053557154286,
+      "ci_lo": 0.348634370015949,
+      "ci_hi": 0.49017857142857146,
+      "fit_time": 1.0532707691192627,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 4,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:45:23.340025"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_05": {
+    "0.5": {
+      "bca": 0.2573809523809524,
+      "std_bca": 0.04035275295691502,
+      "kappa": 0.009313502606929291,
+      "ci_lo": 0.2338888888888889,
+      "ci_hi": 0.2937698412698413,
+      "fit_time": 36.908886957168576,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.941186"
+      }
+    },
+    "1.0": {
+      "bca": 0.25809523809523804,
+      "std_bca": 0.040007085540239455,
+      "kappa": 0.010812636668022724,
+      "ci_lo": 0.2099206349206349,
+      "ci_hi": 0.31240079365079365,
+      "fit_time": 1.0141238689422607,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.942139"
+      }
+    },
+    "2.0": {
+      "bca": 0.2945238095238095,
+      "std_bca": 0.03429398048500157,
+      "kappa": 0.05866992556454196,
+      "ci_lo": 0.2854960317460317,
+      "ci_hi": 0.34236111111111106,
+      "fit_time": 0.9598772048950195,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.942589"
+      }
+    },
+    "5.0": {
+      "bca": 0.2838095238095238,
+      "std_bca": 0.01784285142399542,
+      "kappa": 0.04329966150802098,
+      "ci_lo": 0.24255952380952378,
+      "ci_hi": 0.33378968253968255,
+      "fit_time": 0.9139753818511963,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.943001"
+      }
+    },
+    "10.0": {
+      "bca": 0.33619047619047615,
+      "std_bca": 0.03543221947424052,
+      "kappa": 0.11368271906736331,
+      "ci_lo": 0.3040873015873015,
+      "ci_hi": 0.39186507936507936,
+      "fit_time": 0.9483611583709717,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.943390"
+      }
+    },
+    "15.0": {
+      "bca": 0.3669047619047619,
+      "std_bca": 0.03846841034022991,
+      "kappa": 0.15461614321928172,
+      "ci_lo": 0.35537698412698415,
+      "ci_hi": 0.3968650793650794,
+      "fit_time": 15.62181477546692,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.943769"
+      }
+    },
+    "30.0": {
+      "bca": 0.3623809523809524,
+      "std_bca": 0.015441352730562815,
+      "kappa": 0.15009531771958234,
+      "ci_lo": 0.34464285714285714,
+      "ci_hi": 0.4015873015873016,
+      "fit_time": 0.9631231784820556,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 5,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:51.944160"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_06": {
+    "0.5": {
+      "bca": 0.2989819004524887,
+      "std_bca": 0.06669404103782343,
+      "kappa": 0.06325735746721342,
+      "ci_lo": 0.2647227772227772,
+      "ci_hi": 0.3290414242620125,
+      "fit_time": 38.36312508583069,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.977849"
+      }
+    },
+    "1.0": {
+      "bca": 0.30473497091144147,
+      "std_bca": 0.054279896223753246,
+      "kappa": 0.06397347198007317,
+      "ci_lo": 0.24708624708624707,
+      "ci_hi": 0.35773809523809524,
+      "fit_time": 2.340171718597412,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.979221"
+      }
+    },
+    "2.0": {
+      "bca": 0.3045733678086619,
+      "std_bca": 0.06621332122622658,
+      "kappa": 0.0704847147132344,
+      "ci_lo": 0.28084146245910946,
+      "ci_hi": 0.3445325507825508,
+      "fit_time": 2.1958406448364256,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.979928"
+      }
+    },
+    "5.0": {
+      "bca": 0.33416289592760184,
+      "std_bca": 0.03285203080358009,
+      "kappa": 0.10936113279523392,
+      "ci_lo": 0.2839868464868465,
+      "ci_hi": 0.3827791081467552,
+      "fit_time": 19.9752995967865,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.980602"
+      }
+    },
+    "10.0": {
+      "bca": 0.36586942469295414,
+      "std_bca": 0.057813495903116845,
+      "kappa": 0.1487655677300007,
+      "ci_lo": 0.2878767066267066,
+      "ci_hi": 0.41844613719613716,
+      "fit_time": 42.05098996162415,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.981334"
+      }
+    },
+    "15.0": {
+      "bca": 0.3952650290885585,
+      "std_bca": 0.027722700236781514,
+      "kappa": 0.18963704471370324,
+      "ci_lo": 0.3538378288378288,
+      "ci_hi": 0.4190435789700496,
+      "fit_time": 38.099669981002805,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.981913"
+      }
+    },
+    "30.0": {
+      "bca": 0.4022462831286361,
+      "std_bca": 0.007142857142857162,
+      "kappa": 0.19827950886353757,
+      "ci_lo": 0.3473193473193473,
+      "ci_hi": 0.42976190476190473,
+      "fit_time": 47.70468306541443,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 6,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T08:01:05.982434"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_07": {
+    "0.5": {
+      "bca": 0.3073809523809524,
+      "std_bca": 0.0534755756229759,
+      "kappa": 0.07308184400124389,
+      "ci_lo": 0.26700396825396827,
+      "ci_hi": 0.3576984126984127,
+      "fit_time": 35.009908485412595,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.993794"
+      }
+    },
+    "1.0": {
+      "bca": 0.23595238095238097,
+      "std_bca": 0.10162065424712889,
+      "kappa": -0.020437025981747858,
+      "ci_lo": 0.21749999999999997,
+      "ci_hi": 0.26571428571428574,
+      "fit_time": 1.08901686668396,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.995157"
+      }
+    },
+    "2.0": {
+      "bca": 0.35666666666666663,
+      "std_bca": 0.024346329583169953,
+      "kappa": 0.13933910957430876,
+      "ci_lo": 0.31722222222222224,
+      "ci_hi": 0.4098809523809523,
+      "fit_time": 1.0623274326324463,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.995926"
+      }
+    },
+    "5.0": {
+      "bca": 0.39476190476190476,
+      "std_bca": 0.060579214833482865,
+      "kappa": 0.1899345684519957,
+      "ci_lo": 0.3455357142857142,
+      "ci_hi": 0.48545634920634917,
+      "fit_time": 1.0937665939331054,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.996341"
+      }
+    },
+    "10.0": {
+      "bca": 0.4245238095238095,
+      "std_bca": 0.036874795821718466,
+      "kappa": 0.2300376678451602,
+      "ci_lo": 0.3914484126984127,
+      "ci_hi": 0.49819444444444444,
+      "fit_time": 1.0942504405975342,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.996756"
+      }
+    },
+    "15.0": {
+      "bca": 0.4797619047619047,
+      "std_bca": 0.019604941762132268,
+      "kappa": 0.3042035632227426,
+      "ci_lo": 0.46797619047619043,
+      "ci_hi": 0.5260912698412697,
+      "fit_time": 1.108346700668335,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.997133"
+      }
+    },
+    "30.0": {
+      "bca": 0.4833333333333334,
+      "std_bca": 0.0,
+      "kappa": 0.30870083432657935,
+      "ci_lo": 0.48035714285714287,
+      "ci_hi": 0.5128968253968254,
+      "fit_time": 1.0275311470031738,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 7,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:49:19.997523"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_08": {
+    "0.5": {
+      "bca": 0.3221428571428571,
+      "std_bca": 0.04661805047817304,
+      "kappa": 0.0947923224263861,
+      "ci_lo": 0.291984126984127,
+      "ci_hi": 0.3957936507936508,
+      "fit_time": 17.85925440788269,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.761259"
+      }
+    },
+    "1.0": {
+      "bca": 0.35523809523809524,
+      "std_bca": 0.07486420056393507,
+      "kappa": 0.13994973022193902,
+      "ci_lo": 0.3366468253968254,
+      "ci_hi": 0.40871031746031744,
+      "fit_time": 0.8999217033386231,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.762251"
+      }
+    },
+    "2.0": {
+      "bca": 0.3769047619047619,
+      "std_bca": 0.06152170864760369,
+      "kappa": 0.16960421724579544,
+      "ci_lo": 0.35500000000000004,
+      "ci_hi": 0.421686507936508,
+      "fit_time": 0.9210347175598145,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.762800"
+      }
+    },
+    "5.0": {
+      "bca": 0.41119047619047616,
+      "std_bca": 0.029398736610366655,
+      "kappa": 0.21459579153141894,
+      "ci_lo": 0.3643650793650794,
+      "ci_hi": 0.4766666666666667,
+      "fit_time": 0.9686862468719483,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.763249"
+      }
+    },
+    "10.0": {
+      "bca": 0.4245238095238095,
+      "std_bca": 0.04641697046762412,
+      "kappa": 0.2335777151056432,
+      "ci_lo": 0.3682142857142857,
+      "ci_hi": 0.4828571428571428,
+      "fit_time": 0.9896797180175781,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.763630"
+      }
+    },
+    "15.0": {
+      "bca": 0.4038095238095238,
+      "std_bca": 0.028085147501910702,
+      "kappa": 0.20598184568310124,
+      "ci_lo": 0.2758928571428571,
+      "ci_hi": 0.5071428571428571,
+      "fit_time": 0.9763043880462646,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.764187"
+      }
+    },
+    "30.0": {
+      "bca": 0.4142857142857143,
+      "std_bca": 0.0,
+      "kappa": 0.21962801741195093,
+      "ci_lo": 0.28422619047619047,
+      "ci_hi": 0.49523809523809526,
+      "fit_time": 0.9745954513549805,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 8,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:48:18.764604"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_09": {
+    "0.5": {
+      "bca": 0.2983678086619263,
+      "std_bca": 0.0842947963642219,
+      "kappa": 0.0639450122554914,
+      "ci_lo": 0.2652264402264402,
+      "ci_hi": 0.31869796869796874,
+      "fit_time": 19.99969000816345,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.839169"
+      }
+    },
+    "1.0": {
+      "bca": 0.3728829993535876,
+      "std_bca": 0.02838964089154614,
+      "kappa": 0.16565803887567593,
+      "ci_lo": 0.30370670995671,
+      "ci_hi": 0.4551182885741708,
+      "fit_time": 0.8276241779327392,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.840357"
+      }
+    },
+    "2.0": {
+      "bca": 0.4021331609566904,
+      "std_bca": 0.04664402512450473,
+      "kappa": 0.19994597923995922,
+      "ci_lo": 0.37351790366496246,
+      "ci_hi": 0.43704604219310106,
+      "fit_time": 0.8171992301940918,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.840968"
+      }
+    },
+    "5.0": {
+      "bca": 0.4571266968325792,
+      "std_bca": 0.03666071015679653,
+      "kappa": 0.27871976614370053,
+      "ci_lo": 0.4160568598068598,
+      "ci_hi": 0.48371750798221386,
+      "fit_time": 0.8547160625457764,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.843267"
+      }
+    },
+    "10.0": {
+      "bca": 0.4219780219780219,
+      "std_bca": 0.03855480887697236,
+      "kappa": 0.23220600669762187,
+      "ci_lo": 0.33214285714285713,
+      "ci_hi": 0.5048951048951048,
+      "fit_time": 0.8994472980499267,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.843762"
+      }
+    },
+    "15.0": {
+      "bca": 0.44978991596638657,
+      "std_bca": 0.017238256831013987,
+      "kappa": 0.2710400901571576,
+      "ci_lo": 0.36875,
+      "ci_hi": 0.5256993006993007,
+      "fit_time": 24.24424753189087,
+      "k_minutes": 15.0,
+      "n_cal_trials": 223,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.844156"
+      }
+    },
+    "30.0": {
+      "bca": 0.4418228829993536,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.26144050935137275,
+      "ci_lo": 0.38839285714285715,
+      "ci_hi": 0.48747086247086246,
+      "fit_time": 1.191986083984375,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 9,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "mirepnet",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-05-31T07:50:29.844517"
+      }
+    }
+  }
+}

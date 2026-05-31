@@ -33,13 +33,22 @@ from adaptation.ea_lora import EALoRAAdapter
 from adaptation.cld import CLDAdapter
 from adaptation.stacked import EACLDAdapter
 from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
+from adaptation.foundation_source_cld import (
+    FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
+)
 from adaptation.foundation_finetune import FoundationFineTuneAdapter
 from adaptation.foundation_lora import FoundationLoRAAdapter
+from adaptation.foundation_source_lora import (
+    FoundationSourceFineTuneLoRAAdapter, FoundationSourceFineTuneEALoRAAdapter
+)
 from adaptation.foundation_ea import FoundationEAAdapter
 from adaptation.foundation_ea_lora import FoundationEALoRAAdapter
 from adaptation.linear_probe import LinearProbeAdapter
 from adaptation.foundation_loso import FoundationLOSOAdapter
 from adaptation.foundation_tta import FoundationTTAAdapter
+from adaptation.foundation_source_loso import FoundationSFTLOSOAdapter, FoundationSFTEAAdapter
+from adaptation.foundation_source_tta import FoundationSFTTTAAdapter
+from adaptation.foundation_sft_finetune import FoundationSFTFineTuneAdapter
 from evaluation.protocols import (
     within_subject_cv, loso_evaluation, k_minute_sweep, aggregate_across_subjects
 )
@@ -70,6 +79,14 @@ METHOD_REGISTRY = {
     "foundation_ea_lora": FoundationEALoRAAdapter,
     "foundation_cld": FoundationCLDAdapter,
     "foundation_ea_cld": FoundationEACLDAdapter,
+    "foundation_sft_loso": FoundationSFTLOSOAdapter,
+    "foundation_sft_ea": FoundationSFTEAAdapter,
+    "foundation_sft_tta": FoundationSFTTTAAdapter,
+    "foundation_sft_finetune": FoundationSFTFineTuneAdapter,
+    "foundation_sft_lora": FoundationSourceFineTuneLoRAAdapter,
+    "foundation_sft_ea_lora": FoundationSourceFineTuneEALoRAAdapter,
+    "foundation_sft_cld": FoundationSourceFineTuneCLDAdapter,
+    "foundation_sft_ea_cld": FoundationSourceFineTuneEACLDAdapter,
 }
 
 ALL_METHODS = list(METHOD_REGISTRY.keys())
@@ -92,10 +109,17 @@ def build_any_backbone(
     return build_backbone(name, n_channels=n_channels, n_classes=n_classes, n_times=n_times)
 
 # Methods that require labeled calibration (K > 0)
-SUPERVISED_METHODS = {"finetune", "lora", "ea_lora", "cld", "ea_cld"}
+SUPERVISED_METHODS = {
+    "finetune", "lora", "ea_lora", "cld", "ea_cld",
+    "foundation_finetune", "foundation_lora", "foundation_ea_lora",
+    "foundation_cld", "foundation_ea_cld",
+    "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
+    "foundation_sft_cld", "foundation_sft_ea_cld",
+}
 UNSUPERVISED_METHODS = {
     "loso", "ea", "tta",
-    "foundation_loso", "foundation_ea", "foundation_tta",
+    "linear_probe", "foundation_loso", "foundation_ea", "foundation_tta",
+    "foundation_sft_loso", "foundation_sft_ea", "foundation_sft_tta",
 }
 
 
@@ -267,11 +291,15 @@ def main() -> None:
         dataset = dataset_cls(n_subjects=n_subj, seed=args.seed)
     else:
         data_dir = Path(args.data_dir) / args.dataset
-        if args.backbone == "labram":
-            from data.preprocessing import LABRAM_PREPROCESS_CONFIG
-            dataset = dataset_cls(str(data_dir), preprocess_config=LABRAM_PREPROCESS_CONFIG)
-        else:
-            dataset = dataset_cls(str(data_dir))
+        from data.preprocessing import BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX
+        preprocess_cfg = BACKBONE_PREPROCESS_CONFIGS.get(args.backbone)
+        cache_suffix = BACKBONE_CACHE_SUFFIX.get(args.backbone)
+        cache_dir = str(data_dir.parent / f"{args.dataset}_{cache_suffix}_cache") if cache_suffix else None
+        dataset = dataset_cls(
+            str(data_dir),
+            preprocess_config=preprocess_cfg,
+            **({"cache_dir": cache_dir} if cache_dir else {}),
+        )
     print(f"Dataset: {args.dataset} — {dataset.n_channels}ch, {dataset.n_classes} classes")
 
     # Resolve subjects

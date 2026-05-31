@@ -145,11 +145,76 @@ def preprocess_pipeline(
     return X, y
 
 
-# Preprocessing config for LaBraM: wider bandpass + µV scale (no z-score).
-# LaBraM was pretrained on data bandpassed 0.1–75 Hz, normalised by dividing by 100 µV.
-# The ÷100 step is applied inside LaBraMBackbone.get_features(); store raw µV here.
+# ---------------------------------------------------------------------------
+# Per-backbone preprocessing configs
+#
+# Each foundation model was pretrained on a specific bandpass and normalisation
+# scheme. Mismatching the bandpass at inference degrades pretrained features.
+#
+# IMPORTANT — cache directories must differ per config (the cache stores the
+# preprocessed arrays; mixing configs in the same directory silently corrupts
+# results).
+# ---------------------------------------------------------------------------
+
+# LaBraM (Jiang et al. 2024) — pretrained on TUAB and BCIC data.
+# Bandpass: 0.1–75 Hz (per the official preprocessing in the paper).
+# Normalisation: raw Volts preserved here; LaBraMBackbone.get_features()
+# converts V→µV then divides by 100 µV before the transformer.
+# apply_zscore=False is REQUIRED — z-scoring removes the µV scale that the
+# fixed ÷100 normalisation relies on.
 LABRAM_PREPROCESS_CONFIG: dict = {
     "l_freq": 0.1,
     "h_freq": 75.0,
     "apply_zscore": False,
+}
+
+# CBraMod (Wang et al. 2024) — pretrained on TUAB at 200 Hz.
+# Bandpass: 0.5–75 Hz (per the TUAB preprocessing in the paper).
+# The patch embedding computes an explicit FFT spectral projection over 101
+# frequency bins (0–100 Hz at 200 Hz sampling).  Passing 4–40 Hz filtered
+# data zeros out bins 40–75 Hz, corrupting the pretrained spectral_proj
+# weights — the most critical preprocessing mismatch in the codebase.
+# CBraModBackbone.get_features() applies its own per-channel z-score, so
+# apply_zscore can be either value; False avoids a redundant pass.
+CBRAMOD_PREPROCESS_CONFIG: dict = {
+    "l_freq": 0.5,
+    "h_freq": 75.0,
+    "apply_zscore": False,
+}
+
+# NeuroGPT (Cui et al. 2023) — pretrained on Temple University EEG Corpus.
+# Bandpass: 0.5–40 Hz (per the paper's preprocessing description).
+# The model applies its own per-channel z-score in get_features().
+# Minor fix: adds the delta/theta band (0.5–4 Hz) missing from the default.
+NEUROGPT_PREPROCESS_CONFIG: dict = {
+    "l_freq": 0.5,
+    "h_freq": 40.0,
+    "apply_zscore": False,
+}
+
+# MIRepNet (starself/MIRepNet) — pretrained on MI datasets (BCIC-IV, OpenBMI).
+# Bandpass: 4–40 Hz — the standard MI band that matches default preprocessing.
+# The model applies per-channel z-score in get_features(); apply_zscore=False
+# avoids a redundant pass but has no effect on model accuracy.
+MIREPNET_PREPROCESS_CONFIG: dict = {
+    "l_freq": 4.0,
+    "h_freq": 40.0,
+    "apply_zscore": False,
+}
+
+# Lookup table: backbone name → (preprocessing config, cache directory suffix).
+# Backbones not listed use the default pipeline (4–40 Hz, z-scored).
+BACKBONE_PREPROCESS_CONFIGS: dict[str, dict] = {
+    "labram":   LABRAM_PREPROCESS_CONFIG,
+    "cbramod":  CBRAMOD_PREPROCESS_CONFIG,
+    "neurogpt": NEUROGPT_PREPROCESS_CONFIG,
+    "mirepnet": MIREPNET_PREPROCESS_CONFIG,
+}
+
+# Cache directory suffix per backbone (appended to the base cache path).
+BACKBONE_CACHE_SUFFIX: dict[str, str] = {
+    "labram":   "labram",
+    "cbramod":  "cbramod",
+    "neurogpt": "neurogpt",
+    "mirepnet": "mirepnet",
 }
