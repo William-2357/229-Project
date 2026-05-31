@@ -50,4 +50,16 @@ Per user direction + teammate's `bf55826`:
 - change: rewrote `convex_calib.py` → source-FT MIRepNet (frozen) + convex head fit on
   source ∪ calibration (knobs: source_cap=800, cal_balance=1.0).
 - smoke (3-epoch FT, subj1): LOSO=.350 k1=.435 k5=.457 — dip already gone (k1 > LOSO).
-- decision: PENDING full-source-FT proxy run.
+- proxy (full source-FT, subj1-4): score=0.5755 low_k=0.569 per_k={.5:.574, 1:.564, 2:.588}.
+  Dip GONE (k=.5 already 0.574 vs stock sft_cld 0.357).
+- FAIR same-backbone baselines (subj1-4, identical cached source-FT MIRepNet):
+    convex      0.5755  (.574/.564/.588)
+    sft_finetune 0.5619 (.556/.567/.562)
+    sft_lora     0.5570 (.555/.560/.556)
+  → convex beats LoRA +0.0185, finetune +0.0136. Biggest edge at low K.
+- IMPORTANT: the modal-summary bar was UNFAIR — my source-FT backbone is much stronger
+  than the teammate's (my local LoRA 0.557 vs modal LoRA 0.462). The honest claim is the
+  same-backbone comparison above: convex > LoRA by ~0.02 on the proxy.
+- caveat: convex (like CLD baselines) uses the unlabeled target pool for feature
+  normalization; plain lora/finetune don't. Stricter bar = ea_lora (run later).
+- decision: KEPT — proxy beats bar. Promoting to full 9-subject sweep (convex + baselines).

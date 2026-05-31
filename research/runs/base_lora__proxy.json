@@ -1,0 +1,31 @@
+{
+  "tag": "base_lora",
+  "method": "foundation_sft_lora",
+  "mode": "proxy",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0
+  ],
+  "n_repeats": 3,
+  "seed": 42,
+  "score": 0.557,
+  "low_k_score": 0.5577,
+  "per_k": {
+    "0.5": 0.5552,
+    "1.0": 0.5603,
+    "2.0": 0.5555
+  },
+  "k_star": 0.5,
+  "ceiling": 0.5603,
+  "elapsed_sec": 27.6,
+  "hparams": null
+}
