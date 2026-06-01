@@ -89,6 +89,13 @@ def evaluate(dataset, backbone_name, subjects, k_grid, seed, device, n_repeats, 
     for sid in subjects:
         common = dict(backbone=backbone, device=device, seed=seed)
         source_cache: dict = {}
+        # Provide PER-SUBJECT source (subject-grouped) for subject-aware / meta objectives
+        # via the pass-through source_cache (doesn't touch the protocol's metric path). The
+        # source for target `sid` is every other subject's session-1 data, kept separate.
+        src_subj = [s for s in dataset.subject_ids if s != sid]
+        source_cache["source_per_subject"] = [
+            dataset.get_subject_data(s, sessions=[1]) for s in src_subj
+        ]
         per_k = k_minute_sweep(
             dataset=dataset, subject_id=sid,
             adapter_class=lambda seed, **kw: adapter_cls(**{**common, "seed": seed}),

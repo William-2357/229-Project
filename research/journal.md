@@ -281,3 +281,25 @@ full-9 0.595 vs sft_lora 0.587 vs convex-frozen 0.576 vs sft_finetune 0.572. Opt
 lora_rank 8 best (iter-9), convex-head hparams optimal (iter-10). convex_calib.py is at this
 winner. No further promising convex/hybrid lever remains within this design space. Deliverables:
 research/RESULTS.md, research/kmin_results.png, research/journal.md, research/leaderboard.json.
+
+## iters 11-13 — cross-subject-generality convex objectives (deep-research-inspired) [all negative]
+User asked for DIFFERENT convex formulations maximizing cross-subject generality ("learn
+general rule -> adapt"; no subject IDs). Deep-research workflow (105 agents) ranked: R2D2 ridge
+meta, MetaOptNet SVM, Group-DRO, IRMv1. Implemented 3 as `generality_mode` in convex_calib
+(frozen backbone, use_lora=false, isolating the objective; per-subject source via source_cache):
+- iter-11 meta_r2d2 (R2D2): meta-train low-rank adapter via leave-one-source-subject-out
+  episodes + closed-form differentiable ridge inner. proxy(9subj,K=[1,10,30])=0.5766
+  {1:.555,10:.569,30:.605}.
+- iter-12 irm (IRMv1 gradient penalty): 0.5667 {1:.536,10:.569,30:.595}.
+- iter-13 group_dro (worst-subject exp-grad reweighting): 0.5662 {1:.532,10:.580,30:.587}.
+- bars: frozen-convex 0.582, LoRA+convex(iter-8) 0.611, lora 0.5955.
+- decision: ALL NEGATIVE. None beats frozen-convex (0.582); all far below LoRA+convex (0.611).
+  meta_r2d2 ≈ frozen (tie, edges it at K=30); irm/dro lost low-K discriminability.
+- INTERPRETATION (honest): a strong source-pretrained foundation backbone ALREADY encodes
+  cross-subject-general features, so explicit generality objectives (meta/invariance/worst-
+  subject) on FROZEN features add nothing or hurt. The performance lever here is PER-TARGET
+  representation adaptation (LoRA on the calibration trials), not a better cross-subject-general
+  fixed rule. Matches the research's BOIL/ANIL caveat (cross-domain needs representation change)
+  and explains why LoRA+convex wins. Convex_calib default stays iter-8 (use_lora=True,
+  generality_mode="none"). generality_mode code retained as a research artifact.
+- FINAL (unchanged): LoRA+convex (iter-8) remains the winner — full-9 0.595 > lora 0.587.

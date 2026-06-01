@@ -150,6 +150,33 @@
       "low_k_score": 0.5866,
       "dataset": "bciciv2a",
       "new_best": false
+    },
+    {
+      "iter": 11,
+      "mode": "proxy",
+      "tag": "iter11_meta_r2d2",
+      "score": 0.5766,
+      "low_k_score": 0.5623,
+      "dataset": "bciciv2a",
+      "new_best": false
+    },
+    {
+      "iter": 11,
+      "mode": "proxy",
+      "tag": "iter12_irm",
+      "score": 0.5667,
+      "low_k_score": 0.5524,
+      "dataset": "bciciv2a",
+      "new_best": false
+    },
+    {
+      "iter": 11,
+      "mode": "proxy",
+      "tag": "iter13_group_dro",
+      "score": 0.5662,
+      "low_k_score": 0.5559,
+      "dataset": "bciciv2a",
+      "new_best": false
     }
   ],
   "bars_to_beat_local_proxy14": {
@@ -246,5 +273,14 @@
       "mean": 0.595
     }
   },
-  "status": "WIN \u2014 LoRA+convex (iter-8) beats LoRA on full 9-subj benchmark (0.595 vs 0.587), decisive at K=10-15"
+  "status": "WIN \u2014 LoRA+convex (iter-8) beats LoRA on full 9-subj benchmark (0.595 vs 0.587), decisive at K=10-15",
+  "generality_experiments_frozen_proxy_9subj": {
+    "note": "cross-subject-generality objectives on FROZEN MIRepNet (K=[1,10,30]). None beats frozen-convex 0.582 or LoRA+convex 0.611.",
+    "meta_r2d2": 0.5766,
+    "irm": 0.5667,
+    "group_dro": 0.5662,
+    "frozen_convex_bar": 0.582,
+    "lora_convex_iter8_bar": 0.611,
+    "verdict": "negative \u2014 pretrained backbone already cross-subject-general; per-target LoRA adaptation is the lever, not fixed-rule generality objectives"
+  }
 }
