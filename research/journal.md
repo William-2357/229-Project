@@ -574,3 +574,20 @@ CORRECTED FINDINGS:
   (it's cheap). My earlier "convex loses on NeuroGPT" was a PCA artifact; corrected.
 NET: LoRA+convex beats the sft_lora baseline on BOTH MIRepNet (proxy 0.611 vs 0.596) AND NeuroGPT
 (0.676 vs 0.656). The convex-head advantage generalizes across foundation backbones (given full features).
+
+## NEUROGPT — 2-STEP ANCHORING vs UNION re-test (2026-06-01) [union wins again]
+User: try the reference's 2-step anchoring (Stage1 source head v_bar -> Stage2 cal-only + anchor
+(a/2)||v-v_bar||^2) instead of the source∪cal UNION, on NeuroGPT FULL-DIM (the regime where the
+convex head carries the credit). Proxy 9 subj K=[1,10,30], frozen backbone, max_feat_dim=null:
+    frozen-convex UNION        0.6715  {1:.625, 10:.685, 30:.705}   <- best
+    sft_lora baseline          0.6557
+    adaptive anchor a_base=1   0.6543  {1:.578, 10:.691, 30:.694}
+    anchor a=1.0               0.6487  {1:.570, 10:.678, 30:.698}
+    anchor a=10                0.6052  {1:.602, 10:.606, 30:.608}  (over-anchored -> ~source head)
+    anchor a=0.1               0.5722  {1:.341, ...}               (under-anchored -> K=1 crater)
+FINDING: UNION still beats 2-step anchoring on NeuroGPT full-dim (best anchor 0.654 < union 0.672),
+REPLICATING the MIRepNet iters 14-16 result on a 2nd backbone. The anchor is competitive at K=10/30
+(≈ union) but LOSES at low K — pooling ~800 source rows + tiled cal gives a better-posed low-K solve
+than ~12 cal rows + a source-head prior. Too-weak anchor craters K=1; too-strong collapses to the
+source head. Confirms: offline (source available), feature POOLING > anchoring to a source-head
+summary; the anchor's niche is the online/streaming regime. Convex-in-pretraining default stays UNION.
