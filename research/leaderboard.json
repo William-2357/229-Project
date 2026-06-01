@@ -354,5 +354,15 @@
       },
       "verdict": "REFUTED too. Full coupling family (fixed-head 0.5885/0.5886, implicit 0.5836/0.5870) clusters ~0.02-0.03 below iter-8 0.611; structural, not tuning. Convex head = great post-hoc classifier, poor representation-shaping objective."
     }
+  },
+  "neurogpt_cross_backbone_proxy_9subj": {
+    "note": "Baselines + best-3 methods on NeuroGPT (HF wenhuic/Neuro-GPT, 1024-d; convex head PCA->256). Proxy 9 subj K=[1,10,30], shared source-FT.",
+    "sft_lora": 0.6557,
+    "ensemble_m3": 0.6314,
+    "convex_frozen": 0.6242,
+    "lora_convex": 0.6193,
+    "sft_finetune": 0.6147,
+    "verdict": "REVERSAL vs MIRepNet \u2014 sft_lora WINS by 0.025-0.037; convex head worse than linear head, LoRA hurts the convex head (frozen-convex>LoRA+convex). LoRA+convex win is MIRepNet-specific; convex-head value is strongly backbone-dependent.",
+    "caveat": "1024-d forces convex onto PCA-256 while sft_lora's linear head sees full 1024-d; part of the gap is the PCA handicap, but gap (0.025-0.037) and PCA variance retention mean the verdict holds."
   }
 }

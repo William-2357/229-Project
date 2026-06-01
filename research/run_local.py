@@ -46,10 +46,13 @@ REPO = Path(__file__).resolve().parent.parent
 # high-K regime where representation adaptation (CRONOS-AM) must help.
 PROXY_K = [1.0, 10.0, 30.0]
 FULL_K = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
-CKPT = {"mirepnet": str(REPO / "MIRepNet.pth")}
+CKPT = {"mirepnet": str(REPO / "MIRepNet.pth"),
+        # NeuroGPT pretrained encoder+embedder (HF wenhuic/Neuro-GPT), downloaded locally.
+        "neurogpt": str(REPO / "neurogpt_ckpt" / "pretrained_model" / "pytorch_model.bin")}
 # Backbone-native sampling rate. MIRepNet was pretrained at 250 Hz; feeding native 250 Hz
 # avoids a lossy 250->200->250 round-trip (+0.03-0.05 BCA, verified). Default 200 Hz.
-BACKBONE_SFREQ = {"mirepnet": 250.0}
+# NeuroGPT internally resamples to 250 Hz; feed native 250 so that resample is a no-op.
+BACKBONE_SFREQ = {"mirepnet": 250.0, "neurogpt": 250.0}
 
 METHODS = {
     "convex_calib": ConvexCalibAdapter,

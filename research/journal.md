@@ -525,3 +525,30 @@ signal than a plain linear head. So convex heads should stay DECOUPLED: adapt th
 freely, classify convexly post-hoc. Decoupling is load-bearing, not incidental.
 WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595 / proxy 0.611). All new machinery (convex_implicit,
 couple_mode) retained as research artifacts; default couple_mode=none.
+
+## ===== NEUROGPT CROSS-BACKBONE TEST (2026-06-01) — convex win does NOT generalize =====
+User asked to run the baselines + best-3 methods on a 2nd foundation backbone, NeuroGPT (HF
+wenhuic/Neuro-GPT, 1024-d encoder+embedder; downloaded to neurogpt_ckpt/, wired into run_local
+CKPT/BACKBONE_SFREQ; 1024-d -> convex head uses PCA max_feat_dim=256; ensemble path given PCA too).
+Proxy (9 subj, K=[1,10,30], same source-FT NeuroGPT shared across methods):
+    sft_lora (baseline)   0.6557  {1:.599, 10:.667, 30:.701}   <- WINS decisively
+    ensemble M=3 (ours)   0.6314  {1:.579, 10:.635, 30:.681}
+    frozen-convex (ours)  0.6242  {1:.573, 10:.642, 30:.658}
+    LoRA+convex (iter-8)  0.6193  {1:.573, 10:.635, 30:.650}
+    sft_finetune (base)   0.6147  {1:.601, 10:.615, 30:.629}
+REVERSAL vs MIRepNet (proxy: LoRA+convex 0.611 > sft_lora 0.5955). On NeuroGPT the plain sft_lora
+baseline BEATS every convex method by 0.025-0.037; the convex head is WORSE than LoRA's linear head
+here (lora_convex 0.619 < sft_lora 0.656). Sub-findings:
+- LoRA HURTS the convex head on NeuroGPT: frozen-convex 0.624 > LoRA+convex 0.619 (opposite of
+  MIRepNet, where LoRA was the lever). NeuroGPT's LoRA-adapted features suit a linear head, not the
+  convex ReLU head.
+- The ENSEMBLE helped most among ours (0.631, best of the convex methods) — more variance to reduce
+  on the weaker/noisier NeuroGPT — but still < sft_lora.
+CAVEAT (honest): NeuroGPT features are 1024-d; the convex ADMM doesn't scale there, so the convex
+methods use PCA->256 while sft_lora's linear head sees the FULL 1024-d. Part of the gap is this PCA
+handicap, not purely the convex head. (PCA-256 retains most variance, and the gap is 0.025-0.037, so
+the conclusion—sft_lora wins on NeuroGPT—almost certainly holds; a full-dim convex run would confirm.)
+CONCLUSION: the LoRA+convex win is MIRepNet-SPECIFIC. Convex-head value is strongly backbone-dependent
+(strong on MIRepNet's 256-d MI-pretrained features; absent on NeuroGPT's 1024-d TUH-pretrained features
+and on EEGNet). The robust, backbone-agnostic lever is representation adaptation (LoRA); the convex
+head is a conditional add-on that pays off only on some backbones.

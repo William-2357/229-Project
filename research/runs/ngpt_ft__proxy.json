@@ -1,0 +1,36 @@
+{
+  "tag": "ngpt_ft",
+  "method": "foundation_sft_finetune",
+  "mode": "proxy",
+  "backbone": "neurogpt",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "k_grid": [
+    1.0,
+    10.0,
+    30.0
+  ],
+  "n_repeats": 3,
+  "seed": 42,
+  "score": 0.6147,
+  "low_k_score": 0.6078,
+  "per_k": {
+    "1.0": 0.6005,
+    "10.0": 0.615,
+    "30.0": 0.6285
+  },
+  "k_star": 1.0,
+  "ceiling": 0.6285,
+  "elapsed_sec": 50.1,
+  "hparams": null
+}

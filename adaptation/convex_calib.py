@@ -464,10 +464,11 @@ class ConvexCalibAdapter(BaseAdapter):
             reps = max(1, int(round(h["cal_balance"] * len(f_src) / max(1, len(f_cal)))))
             X_fit = np.concatenate([f_src, np.tile(f_cal, (reps, 1))], 0)
             y_fit = np.concatenate([y_sub, np.tile(target_labeled[1], reps)], 0)
+            X_fit, pca = maybe_reduce_features(X_fit, h["max_feat_dim"], self.seed)  # PCA for large-dim FMs
             cld, mu, sig = fit_cld_head(X_fit, y_fit, n_classes, h["n_neurons"], h["rank"], h["beta"],
                                         h["rho"], h["gamma_ratio"], h["admm_iters"], h["pcg_iters"],
-                                        ms, norm_stats=norm)
-            self._members.append((bbm, cld, mu, sig))
+                                        ms, norm_stats=norm if h["max_feat_dim"] is None else None)
+            self._members.append((bbm, cld, mu, sig, pca))
 
     # -- COUPLED CRONOS-AM (convex-head-aware representation adaptation) -----------
     @staticmethod
@@ -612,8 +613,10 @@ class ConvexCalibAdapter(BaseAdapter):
 
     def _ensemble_proba(self, X):
         probs = None
-        for bbm, cld, mu, sig in self._members:
+        for bbm, cld, mu, sig, pca in self._members:
             feat = extract_foundation_features(bbm, self._align(X), self.device, self.hp["ft_batch_size"])
+            if pca is not None:
+                feat, _ = maybe_reduce_features(feat, self.hp["max_feat_dim"], self.seed, pca=pca)
             Zn = ((feat - mu) / sig).astype(np.float32)
             lg = np.array(cld.stacked_predict(jnp.array(Zn), cld.theta1, cld.theta2))
             e = np.exp(lg - lg.max(1, keepdims=True)); p = e / e.sum(1, keepdims=True)

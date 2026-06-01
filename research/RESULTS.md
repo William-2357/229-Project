@@ -124,3 +124,34 @@ variant when 3× compute is acceptable.
 Repro: `CONVEX_HP='{"n_ensemble":3}' python research/run_local.py --full --tag ens3`;
 `CONVEX_HP='{"couple_mode":"cronos_am"}' ... --tag coupled`; sweeps `research/sweep_transfer.py`,
 `research/sweep_lora_transfer.py`, `research/sweep_ensemble.py`.
+
+---
+
+## Cross-backbone test — NeuroGPT (the convex win does NOT generalize)
+
+Ran the baselines + best-3 methods on a **second** foundation backbone, NeuroGPT (HF
+`wenhuic/Neuro-GPT`, 1024-d; convex head uses PCA→256 since the ADMM doesn't scale to 1024-d).
+Proxy (9 subjects, K=[1,10,30], shared source-FT NeuroGPT):
+
+| method | score | K=1 | K=10 | K=30 |
+|---|--:|--:|--:|--:|
+| **sft_lora** (baseline) | **0.656** | .599 | .667 | .701 |
+| ensemble M=3 (ours) | 0.631 | .579 | .635 | .681 |
+| convex-frozen (ours) | 0.624 | .573 | .642 | .658 |
+| LoRA+convex / iter-8 (ours) | 0.619 | .573 | .635 | .650 |
+| sft_finetune (baseline) | 0.615 | .601 | .615 | .629 |
+
+**Reversal of MIRepNet** (where proxy LoRA+convex 0.611 > sft_lora 0.596). On NeuroGPT the plain
+`sft_lora` baseline **wins by 0.025–0.037**; the convex head is *worse* than LoRA's linear head, and
+LoRA even *hurts* the convex head (frozen-convex 0.624 > LoRA+convex 0.619 — opposite of MIRepNet).
+The ensemble helped most among ours (more variance to reduce on the weaker NeuroGPT) but still lost.
+
+**Caveat:** NeuroGPT's 1024-d features force the convex head onto PCA→256 while `sft_lora`'s linear
+head sees full 1024-d — part of the gap is this PCA handicap. But PCA-256 retains most variance and
+the gap is 0.025–0.037, so the verdict holds. **Conclusion: the LoRA+convex win is MIRepNet-specific;
+convex-head value is strongly backbone-dependent** (strong on MIRepNet's 256-d MI-pretrained features;
+absent on NeuroGPT's 1024-d TUH-pretrained features and on EEGNet). The robust, backbone-agnostic lever
+is representation adaptation (LoRA); the convex head is a conditional add-on.
+
+Repro: `python research/run_local.py --proxy --backbone neurogpt --method foundation_sft_lora --tag ngpt_lora`;
+`CONVEX_HP='{"use_lora":true,"max_feat_dim":256}' ... --backbone neurogpt --method convex_calib --tag ngpt_lora_convex`.
