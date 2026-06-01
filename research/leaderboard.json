@@ -35,19 +35,19 @@
     "dataset": "bciciv2a"
   },
   "full_best": {
-    "tag": "iter3_convex_full",
-    "score": 0.5761,
-    "low_k_score": 0.5536,
-    "iter": 3,
+    "tag": "iter8_lora_convex_full",
+    "score": 0.5952,
+    "low_k_score": 0.558,
+    "iter": 8,
     "dataset": "bciciv2a",
     "per_k": {
-      "0.5": 0.5499,
-      "1.0": 0.5573,
-      "2.0": 0.5559,
-      "5.0": 0.5842,
-      "10.0": 0.5871,
-      "15.0": 0.5968,
-      "30.0": 0.6016
+      "0.5": 0.5572,
+      "1.0": 0.5588,
+      "2.0": 0.557,
+      "5.0": 0.5799,
+      "10.0": 0.6252,
+      "15.0": 0.6465,
+      "30.0": 0.6418
     },
     "k_star": 0.5
   },
@@ -130,6 +130,15 @@
       "tag": "iter8_lora_convex",
       "score": 0.611,
       "low_k_score": 0.5941,
+      "dataset": "bciciv2a",
+      "new_best": true
+    },
+    {
+      "iter": 8,
+      "mode": "full",
+      "tag": "iter8_lora_convex_full",
+      "score": 0.5952,
+      "low_k_score": 0.558,
       "dataset": "bciciv2a",
       "new_best": true
     }
@@ -216,7 +225,17 @@
       "30.0": 0.586,
       "mean": 0.572
     },
-    "ranking": "sft_lora 0.587 > convex 0.576 > sft_finetune 0.572"
+    "ranking": "LoRA+convex 0.595 > sft_lora 0.587 > convex-frozen 0.576 > sft_finetune 0.572",
+    "lora_plus_convex_iter8": {
+      "0.5": 0.557,
+      "1.0": 0.559,
+      "2.0": 0.557,
+      "5.0": 0.58,
+      "10.0": 0.625,
+      "15.0": 0.646,
+      "30.0": 0.642,
+      "mean": 0.595
+    }
   },
-  "status": "CONCLUDED \u2014 convex competitive (2nd of 3, beats finetune), trails lora; see research/RESULTS.md"
+  "status": "WIN \u2014 LoRA+convex (iter-8) beats LoRA on full 9-subj benchmark (0.595 vs 0.587), decisive at K=10-15"
 }

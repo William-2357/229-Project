@@ -228,3 +228,16 @@ optimality — but it is not superior overall on this strong FM backbone.
   The convex head adds real value on top of LoRA's representation. Promoting to FULL 9-subject
   sweep (all 7 K, n_repeats=5) to confirm the whole-curve win. NOTE: this is LoRA+convex
   (representation adaptation via LoRA + convex classifier), the user-requested hybrid.
+- FULL 9-subject sweep (all 7 K, n_repeats=5) — CONFIRMS the win:
+    K       0.5    1     2     5     10    15    30    mean
+    L+cvx  .557  .559  .557  .580  .625  .647  .642  0.5952
+    lora   .559  .565  .566  .573  .587  .623  .634  0.5868
+    Δ      -.002 -.006 -.009 +.007 +.038 +.024 +.008 +0.0084
+  LoRA+convex BEATS lora overall (0.595 vs 0.587). Ties at low K (≤2), WINS decisively at
+  K=10-15 (+0.038/+0.024, >> noise). Final full ranking:
+    **LoRA+convex 0.595 > sft_lora 0.587 > convex-frozen 0.576 > sft_finetune 0.572.**
+  => The convex head beats a LINEAR head on the SAME LoRA-adapted representation. The thesis
+  pays off once the representation is adapted: the globally-optimal convex classifier extracts
+  more from the LoRA-adapted features than lora's own linear head, especially at mid-high K.
+  This is the headline positive result. Next: tune the hybrid (lora_rank, cal_balance/beta on
+  adapted features) to widen the margin, esp. recover the small low-K gap.
