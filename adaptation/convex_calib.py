@@ -59,6 +59,11 @@ HPARAMS = dict(
     lora_val_frac=0.1, lora_min_cal=2,
     # --- convex-head ensemble (variance reduction over independent LoRA+gate members) ---
     n_ensemble=1,             # >1: average M LoRA+convex members (each its own LoRA seed + gates)
+    # --- COUPLED CRONOS-AM: alternate convex-head solve <-> LoRA update THROUGH the convex head ---
+    couple_mode="none",       # none | cronos_am : co-adapt backbone(LoRA) and convex head
+    couple_rounds=3,          # alternating rounds (solve, [rep-step, solve]*) ; >=2
+    couple_epochs=40,         # LoRA epochs per representation step (through the fixed convex head)
+    couple_patience=8,        # early-stop patience (cal-val acc through the fixed head)
     # --- two-stage convex transfer (relaxed-harness arc): fixed dict + anchor to source head ---
     transfer_mode="none",     # none | anchor | adaptive   (convex-pretrain source head, then
                               #   anchored target solve; adaptive=per-pattern Mahalanobis-spirit
@@ -360,6 +365,11 @@ class ConvexCalibAdapter(BaseAdapter):
 
         model = self._source_ft(X_src, y_src, n_classes, source_cache)
         n_cal = len(target_labeled[0]) if target_labeled is not None else 0
+        if (h["couple_mode"] == "cronos_am" and mode == "none"
+                and h["transfer_mode"] == "none" and n_cal >= h["lora_min_cal"]):
+            self._fit_coupled(model, X_src, y_src, target_unlabeled, target_labeled, n_classes)
+            self._fit_time = time.time() - t0
+            return self
         if (h["n_ensemble"] > 1 and h["use_lora"] and mode == "none"
                 and h["transfer_mode"] == "none" and n_cal >= h["lora_min_cal"]):
             self._fit_lora_ensemble(model, X_src, y_src, target_unlabeled, target_labeled, n_classes)
@@ -449,6 +459,77 @@ class ConvexCalibAdapter(BaseAdapter):
                                         h["rho"], h["gamma_ratio"], h["admm_iters"], h["pcg_iters"],
                                         ms, norm_stats=norm)
             self._members.append((bbm, cld, mu, sig))
+
+    # -- COUPLED CRONOS-AM (convex-head-aware representation adaptation) -----------
+    @staticmethod
+    def _coupled_head_forward(Z, W1, W2, mu, sig):
+        """Differentiable forward of the convex ReLU head (fixed W1,W2) in torch, so the
+        convex classifier's loss can backprop into the backbone. Mirrors jaxcld
+        stacked_predict: logits[:,c] = relu(Zn @ W1[c]) @ W2[c], with Zn = (Z-mu)/sig."""
+        Zn = (Z - mu) / sig
+        H = torch.relu(torch.einsum('nd,cdm->ncm', Zn, W1))   # (N, C, m)
+        return torch.einsum('ncm,cm->nc', H, W2)              # (N, C)
+
+    def _fit_coupled(self, model_src, X_src, y_src, target_unlabeled, target_labeled, n_classes):
+        """CRONOS-AM: alternate (a) global convex-head solve on source∪cal of the CURRENT features
+        with (b) a LoRA update on cal CE backpropped THROUGH the fixed convex head. Couples the
+        representation to the actual nonlinear convex classifier (vs iter-8's decoupled
+        LoRA-through-a-throwaway-linear-head then post-hoc convex fit)."""
+        h = self.hp; bs = h["ft_batch_size"]; dev = self.device
+        Xc, yc = target_labeled
+        targets = _get_lora_target_modules(model_src, rank=h["lora_rank"])
+        lm = get_peft_model(model_src, LoraConfig(r=h["lora_rank"], lora_alpha=h["lora_rank"] * 2,
+                            target_modules=targets, lora_dropout=0.1, bias="none")).to(dev)
+        opt = torch.optim.AdamW([p for p in lm.parameters() if p.requires_grad],
+                                lr=h["lora_lr"], weight_decay=h["weight_decay"])
+        bb = lm.get_base_model().backbone                      # LoRA-injected backbone (differentiable)
+        cld = mu = sig = None
+        for r in range(h["couple_rounds"]):
+            # (a) convex step: solve head on source∪upweighted-cal of the current features
+            f_src = extract_foundation_features(bb, X_src, dev, bs)
+            f_src, y_sub = _stratified_subsample(f_src, y_src, h["source_cap"], np.random.default_rng(self.seed))
+            f_unlab = extract_foundation_features(bb, target_unlabeled, dev, bs)
+            norm = (f_unlab.mean(0, keepdims=True), f_unlab.std(0, keepdims=True) + 1e-8)
+            f_cal = extract_foundation_features(bb, Xc, dev, bs)
+            reps = max(1, int(round(h["cal_balance"] * len(f_src) / max(1, len(f_cal)))))
+            X_fit = np.concatenate([f_src, np.tile(f_cal, (reps, 1))], 0)
+            y_fit = np.concatenate([y_sub, np.tile(yc, reps)], 0)
+            cld, mu, sig = fit_cld_head(X_fit, y_fit, n_classes, h["n_neurons"], h["rank"], h["beta"],
+                                        h["rho"], h["gamma_ratio"], h["admm_iters"], h["pcg_iters"],
+                                        self.seed, norm_stats=norm)
+            if r == h["couple_rounds"] - 1:
+                break
+            # (b) representation step: fix the head, update LoRA on cal CE through it
+            W1 = torch.tensor(np.array(cld.theta1), dtype=torch.float32, device=dev)
+            W2 = torch.tensor(np.array(cld.theta2), dtype=torch.float32, device=dev)
+            mu_t = torch.tensor(mu, dtype=torch.float32, device=dev)
+            sig_t = torch.tensor(sig, dtype=torch.float32, device=dev)
+            n_val = max(1, int(len(Xc) * h["lora_val_frac"])); idx = np.random.permutation(len(Xc))
+            vi, ti = idx[:n_val], idx[n_val:] if len(idx) > n_val else idx
+            best, bstate, pat = -1.0, None, 0
+            for _ in range(h["couple_epochs"]):
+                lm.train()
+                for st in range(0, len(ti), bs):
+                    b = ti[st:st + bs]
+                    xb = torch.tensor(Xc[b], dtype=torch.float32, device=dev)
+                    yb = torch.tensor(yc[b], dtype=torch.long, device=dev)
+                    logits = self._coupled_head_forward(bb.get_features(xb), W1, W2, mu_t, sig_t)
+                    opt.zero_grad(); F.cross_entropy(logits, yb).backward(); opt.step()
+                lm.eval()
+                with torch.no_grad():
+                    xv = torch.tensor(Xc[vi], dtype=torch.float32, device=dev)
+                    lv = self._coupled_head_forward(bb.get_features(xv), W1, W2, mu_t, sig_t)
+                acc = float((lv.argmax(1).cpu().numpy() == yc[vi]).mean())
+                if acc > best: best, bstate, pat = acc, copy.deepcopy(lm.state_dict()), 0
+                else:
+                    pat += 1
+                    if pat >= h["couple_patience"]: break
+            if bstate is not None: lm.load_state_dict(bstate)
+        merged = lm.merge_and_unload()
+        for p in merged.parameters():
+            p.requires_grad_(False)
+        self._backbone_model = merged.backbone.to(dev)
+        self._cld_model, self._feat_mu, self._feat_sigma = cld, mu, sig
 
     def _ensemble_proba(self, X):
         probs = None

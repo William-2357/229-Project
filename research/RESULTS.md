@@ -101,10 +101,23 @@ not this offline benchmark.
 **ensemble M=3 = 0.598 vs iter-8 0.595 (+0.003, within noise)** — gains at K=5/30 offset by small
 losses at K=0.5/10/15. Highest recorded, but not a decisive win, and 3× the compute.
 
+**Result 3 — coupling the representation to the convex head (CRONOS-AM) is REFUTED.** iter-8 is
+*decoupled*: LoRA trains via a throwaway linear head, the convex head is fit post-hoc. We coupled
+them — alternate `global convex-head solve` ↔ `LoRA update on cal CE backpropped through the fixed
+convex head` (the real CRONOS-AM, enabled by the relaxed harness). Both re-solve frequencies
+(rounds=3 and rounds=6) give **0.589 vs iter-8 0.611 (−0.022), worse at every K.** **Why decoupling
+wins (the insight):** representation learning wants a *smooth, co-adapting* objective — iter-8's
+linear head rotates with the features each SGD step, a clean gradient. The convex head's power is as
+a *global-optimal, post-hoc* classifier of nonlinear structure in already-good features; used as the
+representation's *training target* it is static and ill-conditioned (dead ReLUs, two-sided neurons
+with negative W₂) and **degrades** the features. The decoupling is **load-bearing**, not incidental.
+
 **Standing winner unchanged: iter-8 LoRA+convex (full 0.595).** The robust lever remains
-per-target representation adaptation (LoRA) + a convex head; neither convex transfer nor ensembling
-decisively exceeds it on this strong FM backbone. `convex_calib.py` default stays `n_ensemble=1,
-transfer_mode=none`; `n_ensemble=3` is the highest-accuracy variant when 3× compute is acceptable.
+per-target representation adaptation (LoRA) + a convex head; convex transfer, ensembling, and
+coupling all fail to decisively exceed it on this strong FM backbone. `convex_calib.py` default
+stays `n_ensemble=1, transfer_mode=none, couple_mode=none`; `n_ensemble=3` is the highest-accuracy
+variant when 3× compute is acceptable.
 
 Repro: `CONVEX_HP='{"n_ensemble":3}' python research/run_local.py --full --tag ens3`;
-sweeps `research/sweep_transfer.py`, `research/sweep_lora_transfer.py`, `research/sweep_ensemble.py`.
+`CONVEX_HP='{"couple_mode":"cronos_am"}' ... --tag coupled`; sweeps `research/sweep_transfer.py`,
+`research/sweep_lora_transfer.py`, `research/sweep_ensemble.py`.

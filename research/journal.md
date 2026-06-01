@@ -444,3 +444,44 @@ a convex-head ensemble, to push past iter-8 LoRA+convex (full 0.595 / proxy 0.61
 - WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595). Highest recorded: ensemble M=3 (0.598, within
   noise). The robust lever remains per-target representation adaptation (LoRA) + a convex head;
   neither convex transfer nor ensembling decisively exceeds it on this strong FM backbone.
+
+## iter 19 — COUPLED CRONOS-AM: LoRA trained THROUGH the convex head (2026-06-01)  [REVERTED]
+- motivation (user): iter-8 LoRA+convex is DECOUPLED — LoRA trains via a throwaway LINEAR head,
+  then the convex head is fit post-hoc; the convex classifier never shapes the representation.
+  COUPLE them: alternate (a) global convex-head solve on source∪cal of current features with
+  (b) a LoRA update on cal CE backpropped THROUGH the fixed convex head (relu(Zn@W1)@W2). This is
+  the real CRONOS-AM (vs iter-7's frozen-backbone feature-adapter), enabled by the relaxed harness.
+- change: couple_mode=cronos_am (_fit_coupled + differentiable _coupled_head_forward); rounds=3,
+  epochs=40. Verified end-to-end (subj1 smoke K1=.699,K10=.735).
+- proxy (9 subj, K=[1,10,30]): score=0.5885 per_k={1:.551, 10:.593, 30:.622}.
+  vs iter-8 0.611 {1:.558, 10:.6305, 30:.645}: WORSE at every K (-0.0225 overall, -0.038 at K10).
+- decision: REVERTED. Coupling to a FIXED convex head HURTS vs the decoupled iter-8. Diagnosis: the
+  static nonlinear head is a poor training TARGET for the representation (dead ReLUs / two-sided
+  neurons w/ negative W2 -> ill-conditioned gradients), whereas iter-8's linear head CO-ADAPTS with
+  the features (rotates with them) -> cleaner LoRA gradient. The decoupling is a FEATURE: LoRA does
+  free representation adaptation; the convex head's value is GLOBAL-OPTIMAL classification post-hoc,
+  not as an SGD target. Mirrors iter-7 (re-solve absorbs the rep change) but now with real backbone
+  capacity. Testing frequent re-solve (rounds=6,epochs=15) to rule out the moving-target confound.
+
+## iter 20 — coupled CRONOS-AM, frequent re-solve (rounds=6, epochs=15) (2026-06-01)  [REVERTED]
+- hypothesis: the iter-19 deficit is the moving-target (head re-solves only between rounds); re-solving
+  more often (6 rounds x 15 epochs) lets the head track the features -> better coupling.
+- proxy (9 subj, K=[1,10,30]): score=0.5886 per_k={1:.554, 10:.601, 30:.611}.
+  IDENTICAL to iter-19 (0.5885). vs iter-8 0.611: still -0.0225.
+- decision: REVERTED. Moving-target confound RULED OUT — re-solve frequency doesn't matter. Coupling
+  to the convex head robustly underperforms the decoupled iter-8.
+
+## ===== COUPLING INVESTIGATION — CONCLUSION (2026-06-01) =====
+User's hypothesis: LoRA+convex is decoupled (LoRA trains via a throwaway linear head, convex head
+fit post-hoc); coupling them should help. RESULT: REFUTED on this benchmark. Both coupled variants
+(iter-19 rounds=3, iter-20 rounds=6) = 0.5885 vs iter-8 decoupled 0.611 (-0.022).
+WHY DECOUPLING WINS (the insight): representation learning wants a SMOOTH, CO-ADAPTING objective —
+iter-8's linear head rotates with the features each SGD step, giving LoRA a clean gradient. The
+convex head's power is as a GLOBAL-OPTIMAL, POST-HOC classifier that extracts nonlinear structure
+from already-good features; used as the representation's TRAINING TARGET it is static and
+ill-conditioned (dead ReLUs, two-sided neurons with negative W2) and DEGRADES the features. So the
+two stages are best kept decoupled, each doing what it is good at — the decoupling is load-bearing,
+not incidental. (Theoretically-cleaner coupling — implicit/unrolled differentiation through the
+ADMM solve so the head is always-optimal-and-differentiable — remains untried; cross-framework
+torch+jax autodiff, high effort, and the robust negative above predicts limited upside.)
+WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595 / proxy 0.611). couple_mode default = none.

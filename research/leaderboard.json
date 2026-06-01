@@ -273,7 +273,7 @@
       "mean": 0.595
     }
   },
-  "status": "WIN (unchanged) \u2014 LoRA+convex (iter-8) full 0.595. Convex-in-pretraining arc (iters 14-18): convex-transfer anchor NEGATIVE (offline pooling > anchor); convex-head ensemble marginal (M=3 full 0.598, +0.003 within noise). iter-8 remains the robust winner.",
+  "status": "WIN (unchanged) \u2014 iter-8 LoRA+convex full 0.595. Convex-in-pretraining campaign (iters 14-20): transfer-anchor NEGATIVE (offline pooling>anchor); ensemble marginal (full 0.598, within noise); coupled CRONOS-AM REFUTED (0.589<0.611, decoupling is load-bearing). iter-8 remains the robust winner.",
   "generality_experiments_frozen_proxy_9subj": {
     "note": "cross-subject-generality objectives on FROZEN MIRepNet (K=[1,10,30]). None beats frozen-convex 0.582 or LoRA+convex 0.611.",
     "meta_r2d2": 0.5766,
@@ -313,5 +313,26 @@
       "verdict": "marginal \u2014 highest recorded full number but not a decisive win"
     },
     "winner_unchanged": "iter-8 LoRA+convex (full 0.595). convex_calib default stays n_ensemble=1, transfer_mode=none."
+  },
+  "coupled_cronos_am_iters19_20": {
+    "note": "User hypothesis: couple LoRA<->convex head (vs iter-8's decoupled LoRA-then-convex). Alternate global convex solve <-> LoRA update through the fixed convex head (real CRONOS-AM w/ backbone via relaxed harness).",
+    "iter19_rounds3_epochs40": {
+      "proxy": 0.5885,
+      "per_k": {
+        "1.0": 0.5509,
+        "10.0": 0.5929,
+        "30.0": 0.6217
+      }
+    },
+    "iter20_rounds6_epochs15_freqsolve": {
+      "proxy": 0.5886,
+      "per_k": {
+        "1.0": 0.5538,
+        "10.0": 0.601,
+        "30.0": 0.6109
+      }
+    },
+    "vs_iter8_proxy": "-0.022 (worse at every K); identical across re-solve frequency -> moving-target ruled out",
+    "verdict": "REFUTED \u2014 coupling underperforms the decoupled iter-8. Decoupling is load-bearing: LoRA wants a smooth co-adapting (linear) head as its SGD target; the convex head's value is global-optimal POST-HOC classification, not as a static training target (ill-conditioned: dead ReLUs / negative-W2 neurons)."
   }
 }
