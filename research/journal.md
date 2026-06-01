@@ -357,3 +357,37 @@ Verified: anchored_admm(a=0) == stock jaxcld ADMM to 3e-8.
   source head, so low-K lands below even zero-shot source. Confirms: cal-only needs either a
   much stronger anchor (low-K -> source head) or source pooling. Running sweep_transfer.py over
   (anchor_a, stage2) to find whether ANY frozen-anchor config beats 0.582 before stacking on LoRA.
+
+## iter 15 — anchor sweeps: frozen + LoRA (2026-06-01)  [REVERTED — anchor is null]
+- sweep_transfer.py (FROZEN, 9 subj, K=[1,10,30], (stage2, anchor_a)):
+    source_cal a=0.1  0.5759 | source_cal a=0.0  0.5754 | source_cal a=1.0  0.5710
+    cal a=1.0  0.5638 | cal a=10  0.5449 | cal a=0.1  0.5356 | cal a=0.01  0.5240
+  -> ('source_cal', a=0) = 0.5754 reproduces frozen-convex (validates the fixed-gate solver vs
+     the 0.582 bar, within RNG/path noise). The anchor barely moves source_cal (.575->.576);
+     cal-only underperforms at every a. NO frozen-anchor config beats frozen-convex.
+- sweep_lora_transfer.py (LoRA-adapted, 9 subj, K=[1,10,30]):
+    source_cal a=0.0  0.5969 | a=1.0  0.5966 | a=0.1  0.5965 | cal a=1.0  0.5941 | cal a=3.0  0.5818
+  -> ('source_cal', a=0) = iter-8 control (0.597 here vs run_local 0.611 = the ~0.014 sweep/path
+     noise flagged in iter-10). Anchor a=0 ≈ a=0.1 ≈ a=1.0 within noise -> ANCHOR ADDS NOTHING on
+     top of LoRA either.
+- decision: REVERTED. KEY FINDING: when source DATA is available offline, POOLING raw source
+  features into the convex fit DOMINATES anchoring to a source-head summary (v_bar) — on both
+  frozen and LoRA features. The reference's anchor channel earns its keep in the ONLINE/STREAMING
+  regime (the paper's original continual-learning motivation) where source can't be re-accessed;
+  in this OFFLINE benchmark it's redundant. iter-8 LoRA+convex remains the winner.
+
+## iter 16 — adaptive per-pattern anchor (Mahalanobis-spirit) (2026-06-01)  [REVERTED]
+- hypothesis: the reference's STRONG version — per-pattern anchor strength a_i ~ 1/Var_s(v_i^(s))
+  from a MULTI-TASK source solve (per source subject, shared gates) — beats both isotropic anchor
+  and source-pooling by holding cross-subject-CONSERVED neurons while letting VARIABLE neurons fit
+  the target. Tested cal-only on the frozen backbone (a_base=1.0).
+- change: transfer_mode=adaptive; _transfer_head solves a source head per source subject, sets
+  per-pattern a_i; anchored_admm generalized to a per-pattern (P,) anchor-strength array.
+- proxy (9 subj, K=[1,10,30]): score=0.5641 per_k={1:.531, 10:.577, 30:.584}.
+  vs frozen-convex 0.582 {1:.557,10:.587,30:.602}: BELOW at every K (better than iter-14's 0.524 —
+  per-pattern weighting helps vs weak isotropic — but cal-only still < source pooling).
+- decision: REVERTED. The adaptive/Mahalanobis-spirit anchor is the strongest faithful version of
+  the reference's transfer and still does not beat source-pooling offline. CONVEX-TRANSFER ARC
+  (iters 14-16, isotropic+adaptive, cal+source_cal, frozen+LoRA) = thorough NEGATIVE on this
+  benchmark. Pivoting the "push score" effort to a convex-head ENSEMBLE (variance reduction,
+  program backlog) on the iter-8 winner.

@@ -58,10 +58,13 @@ HPARAMS = dict(
     use_lora=True, lora_rank=8, lora_lr=1e-3, lora_epochs=100, lora_patience=15,
     lora_val_frac=0.1, lora_min_cal=2,
     # --- two-stage convex transfer (relaxed-harness arc): fixed dict + anchor to source head ---
-    transfer_mode="none",     # none | anchor   (anchor => convex-pretrain source head, then
-                              #                   anchored target solve; see convex_transfer.py)
+    transfer_mode="none",     # none | anchor | adaptive   (convex-pretrain source head, then
+                              #   anchored target solve; adaptive=per-pattern Mahalanobis-spirit
+                              #   anchor from multi-task source variance; see convex_transfer.py)
     anchor_a=0.01,            # quadratic anchor strength toward the source convex head v_bar
     transfer_stage2="cal",    # cal | source_cal : fit set for the anchored target solve
+    anchor_a_base=0.1,        # adaptive: mean per-pattern anchor strength (distributed by 1/var)
+    anchor_var_eps=1e-4,      # adaptive: cross-subject variance floor for the 1/var weighting
     # --- cross-subject-generality objective ---
     generality_mode="none",   # none | meta_r2d2 | group_dro | irm
     gen_adapter_rank=16,      # low-rank adapter A(f)=f+(f@U)@V for meta/irm
@@ -288,22 +291,40 @@ class ConvexCalibAdapter(BaseAdapter):
             norm = (X_src_feat.mean(0, keepdims=True), X_src_feat.std(0, keepdims=True) + 1e-8)
         mu, sigma = norm
         d = X_src_feat.shape[1]
+        adaptive = h["transfer_mode"] == "adaptive"
         # Stage-1 anchor is cacheable across K/repeats ONLY on a frozen backbone; under LoRA
         # the source features differ per cell, so a cached v_bar would be stale -> recompute.
-        ck = ("convex_transfer", self.seed)
+        ck = ("convex_transfer", h["transfer_mode"], self.seed)
         cacheable = source_cache is not None and not h["use_lora"]
         if cacheable and ck in source_cache:
-            G, v_bar = source_cache[ck]
+            G, v_bar, a_vec = source_cache[ck]
         else:
             key = jax.random.PRNGKey(self.seed)
             G, key = sample_gates(d, h["n_neurons"], key)
-            Xs_n = ((X_src_feat - mu) / sigma).astype(np.float32)
-            src = build_fixed_gate_model(Xs_n, y_src, n_classes, h["n_neurons"],
-                                         h["beta"], h["rho"], key, G)
-            anchored_admm(src, self._admm_params(), v_anchor=None, anchor_a=0.0)
-            v_bar = src.v
+            if adaptive:
+                # multi-task: solve a source head per source subject (shared gates) -> v^(s);
+                # per-pattern anchor strength a_i ~ 1/Var_s(v_i), mean-normalized to anchor_a_base.
+                feats, labels = self._subject_feats(source_cache, n_classes)
+                Vs = []
+                for fs, ls in zip(feats, labels):
+                    Xn = ((self._adapt_np(fs) - mu) / sigma).astype(np.float32)
+                    m = build_fixed_gate_model(Xn, ls, n_classes, h["n_neurons"],
+                                               h["beta"], h["rho"], key, G)
+                    anchored_admm(m, self._admm_params(), v_anchor=None, anchor_a=0.0)
+                    Vs.append(m.v)
+                V = jnp.stack(Vs, axis=0)                       # (S, C, 2, d, P)
+                v_bar = V.mean(0)
+                var_i = V.var(0).mean(axis=(0, 1, 2))           # per-pattern cross-subject var, (P,)
+                inv = 1.0 / (var_i + h["anchor_var_eps"])
+                a_vec = h["anchor_a_base"] * inv / inv.mean()   # mean strength = anchor_a_base
+            else:
+                Xs_n = ((X_src_feat - mu) / sigma).astype(np.float32)
+                src = build_fixed_gate_model(Xs_n, y_src, n_classes, h["n_neurons"],
+                                             h["beta"], h["rho"], key, G)
+                anchored_admm(src, self._admm_params(), v_anchor=None, anchor_a=0.0)
+                v_bar, a_vec = src.v, h["anchor_a"]
             if cacheable:
-                source_cache[ck] = (G, v_bar)
+                source_cache[ck] = (G, v_bar, a_vec)
         if h["transfer_stage2"] == "source_cal":
             reps = max(1, int(round(h["cal_balance"] * len(X_src_feat) / max(1, len(cal_feat)))))
             X_fit = np.concatenate([X_src_feat, np.tile(cal_feat, (reps, 1))], axis=0)
@@ -313,7 +334,7 @@ class ConvexCalibAdapter(BaseAdapter):
         Xn = ((X_fit - mu) / sigma).astype(np.float32)
         tgt = build_fixed_gate_model(Xn, y_fit, n_classes, h["n_neurons"],
                                      h["beta"], h["rho"], jax.random.PRNGKey(self.seed + 1), G)
-        anchored_admm(tgt, self._admm_params(), v_anchor=v_bar, anchor_a=h["anchor_a"])
+        anchored_admm(tgt, self._admm_params(), v_anchor=v_bar, anchor_a=a_vec)
         self._cld_model, self._feat_mu, self._feat_sigma = tgt, mu, sigma
 
     # -- BaseAdapter interface ---------------------------------------------
@@ -372,7 +393,7 @@ class ConvexCalibAdapter(BaseAdapter):
             cal_feat = self._adapt_np(extract_foundation_features(self._backbone_model, target_labeled[0], self.device, bs))
             y_cal = target_labeled[1]
 
-        if h["transfer_mode"] == "anchor" and cal_feat is not None:
+        if h["transfer_mode"] in ("anchor", "adaptive") and cal_feat is not None:
             self._transfer_head(X_src_feat, y_src_sub, cal_feat, y_cal, norm, n_classes, source_cache)
         elif mode == "group_dro":
             sf, sl = self._subject_feats(source_cache, n_classes)
