@@ -303,3 +303,20 @@ meta, MetaOptNet SVM, Group-DRO, IRMv1. Implemented 3 as `generality_mode` in co
   and explains why LoRA+convex wins. Convex_calib default stays iter-8 (use_lora=True,
   generality_mode="none"). generality_mode code retained as a research artifact.
 - FINAL (unchanged): LoRA+convex (iter-8) remains the winner — full-9 0.595 > lora 0.587.
+
+## SPECIALIST PORT — eegnet quick test (2026-06-01)
+Ported convex methods to specialists (adaptation/convex_calib_specialist.py): source-train
+eegnet -> {convex: frozen + convex head on source∪cal | ft_convex: gentle full-FT on cal +
+convex head | ft_linear: full-FT + linear head = finetune}. (peft-LoRA can't wrap braindecode
+MaxNorm convs under torch 2.11 -> representation adaptation uses full-FT.)
+Clean 3-way, SAME source-trained backbone, 9 subj, K=[1,10,30], n_repeats=2:
+    ft_linear (finetune)  0.5405  {1:.529, 10:.536, 30:.557}
+    ft_convex (ours)      0.5371  {1:.497, 10:.545, 30:.570}
+    convex    (ours)      0.5263  {1:.490, 10:.533, 30:.556}
+FINDING: on eegnet the convex head does NOT beat the linear head — ft_convex ≈ ft_linear
+(within noise), finetune ahead at low K, convex ahead only at K=30. The MIRepNet convex win
+(+0.038 @K=10) does NOT replicate -> the convex-head advantage is BACKBONE-DEPENDENT: strong on
+rich foundation features (MIRepNet 256-d), neutral/mixed on smaller specialist features (eegnet).
+Caveat: eegnet source-train is GPU-nondeterministic (~±0.02 across runs); within-run comparison
+(shared backbone) is controlled, margins are within noise. Next option: shallowconv/conformer
+(conformer's transformer features may behave more like MIRepNet).
