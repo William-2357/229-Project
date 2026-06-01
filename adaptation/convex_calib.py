@@ -57,6 +57,8 @@ HPARAMS = dict(
     # --- LoRA representation adaptation (iter-8 winner) ---
     use_lora=True, lora_rank=8, lora_lr=1e-3, lora_epochs=100, lora_patience=15,
     lora_val_frac=0.1, lora_min_cal=2,
+    # --- convex-head ensemble (variance reduction over independent LoRA+gate members) ---
+    n_ensemble=1,             # >1: average M LoRA+convex members (each its own LoRA seed + gates)
     # --- two-stage convex transfer (relaxed-harness arc): fixed dict + anchor to source head ---
     transfer_mode="none",     # none | anchor | adaptive   (convex-pretrain source head, then
                               #   anchored target solve; adaptive=per-pattern Mahalanobis-spirit
@@ -114,6 +116,7 @@ class ConvexCalibAdapter(BaseAdapter):
         self.hp = {**HPARAMS, **overrides}
         self._backbone_model = None
         self._cld_model = None
+        self._members = None       # ensemble: list of (backbone, cld, mu, sigma)
         self._feat_mu = self._feat_sigma = None
         self._pca = None
         self._target_R_inv_sqrt = None
@@ -357,6 +360,11 @@ class ConvexCalibAdapter(BaseAdapter):
 
         model = self._source_ft(X_src, y_src, n_classes, source_cache)
         n_cal = len(target_labeled[0]) if target_labeled is not None else 0
+        if (h["n_ensemble"] > 1 and h["use_lora"] and mode == "none"
+                and h["transfer_mode"] == "none" and n_cal >= h["lora_min_cal"]):
+            self._fit_lora_ensemble(model, X_src, y_src, target_unlabeled, target_labeled, n_classes)
+            self._fit_time = time.time() - t0
+            return self
         if h["use_lora"] and mode == "none" and n_cal >= h["lora_min_cal"]:
             model = self._lora_adapt(model, target_labeled[0], target_labeled[1])
         for p in model.parameters():
@@ -415,6 +423,43 @@ class ConvexCalibAdapter(BaseAdapter):
         self._fit_time = time.time() - t0
         return self
 
+    def _fit_lora_ensemble(self, model_src, X_src, y_src, target_unlabeled, target_labeled, n_classes):
+        """M independent LoRA+convex members (each its own LoRA seed + convex-head gates), to be
+        averaged in prob space. Reduces the high variance of LoRA-on-few-trials, esp. at low K."""
+        h = self.hp; bs = h["ft_batch_size"]
+        self._members = []
+        for m in range(h["n_ensemble"]):
+            ms = self.seed + 1000 * (m + 1)            # per-member seed -> distinct LoRA + gates
+            torch.manual_seed(ms); np.random.seed(ms)
+            if torch.cuda.is_available():
+                torch.cuda.manual_seed_all(ms)
+            model = self._lora_adapt(copy.deepcopy(model_src), target_labeled[0], target_labeled[1])
+            for p in model.parameters():
+                p.requires_grad_(False)
+            bbm = model.backbone.to(self.device)
+            f_src = extract_foundation_features(bbm, X_src, self.device, bs)
+            f_src, y_sub = _stratified_subsample(f_src, y_src, h["source_cap"], np.random.default_rng(self.seed))
+            f_unlab = extract_foundation_features(bbm, target_unlabeled, self.device, bs)
+            norm = (f_unlab.mean(0, keepdims=True), f_unlab.std(0, keepdims=True) + 1e-8)
+            f_cal = extract_foundation_features(bbm, target_labeled[0], self.device, bs)
+            reps = max(1, int(round(h["cal_balance"] * len(f_src) / max(1, len(f_cal)))))
+            X_fit = np.concatenate([f_src, np.tile(f_cal, (reps, 1))], 0)
+            y_fit = np.concatenate([y_sub, np.tile(target_labeled[1], reps)], 0)
+            cld, mu, sig = fit_cld_head(X_fit, y_fit, n_classes, h["n_neurons"], h["rank"], h["beta"],
+                                        h["rho"], h["gamma_ratio"], h["admm_iters"], h["pcg_iters"],
+                                        ms, norm_stats=norm)
+            self._members.append((bbm, cld, mu, sig))
+
+    def _ensemble_proba(self, X):
+        probs = None
+        for bbm, cld, mu, sig in self._members:
+            feat = extract_foundation_features(bbm, self._align(X), self.device, self.hp["ft_batch_size"])
+            Zn = ((feat - mu) / sig).astype(np.float32)
+            lg = np.array(cld.stacked_predict(jnp.array(Zn), cld.theta1, cld.theta2))
+            e = np.exp(lg - lg.max(1, keepdims=True)); p = e / e.sum(1, keepdims=True)
+            probs = p if probs is None else probs + p
+        return probs / len(self._members)
+
     def _logits(self, feat):
         feat = self._adapt_np(feat)
         if self._pca is not None:
@@ -423,10 +468,14 @@ class ConvexCalibAdapter(BaseAdapter):
         return np.array(self._cld_model.stacked_predict(jnp.array(Zn), self._cld_model.theta1, self._cld_model.theta2))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
+        if self._members is not None:
+            return self._ensemble_proba(X).argmax(axis=1)
         feat = extract_foundation_features(self._backbone_model, self._align(X), self.device, self.hp["ft_batch_size"])
         return self._logits(feat).argmax(axis=1)
 
     def predict_proba(self, X: np.ndarray) -> np.ndarray:
+        if self._members is not None:
+            return self._ensemble_proba(X)
         feat = extract_foundation_features(self._backbone_model, self._align(X), self.device, self.hp["ft_batch_size"])
         logits = self._logits(feat)
         e = np.exp(logits - logits.max(1, keepdims=True))

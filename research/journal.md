@@ -391,3 +391,29 @@ Verified: anchored_admm(a=0) == stock jaxcld ADMM to 3e-8.
   (iters 14-16, isotropic+adaptive, cal+source_cal, frozen+LoRA) = thorough NEGATIVE on this
   benchmark. Pivoting the "push score" effort to a convex-head ENSEMBLE (variance reduction,
   program backlog) on the iter-8 winner.
+
+## iter 17 — LoRA+convex ENSEMBLE, M=3 (2026-06-01)  [marginal — within proxy noise]
+- hypothesis: averaging M independent LoRA+convex members (each its own LoRA seed + convex-head
+  gates) reduces the variance of LoRA-on-few-trials and lifts the curve, esp. low K.
+- change: n_ensemble HPARAM + _fit_lora_ensemble (M members) + _ensemble_proba (avg in prob space).
+- proxy (9 subj, K=[1,10,30], M=3): score=0.6129 per_k={1:.557, 10:.628, 30:.654}.
+  vs iter-8 0.611 {1:.558, 10:.6305, 30:.645}: +0.002 OVERALL (K30 +.009, K10 -.002, K1 tie) —
+  WITHIN the ~±0.01 proxy noise from independent runs. Not a clear win.
+- decision: INCONCLUSIVE from independent runs. Running sweep_ensemble.py — a CONTROLLED test
+  (fit 5 members per cell ONCE, evaluate cumulative ensemble sizes {1,3,5} on the SAME members)
+  to isolate the pure ensemble effect (size=1 == iter-8) free of run-to-run noise.
+
+## iter 18 — CONTROLLED ensemble-size test (2026-06-01)  [ensemble is real but saturates at M=3]
+- sweep_ensemble.py (9 subj, K=[1,10,30], SAME 5 members per cell, cumulative averages):
+    M=1  0.5990  {1:.5535, 10:.6093, 30:.6343}
+    M=3  0.6121  {1:.5570, 10:.6142, 30:.6651}
+    M=5  0.6114  {1:.5555, 10:.6280, 30:.6508}
+- finding: ensembling gives a REAL controlled gain M1->M3 = +0.013 (free of run noise), SATURATING
+  at M=3 (M5 no better). Largest at K=30 (+0.031) — high K gives LoRA more data => more member
+  diversity => more ensemble benefit. CONFOUND (honest): the controlled M=1 (0.599) is the SWEEP
+  code path, ~0.012 below run_local's single member (iter-8 0.611, the known sweep/path gap). So the
+  +0.013 mostly RECOVERS run_local's single-member level rather than clearly exceeding it — matching
+  iter-17 (M=3 run_local 0.6129) being within noise of iter-8 (0.611).
+- decision: ensemble M=3 is the candidate. Running it on the FULL 9-subject grid (7 K, 5 repeats)
+  via run_local for the OFFICIAL number vs iter-8 full 0.595 — the full K grid includes K=15,30
+  where the controlled gain is largest, so the full may resolve a clearer signal than the proxy.
