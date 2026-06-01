@@ -1,22 +1,17 @@
 """Convex calibration adapter — the ONE file the autoresearch loop edits.
 
 Research surface for "convex NN for low-resource EEG calibration" (research/program.md).
-Backbone: a source-fine-tuned MIRepNet foundation encoder (frozen after source-FT),
-exactly like the `foundation_sft_*` baselines, so the comparison vs sft_lora /
-sft_finetune is apples-to-apples — the only moving part is the adaptation head.
+Backbone: a source-fine-tuned MIRepNet foundation encoder. Baselines (sft_lora/sft_finetune)
+use the SAME disk-cached source-FT backbone, so comparisons are apples-to-apples.
 
-The convex head (jaxcld CVX_ReLU_MLP + ADMM) has provable global optimality / margin
-stability; the goal is to beat LoRA in the low-K calibration regime.
-
-Iteration 1 — kill the low-K dip
---------------------------------
-The stock `foundation_sft_cld` refits the convex head FROM SCRATCH on only the ~12
-calibration trials at K>0, throwing away everything the source-shaped backbone+head
-knew → BCA collapses below LOSO at K=0.5 (the dip in mirepnet_performance.png). Fix:
-fit the convex head on the UNION of (subsampled) source features + UPWEIGHTED
-calibration features. One global convex solve, well-posed at every K. K=0 → source-only
-(LOSO head, no dip); K>0 → boundary nudged toward target. `cal_balance` sets how much
-total mass the calibration trials get relative to the source pool.
+iter-8 — LoRA + convex head (hybrid)
+------------------------------------
+Honest full-9 result: frozen-backbone convex (iter-3) trails LoRA because LoRA ADAPTS THE
+REPRESENTATION at high K. So: do exactly sft_lora's LoRA adaptation on calibration (gentle,
+low-rank — gentler than the full-finetune that diluted in iter-5), then replace LoRA's LINEAR
+head with the convex ReLU head fit on source ∪ upweighted-calibration of the LoRA-adapted
+features. This tests whether the convex head beats a linear head on the SAME representation —
+i.e. whether LoRA+convex > LoRA. `use_lora=False` recovers iter-3 (frozen + convex on src∪cal).
 """
 
 from __future__ import annotations
@@ -29,12 +24,15 @@ import torch.nn as nn
 
 import jax.numpy as jnp
 
-from .base import BaseAdapter
+from peft import LoraConfig, get_peft_model
+
+from .base import BaseAdapter, train_epoch, evaluate_model
 from .cld import fit_cld_head, maybe_reduce_features
 from .ea import compute_mean_covariance, matrix_sqrt_inv, euclidean_align
 from .foundation_cld import extract_foundation_features
+from .foundation_lora import _get_lora_target_modules
 from .foundation_source_finetune import build_source_finetuned_foundation_model
-from models.foundations import FoundationBackbone
+from models.foundations import FoundationBackbone, FoundationWithHead
 
 # ---------------------------------------------------------------------------
 # HPARAMS — the loop's primary tuning surface. Keep flat and documented.
@@ -45,18 +43,20 @@ HPARAMS = dict(
     val_fraction_src=0.1, ft_batch_size=32,
 
     # --- front-end ---
-    use_ea=False,           # EA whitening of raw EEG (MIRepNet already EA-normalizes internally)
-    ea_epsilon=1e-6,
+    use_ea=False, ea_epsilon=1e-6,
 
     # --- convex ReLU head (jaxcld CVX_ReLU_MLP + ADMM) ---
-    # iter-3: beta 1e-3->1e-4 (lighter group-lasso; 1e-2 over-regularizes to ~chance).
     n_neurons=32, rank=20, beta=1e-4, rho=0.01, gamma_ratio=1.0,
     admm_iters=50, pcg_iters=10, max_feat_dim=None,
 
-    # --- combined source + upweighted calibration fit ---
-    # iter-3: cal_balance 1.0->4.0 (more target emphasis; sweep sweet spot 2-4, 8+ hurts low-K).
-    source_cap=800,         # max source feature rows in the convex solve (stratified)
-    cal_balance=4.0,        # calibration total mass as a fraction of the source rows used
+    # --- combined source ∪ upweighted calibration fit (iter-3) ---
+    source_cap=800, cal_balance=4.0,
+
+    # --- iter-8: LoRA representation adaptation before the convex head ---
+    use_lora=True,
+    lora_rank=8,            # matches the sft_lora baseline
+    lora_lr=1e-3, lora_epochs=100, lora_patience=15, lora_val_frac=0.1,
+    lora_min_cal=2,         # apply LoRA whenever calibration exists (like sft_lora)
 )
 
 
@@ -73,18 +73,18 @@ def _stratified_subsample(X, y, cap, rng):
 
 
 class ConvexCalibAdapter(BaseAdapter):
-    """Source-finetuned MIRepNet + convex head fit on source ∪ upweighted calibration."""
+    """Source-FT MIRepNet (+ optional LoRA on calibration) + convex head on source∪cal."""
 
     def __init__(self, backbone: nn.Module, device: str = "cpu", seed: int = 42, **overrides):
         if not isinstance(backbone, FoundationBackbone):
             raise TypeError("ConvexCalibAdapter requires a FoundationBackbone (e.g. mirepnet)")
         super().__init__(backbone, device, seed)
         self.hp = {**HPARAMS, **overrides}
-        self._backbone_model: FoundationBackbone | None = None
+        self._backbone_model = None
         self._cld_model = None
         self._feat_mu = self._feat_sigma = None
         self._pca = None
-        self._target_R_inv_sqrt: np.ndarray | None = None
+        self._target_R_inv_sqrt = None
 
     def _align(self, X):
         if not self.hp["use_ea"] or self._target_R_inv_sqrt is None:
@@ -95,20 +95,49 @@ class ConvexCalibAdapter(BaseAdapter):
         h = self.hp
         key = ("convex_calib_sft", self.seed)
         if source_cache is not None and key in source_cache:
-            from models.foundations import FoundationWithHead
             model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
             model.load_state_dict(copy.deepcopy(source_cache[key]))
             return model
         model = build_source_finetuned_foundation_model(
             self.backbone, n_classes, X_src, y_src, device=self.device,
-            lr_src=h["lr_src"], weight_decay=h["weight_decay"],
-            max_epochs_src=h["max_epochs_src"], patience_src=h["patience_src"],
-            val_fraction_src=h["val_fraction_src"], batch_size=h["ft_batch_size"],
-            seed=self.seed,
-        )
+            lr_src=h["lr_src"], weight_decay=h["weight_decay"], max_epochs_src=h["max_epochs_src"],
+            patience_src=h["patience_src"], val_fraction_src=h["val_fraction_src"],
+            batch_size=h["ft_batch_size"], seed=self.seed)
         if source_cache is not None:
             source_cache[key] = copy.deepcopy(model.state_dict())
         return model
+
+    def _lora_adapt(self, model: FoundationWithHead, X_cal, y_cal) -> FoundationWithHead:
+        """sft_lora's adaptation: LoRA on backbone, fine-tune LoRA params on cal, merge.
+        Returns a FoundationWithHead whose backbone has LoRA folded in (head = source head)."""
+        h = self.hp
+        if len(X_cal) < 2:
+            return model
+        targets = _get_lora_target_modules(model, rank=h["lora_rank"])
+        if not targets:
+            return model
+        cfg = LoraConfig(r=h["lora_rank"], lora_alpha=h["lora_rank"] * 2,
+                         target_modules=targets, lora_dropout=0.1, bias="none")
+        lm = get_peft_model(model, cfg)
+        n_val = max(1, int(len(X_cal) * h["lora_val_frac"]))
+        idx = np.random.permutation(len(X_cal))
+        val_idx, tr_idx = idx[:n_val], idx[n_val:] if len(idx) > n_val else idx
+        Xtr, ytr, Xv, yv = X_cal[tr_idx], y_cal[tr_idx], X_cal[val_idx], y_cal[val_idx]
+        trainable = [p for p in lm.parameters() if p.requires_grad]
+        opt = torch.optim.AdamW(trainable, lr=h["lora_lr"], weight_decay=h["weight_decay"])
+        best, best_state, pat = -1.0, None, 0
+        for _ in range(h["lora_epochs"]):
+            train_epoch(lm, Xtr, ytr, opt, self.device, h["ft_batch_size"])
+            acc = evaluate_model(lm, Xv, yv, self.device)
+            if acc > best:
+                best, best_state, pat = acc, copy.deepcopy(lm.state_dict()), 0
+            else:
+                pat += 1
+                if pat >= h["lora_patience"]:
+                    break
+        if best_state is not None:
+            lm.load_state_dict(best_state)
+        return lm.merge_and_unload()   # fold LoRA into backbone weights -> FoundationWithHead
 
     def fit(self, source_data, target_unlabeled=None, target_labeled=None,
             source_cache: dict | None = None, source_per_subject: list | None = None):
@@ -133,29 +162,34 @@ class ConvexCalibAdapter(BaseAdapter):
                 target_labeled = (euclidean_align(target_labeled[0], self._target_R_inv_sqrt),
                                   target_labeled[1])
 
-        # 2) source-fine-tune the FM backbone, then freeze (shared w/ baselines, cached)
+        # 2) source-FT (cached). iter-8: then LoRA-adapt on calibration (gentle), freeze.
         model = self._source_ft(X_src, y_src, n_classes, source_cache)
-        model.freeze_backbone()
+        n_cal = len(target_labeled[0]) if target_labeled is not None else 0
+        adapted = h["use_lora"] and n_cal >= h["lora_min_cal"]
+        if adapted:
+            model = self._lora_adapt(model, target_labeled[0], target_labeled[1])
+        for p in model.parameters():
+            p.requires_grad_(False)
         self._backbone_model = model.backbone.to(self.device)
 
-        # 3) features. normalization stats from large unlabeled target set (stable at low K)
+        # 3) features from the (LoRA-adapted) frozen backbone
         bs = h["ft_batch_size"]
         X_src_feat = extract_foundation_features(self._backbone_model, X_src, self.device, bs)
         X_src_feat, y_src_sub = _stratified_subsample(X_src_feat, y_src, h["source_cap"], rng)
 
+        norm_stats = None
         if target_unlabeled is not None and len(target_unlabeled) >= 2:
+            # cache unlabeled feats only when backbone is the shared frozen one (not LoRA-adapted)
             uk = ("convex_calib_tgt_feats", self.seed)
-            if source_cache is not None and uk in source_cache:
+            if not adapted and source_cache is not None and uk in source_cache:
                 X_unlab = source_cache[uk]
             else:
                 X_unlab = extract_foundation_features(self._backbone_model, target_unlabeled, self.device, bs)
-                if source_cache is not None:
+                if not adapted and source_cache is not None:
                     source_cache[uk] = X_unlab
             norm_stats = (X_unlab.mean(0, keepdims=True), X_unlab.std(0, keepdims=True) + 1e-8)
-        else:
-            norm_stats = None
 
-        # 4) build the combined convex-fit set: source ∪ upweighted calibration
+        # 4) convex head on source ∪ upweighted calibration of the (adapted) features
         if target_labeled is not None and len(target_labeled[0]) >= 2:
             X_cal_feat = extract_foundation_features(self._backbone_model, target_labeled[0], self.device, bs)
             y_cal = target_labeled[1]
@@ -166,24 +200,20 @@ class ConvexCalibAdapter(BaseAdapter):
         else:
             X_fit, y_fit = X_src_feat, y_src_sub
 
-        # optional PCA for very high-dim backbones (no-op for MIRepNet's 256-d)
         X_fit, self._pca = maybe_reduce_features(X_fit, h["max_feat_dim"], self.seed)
-
-        # 5) one global convex solve
         self._cld_model, self._feat_mu, self._feat_sigma = fit_cld_head(
             X_fit, y_fit, n_classes, h["n_neurons"], h["rank"], h["beta"], h["rho"],
             h["gamma_ratio"], h["admm_iters"], h["pcg_iters"], self.seed,
-            norm_stats=norm_stats if h["max_feat_dim"] is None else None,
-        )
+            norm_stats=norm_stats if h["max_feat_dim"] is None else None)
         self._fit_time = time.time() - t0
         return self
 
-    def _logits(self, X_feat):
+    def _logits(self, feat):
         if self._pca is not None:
-            X_feat, _ = maybe_reduce_features(X_feat, self.hp["max_feat_dim"], self.seed, pca=self._pca)
-        X_norm = ((X_feat - self._feat_mu) / self._feat_sigma).astype(np.float32)
+            feat, _ = maybe_reduce_features(feat, self.hp["max_feat_dim"], self.seed, pca=self._pca)
+        Zn = ((feat - self._feat_mu) / self._feat_sigma).astype(np.float32)
         return np.array(self._cld_model.stacked_predict(
-            jnp.array(X_norm), self._cld_model.theta1, self._cld_model.theta2))
+            jnp.array(Zn), self._cld_model.theta1, self._cld_model.theta2))
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         feat = extract_foundation_features(self._backbone_model, self._align(X), self.device, self.hp["ft_batch_size"])

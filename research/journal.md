@@ -213,3 +213,18 @@ high K. The thesis (convex robust at low resource) holds DIRECTIONALLY — conve
 LoRA at low K and wins on the easiest subject (subj1: .705 vs .650 @K=0.5) with provable global
 optimality — but it is not superior overall on this strong FM backbone.
 => Consolidating and reporting. Autonomous loop stopped here (convex design space explored).
+
+## iter 8 — LoRA + convex head (HYBRID, user-requested) (2026-06-01)  [KEPT — BEATS LoRA]
+- hypothesis: the frozen-feature limit is the problem. Use sft_lora's exact LoRA adaptation
+  (rank 8) to adapt the representation on calibration, then replace lora's LINEAR head with
+  the convex ReLU head (on source∪upweighted-cal of the LoRA-adapted features). Tests: does
+  the convex head beat a linear head on the SAME adapted representation?
+- change: use_lora=True; _lora_adapt (peft LoRA, finetune on cal, merge_and_unload), then
+  iter-3 convex head on the merged backbone's features.
+- proxy (9 subj, K=[1,10,30]): score=0.6110 per_k={1:.558, 10:.6305, 30:.645}.
+  vs sft_lora 0.5955: +0.0155 OVERALL; K10 .6305 vs .587 (+0.044!), K30 .645 vs .634 (+0.011),
+  K1 .558 vs .565 (~tie). vs convex iter-3 0.582: +0.029.
+- decision: KEPT — NEW BEST and BEATS LoRA on the proxy (margin >> ~0.01 noise, esp. K10).
+  The convex head adds real value on top of LoRA's representation. Promoting to FULL 9-subject
+  sweep (all 7 K, n_repeats=5) to confirm the whole-curve win. NOTE: this is LoRA+convex
+  (representation adaptation via LoRA + convex classifier), the user-requested hybrid.

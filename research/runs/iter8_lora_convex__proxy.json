@@ -1,0 +1,62 @@
+{
+  "tag": "iter8_lora_convex",
+  "method": "convex_calib",
+  "mode": "proxy",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "k_grid": [
+    1.0,
+    10.0,
+    30.0
+  ],
+  "n_repeats": 3,
+  "seed": 42,
+  "score": 0.611,
+  "low_k_score": 0.5941,
+  "per_k": {
+    "1.0": 0.5576,
+    "10.0": 0.6305,
+    "30.0": 0.645
+  },
+  "k_star": 1.0,
+  "ceiling": 0.645,
+  "elapsed_sec": 397.4,
+  "hparams": {
+    "lr_src": 0.001,
+    "weight_decay": 0.0001,
+    "max_epochs_src": 200,
+    "patience_src": 25,
+    "val_fraction_src": 0.1,
+    "ft_batch_size": 32,
+    "use_ea": false,
+    "ea_epsilon": 1e-06,
+    "n_neurons": 32,
+    "rank": 20,
+    "beta": 0.0001,
+    "rho": 0.01,
+    "gamma_ratio": 1.0,
+    "admm_iters": 50,
+    "pcg_iters": 10,
+    "max_feat_dim": null,
+    "source_cap": 800,
+    "cal_balance": 4.0,
+    "use_lora": true,
+    "lora_rank": 8,
+    "lora_lr": 0.001,
+    "lora_epochs": 100,
+    "lora_patience": 15,
+    "lora_val_frac": 0.1,
+    "lora_min_cal": 2
+  }
+}

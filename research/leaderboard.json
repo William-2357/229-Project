@@ -28,10 +28,10 @@
     }
   },
   "proxy_best": {
-    "tag": "iter3_calbal4_beta1e4",
-    "score": 0.5971,
-    "low_k_score": 0.6036,
-    "iter": 3,
+    "tag": "iter8_lora_convex",
+    "score": 0.611,
+    "low_k_score": 0.5941,
+    "iter": 8,
     "dataset": "bciciv2a"
   },
   "full_best": {
@@ -123,6 +123,15 @@
       "low_k_score": 0.5702,
       "dataset": "bciciv2a",
       "new_best": false
+    },
+    {
+      "iter": 8,
+      "mode": "proxy",
+      "tag": "iter8_lora_convex",
+      "score": 0.611,
+      "low_k_score": 0.5941,
+      "dataset": "bciciv2a",
+      "new_best": true
     }
   ],
   "bars_to_beat_local_proxy14": {
