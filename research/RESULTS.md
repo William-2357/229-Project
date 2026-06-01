@@ -72,3 +72,39 @@ python research/run_local.py --full --tag lora   --method foundation_sft_lora
 python research/run_local.py --full --tag ft     --method foundation_sft_finetune
 python research/plot_official.py
 ```
+
+---
+
+## Convex-in-pretraining arc (relaxed harness, iters 14–18)
+
+After the head-only loop, the harness was relaxed to allow **convexity in the pre-training
+stage**, guided by the team-paper reference (arXiv 2605.23235) on the two-stage convex transfer.
+Governing principle: in a convex model "pretrain→finetune via initialization" is meaningless
+(the solution is set by data+regularizer+dictionary, not the optimization path), so source
+knowledge can transfer only through the **gate dictionary** or the **regularizer (anchor)**.
+
+Built `adaptation/convex_transfer.py`: an **anchored ADMM** (v-update blended toward a
+source-pretrained convex head `v_bar`; verified identical to stock jaxcld ADMM at `a=0` to 3e-8),
+generalized to a per-pattern (Mahalanobis-spirit) anchor whose strength `a_i ∝ 1/Var_s(v_i)` from
+a multi-task per-source-subject solve.
+
+**Result 1 — the convex-transfer anchor is a thorough NEGATIVE.** Tested isotropic + adaptive,
+cal-only + source-pooled, on frozen + LoRA features; none beats its bar (frozen-convex 0.582 /
+LoRA+convex 0.611). **Key finding:** when source *data* is available offline, **pooling raw source
+features into the convex fit dominates anchoring to a source-head summary.** The anchor earns its
+keep in the **online/streaming** regime the paper originally targeted (source can't be re-accessed),
+not this offline benchmark.
+
+**Result 2 — a convex-head ENSEMBLE is marginal.** Averaging M independent LoRA+convex members
+(each its own LoRA seed + gates). Controlled test (same members per cell): a real **+0.013**
+(M=1→M=3, variance reduction, saturating at M=3, largest at high K). On the official full grid,
+**ensemble M=3 = 0.598 vs iter-8 0.595 (+0.003, within noise)** — gains at K=5/30 offset by small
+losses at K=0.5/10/15. Highest recorded, but not a decisive win, and 3× the compute.
+
+**Standing winner unchanged: iter-8 LoRA+convex (full 0.595).** The robust lever remains
+per-target representation adaptation (LoRA) + a convex head; neither convex transfer nor ensembling
+decisively exceeds it on this strong FM backbone. `convex_calib.py` default stays `n_ensemble=1,
+transfer_mode=none`; `n_ensemble=3` is the highest-accuracy variant when 3× compute is acceptable.
+
+Repro: `CONVEX_HP='{"n_ensemble":3}' python research/run_local.py --full --tag ens3`;
+sweeps `research/sweep_transfer.py`, `research/sweep_lora_transfer.py`, `research/sweep_ensemble.py`.

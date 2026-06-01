@@ -417,3 +417,30 @@ Verified: anchored_admm(a=0) == stock jaxcld ADMM to 3e-8.
 - decision: ensemble M=3 is the candidate. Running it on the FULL 9-subject grid (7 K, 5 repeats)
   via run_local for the OFFICIAL number vs iter-8 full 0.595 — the full K grid includes K=15,30
   where the controlled gain is largest, so the full may resolve a clearer signal than the proxy.
+- FULL 9-subject result (M=3, all 7 K, n_repeats=5):
+    K      0.5    1     2     5     10    15    30    mean
+    ens-M3 .552  .562  .559  .591  .622  .645  .657  0.5983
+    iter-8 .557  .559  .557  .580  .625  .647  .642  0.5950
+    Δ      -.006 +.003 +.002 +.011 -.004 -.002 +.015 +0.0033
+  Ensemble M=3 (0.5983) is the highest full number recorded but +0.0033 over iter-8 is WITHIN
+  run-to-run noise; mixed per-K (gains K=5/30, small losses K=0.5/10/15). Real-but-small high-K
+  effect, NOT a decisive win, and costs 3x LoRA+inference.
+- VERDICT: marginal. Keeping iter-8 (n_ensemble=1) as the committed DEFAULT (best value/robust);
+  n_ensemble=3 documented as the highest-accuracy variant (worth it only when 3x compute is fine
+  and high-K accuracy matters). Convex-in-pretraining campaign CONCLUDED.
+
+## ===== CONVEX-IN-PRETRAINING CAMPAIGN — FINAL (2026-06-01) =====
+Relaxed-harness arc (iters 14-18) testing the team-paper reference's two-stage convex transfer +
+a convex-head ensemble, to push past iter-8 LoRA+convex (full 0.595 / proxy 0.611).
+- Built adaptation/convex_transfer.py: anchored ADMM (a=0 == stock jaxcld to 3e-8), per-pattern
+  (Mahalanobis-spirit) anchor. The reference's principle: convex transfer = dictionary + anchor
+  (init is meaningless in a convex model).
+- CONVEX-TRANSFER ANCHOR = thorough NEGATIVE. Isotropic + adaptive/Mahalanobis, cal-only +
+  source-pooled, frozen + LoRA — none beats its bar. KEY FINDING: offline (source data available),
+  POOLING raw source features into the convex fit DOMINATES anchoring to a source-head summary; the
+  anchor's value is the ONLINE/STREAMING regime the paper originally targeted, not this benchmark.
+- ENSEMBLE of convex heads = marginal. Real controlled +0.013 (variance reduction, saturates at
+  M=3, largest at high K) but on the official full metric only +0.0033 over iter-8 (within noise).
+- WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595). Highest recorded: ensemble M=3 (0.598, within
+  noise). The robust lever remains per-target representation adaptation (LoRA) + a convex head;
+  neither convex transfer nor ensembling decisively exceeds it on this strong FM backbone.

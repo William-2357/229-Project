@@ -273,7 +273,7 @@
       "mean": 0.595
     }
   },
-  "status": "WIN \u2014 LoRA+convex (iter-8) beats LoRA on full 9-subj benchmark (0.595 vs 0.587), decisive at K=10-15",
+  "status": "WIN (unchanged) \u2014 LoRA+convex (iter-8) full 0.595. Convex-in-pretraining arc (iters 14-18): convex-transfer anchor NEGATIVE (offline pooling > anchor); convex-head ensemble marginal (M=3 full 0.598, +0.003 within noise). iter-8 remains the robust winner.",
   "generality_experiments_frozen_proxy_9subj": {
     "note": "cross-subject-generality objectives on FROZEN MIRepNet (K=[1,10,30]). None beats frozen-convex 0.582 or LoRA+convex 0.611.",
     "meta_r2d2": 0.5766,
@@ -282,5 +282,36 @@
     "frozen_convex_bar": 0.582,
     "lora_convex_iter8_bar": 0.611,
     "verdict": "negative \u2014 pretrained backbone already cross-subject-general; per-target LoRA adaptation is the lever, not fixed-rule generality objectives"
+  },
+  "convex_in_pretraining_arc_iters14_18": {
+    "note": "Relaxed-harness arc (team-paper reference 2605.23235): two-stage convex transfer + convex-head ensemble, vs iter-8 LoRA+convex (full 0.595 / proxy 0.611).",
+    "convex_transfer_anchor": {
+      "verdict": "NEGATIVE \u2014 none beats its bar (frozen-convex 0.582 / LoRA+convex 0.611)",
+      "frozen_isotropic_caL_a0.01": 0.524,
+      "frozen_anchor_sweep_best_source_cal": 0.5759,
+      "frozen_adaptive_per_pattern_cal": 0.5641,
+      "lora_anchor_sweep_best": 0.5969,
+      "finding": "offline (source data available), POOLING raw source features dominates anchoring to a source-head summary; the anchor's value is the online/streaming regime, not this benchmark"
+    },
+    "convex_head_ensemble": {
+      "controlled_M1": 0.599,
+      "controlled_M3": 0.6121,
+      "controlled_M5": 0.6114,
+      "controlled_gain_M1_to_M3": 0.0131,
+      "saturates_at": 3,
+      "full_9subj_M3": 0.5983,
+      "full_9subj_M3_per_k": {
+        "0.5": 0.5515,
+        "1.0": 0.5621,
+        "2.0": 0.5594,
+        "5.0": 0.5914,
+        "10.0": 0.6215,
+        "15.0": 0.6446,
+        "30.0": 0.6573
+      },
+      "vs_iter8_full": "+0.0033 (within run-to-run noise); gains at K=5/30, small losses K=0.5/10/15; 3x compute",
+      "verdict": "marginal \u2014 highest recorded full number but not a decisive win"
+    },
+    "winner_unchanged": "iter-8 LoRA+convex (full 0.595). convex_calib default stays n_ensemble=1, transfer_mode=none."
   }
 }
