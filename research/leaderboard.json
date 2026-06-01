@@ -114,6 +114,15 @@
       "low_k_score": 0.5536,
       "dataset": "bciciv2a",
       "new_best": true
+    },
+    {
+      "iter": 7,
+      "mode": "proxy",
+      "tag": "iter7_cronos_am",
+      "score": 0.5816,
+      "low_k_score": 0.5702,
+      "dataset": "bciciv2a",
+      "new_best": false
     }
   ],
   "bars_to_beat_local_proxy14": {
@@ -187,6 +196,18 @@
       "30.0": 0.634,
       "mean": 0.587
     },
-    "verdict": "LoRA > convex by 0.011 overall; convex wins only K=5; LoRA wins high-K decisively"
-  }
+    "verdict": "LoRA > convex by 0.011 overall; convex wins only K=5; LoRA wins high-K decisively",
+    "sft_finetune": {
+      "0.5": 0.564,
+      "1.0": 0.564,
+      "2.0": 0.565,
+      "5.0": 0.565,
+      "10.0": 0.578,
+      "15.0": 0.584,
+      "30.0": 0.586,
+      "mean": 0.572
+    },
+    "ranking": "sft_lora 0.587 > convex 0.576 > sft_finetune 0.572"
+  },
+  "status": "CONCLUDED \u2014 convex competitive (2nd of 3, beats finetune), trails lora; see research/RESULTS.md"
 }

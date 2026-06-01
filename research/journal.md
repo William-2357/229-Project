@@ -179,3 +179,37 @@ benchmark. Convex is COMPETITIVE (within ~0.01 at low/mid K, wins K=5, wins subj
 but not superior. Remaining principled lever = CRONOS-AM alt-min (uncertain, ~1h/iter to
 validate on full). PAUSING the autonomous loop here to report this result-overturning finding
 and get a decision: invest in CRONOS-AM vs. accept the honest result.
+[User chose: implement CRONOS-AM, fix the biased proxy first.]
+
+## PROXY FIX (2026-06-01)
+run_local proxy was subj1-4 / K=[.5,1,2] (biased toward convex via subject 1). Fixed to ALL
+9 subjects (source-FT disk-cached so affordable), K=[1,10,30] spanning low/mid/high. New
+bars (9-subj, same backbone): lora 0.5955, convex iter-3 0.582.
+
+## iter 7 — CRONOS-AM alternating minimization (2026-06-01)  [REVERTED]
+- hypothesis: adapt the representation CONVEXLY via a light low-rank feature-space adapter A
+  trained THROUGH the fixed convex head (alternate: solve head on A(source∪cal) <-> grad-update
+  A on cal CE), gated to K>=5 (adapter_min_cal=60; at K=1 the adapter overfits). Avoids iter-5
+  dilution / iter-6 underdetermination, and is cheap (256-d feature space, no backbone fwd).
+- change: altmin_rounds=2, rank=16, 60 steps; _head_forward (differentiable relu(Z@W1)@W2),
+  _solve_head / _update_adapter.
+- proxy (9 subj, K=[1,10,30]): score=0.5816 per_k={1:.555, 10:.585, 30:.6045}.
+  vs iter-3 {1:.557,10:.587,30:.602}=0.582 -> NO IMPROVEMENT (within noise). vs lora 0.5955.
+- decision: REVERTED (0.5816 ≈ iter-3 0.582). The adapter barely moves the representation —
+  re-solving the global convex head absorbs its change, and the frozen MIRepNet features cap
+  what any head/feature-adapter can do. K=30 stays .605 (lora .634).
+
+## ===== FINAL HONEST CONCLUSION (2026-06-01) =====
+Across 7 iterations on the corrected, fair, full benchmark (source-pretrained MIRepNet @250Hz,
+same backbone for all methods): the convex calibration head is COMPETITIVE but does NOT beat
+LoRA. Best convex = iter-3 (frozen backbone + convex ReLU head on source∪upweighted-cal,
+cal_balance=4, beta=1e-4): full-9 mean BCA 0.576 vs lora 0.587 (-0.011); wins only K=5; ties
+mid-K; trails at K=15-30. 
+Tried and failed to beat LoRA: head/source-cal rebalancing (iter3-4), heavy-backbone adaptation
+(iter5 dilutes, iter6 underdetermines), CRONOS-AM light feature-adapter (iter7, no gain).
+ROOT CAUSE: LoRA/finetune ADAPT THE REPRESENTATION (backbone); the convex method keeps the
+backbone frozen and adapts only a head/feature-map, which cannot match backbone adaptation at
+high K. The thesis (convex robust at low resource) holds DIRECTIONALLY — convex is closest to
+LoRA at low K and wins on the easiest subject (subj1: .705 vs .650 @K=0.5) with provable global
+optimality — but it is not superior overall on this strong FM backbone.
+=> Consolidating and reporting. Autonomous loop stopped here (convex design space explored).

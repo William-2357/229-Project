@@ -40,7 +40,11 @@ from adaptation.foundation_source_lora import FoundationSourceFineTuneLoRAAdapte
 from adaptation.foundation_sft_finetune import FoundationSFTFineTuneAdapter
 
 REPO = Path(__file__).resolve().parent.parent
-PROXY_K = [0.5, 1.0, 2.0]
+# Proxy fixed (2026-06-01): was subj1-4 / K=[.5,1,2], which is BIASED — subject 1 favours
+# convex and is 1/4 of that proxy (vs 1/9 of full), overstating convex. Now: ALL 9 subjects
+# (source-FT is disk-cached so this is cheap) at K spanning low/mid/high to also expose the
+# high-K regime where representation adaptation (CRONOS-AM) must help.
+PROXY_K = [1.0, 10.0, 30.0]
 FULL_K = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
 CKPT = {"mirepnet": str(REPO / "MIRepNet.pth")}
 # Backbone-native sampling rate. MIRepNet was pretrained at 250 Hz; feeding native 250 Hz
@@ -120,7 +124,7 @@ def main():
     dataset, resolved = build_dataset(args.dataset, args.backbone, Path(args.data_root), seed)
     all_subj = dataset.subject_ids
     if args.proxy:
-        subjects, k_grid = all_subj[:4], PROXY_K
+        subjects, k_grid = all_subj, PROXY_K   # all 9 subjects (unbiased); reduced K grid
         n_repeats = args.n_repeats if args.n_repeats is not None else 3
     else:
         subjects, k_grid = all_subj, FULL_K

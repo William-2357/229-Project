@@ -1,0 +1,44 @@
+{
+  "tag": "full_ft_250",
+  "method": "foundation_sft_finetune",
+  "mode": "full",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    15.0,
+    30.0
+  ],
+  "n_repeats": 5,
+  "seed": 42,
+  "score": 0.5721,
+  "low_k_score": 0.5639,
+  "per_k": {
+    "0.5": 0.5639,
+    "1.0": 0.5638,
+    "2.0": 0.5648,
+    "5.0": 0.5645,
+    "10.0": 0.5778,
+    "15.0": 0.5838,
+    "30.0": 0.5863
+  },
+  "k_star": 0.5,
+  "ceiling": 0.5863,
+  "elapsed_sec": 567.0,
+  "hparams": null
+}
