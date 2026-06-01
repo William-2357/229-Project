@@ -151,3 +151,31 @@ to turn the low-K lead into a whole-curve win over LoRA.
   + sft_finetune at 250Hz) to resolve the proxy tie at scale and produce the definitive curve.
   Remaining stretch idea if a whole-curve win is still wanted: CRONOS-AM alt-min (convex
   representation adaptation), which neither dilutes nor underdetermines like iters 5-6 did.
+
+## OFFICIAL FULL 9-SUBJECT RESULT (2026-06-01) — convex (iter-3) vs sft_lora, 250Hz
+Same source-FT MIRepNet backbone for both. K=0.5..30, n_repeats=5.
+    K     convex   lora     Δ
+    0.5   0.550    0.559    lora +0.009
+    1.0   0.557    0.565    lora +0.007
+    2.0   0.556    0.566    lora +0.010
+    5.0   0.584    0.573    convex +0.011   (convex's only win)
+    10    0.587    0.587    tie
+    15    0.597    0.623    lora +0.026
+    30    0.602    0.634    lora +0.033
+    mean  0.576    0.587    lora +0.011
+
+**HONEST BOTTOM LINE — the premise is NOT supported on the full benchmark.** LoRA beats
+convex at every K except K=5, and overall (0.587 vs 0.576). The earlier "convex wins low-K"
+was a PROXY ARTIFACT: the 4-subject proxy is dominated by subject 1 (convex 0.705 vs lora
+0.650 @K=0.5), who is 1/4 of the proxy but 1/9 of the full set. Across all 9 subjects convex's
+low-K edge vanishes. LoRA's backbone adaptation wins decisively at high K (15-30), which the
+frozen-feature convex head cannot match.
+
+METHODOLOGICAL FINDING: the subj-1-4 proxy systematically OVERSTATES convex → unreliable for
+loop selection. Any further iterations must validate on all 9 subjects (or a balanced subset).
+
+STATUS: iters 1-6 explored head tuning + representation adaptation; none beat LoRA on the full
+benchmark. Convex is COMPETITIVE (within ~0.01 at low/mid K, wins K=5, wins subject 1 outright)
+but not superior. Remaining principled lever = CRONOS-AM alt-min (uncertain, ~1h/iter to
+validate on full). PAUSING the autonomous loop here to report this result-overturning finding
+and get a decision: invest in CRONOS-AM vs. accept the honest result.

@@ -1,0 +1,44 @@
+{
+  "tag": "full_lora_250",
+  "method": "foundation_sft_lora",
+  "mode": "full",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    15.0,
+    30.0
+  ],
+  "n_repeats": 5,
+  "seed": 42,
+  "score": 0.5868,
+  "low_k_score": 0.562,
+  "per_k": {
+    "0.5": 0.5593,
+    "1.0": 0.5647,
+    "2.0": 0.5655,
+    "5.0": 0.5729,
+    "10.0": 0.5874,
+    "15.0": 0.6232,
+    "30.0": 0.6343
+  },
+  "k_star": 0.5,
+  "ceiling": 0.6343,
+  "elapsed_sec": 1000.9,
+  "hparams": null
+}

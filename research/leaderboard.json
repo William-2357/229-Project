@@ -35,12 +35,21 @@
     "dataset": "bciciv2a"
   },
   "full_best": {
-    "tag": null,
-    "score": null,
-    "low_k_score": null,
-    "per_k": null,
-    "k_star": null,
-    "iter": null
+    "tag": "iter3_convex_full",
+    "score": 0.5761,
+    "low_k_score": 0.5536,
+    "iter": 3,
+    "dataset": "bciciv2a",
+    "per_k": {
+      "0.5": 0.5499,
+      "1.0": 0.5573,
+      "2.0": 0.5559,
+      "5.0": 0.5842,
+      "10.0": 0.5871,
+      "15.0": 0.5968,
+      "30.0": 0.6016
+    },
+    "k_star": 0.5
   },
   "history": [
     {
@@ -96,6 +105,15 @@
       "low_k_score": 0.6036,
       "dataset": "bciciv2a",
       "new_best": false
+    },
+    {
+      "iter": 3,
+      "mode": "full",
+      "tag": "iter3_convex_full",
+      "score": 0.5761,
+      "low_k_score": 0.5536,
+      "dataset": "bciciv2a",
+      "new_best": true
     }
   ],
   "bars_to_beat_local_proxy14": {
@@ -146,5 +164,29 @@
         "2.0": 0.587
       }
     }
+  },
+  "official_full_9subj_250hz": {
+    "note": "Definitive comparison, same source-FT MIRepNet backbone. LoRA leads overall; convex's proxy low-K 'win' was a subject-1 artifact.",
+    "convex_iter3": {
+      "0.5": 0.55,
+      "1.0": 0.557,
+      "2.0": 0.556,
+      "5.0": 0.584,
+      "10.0": 0.587,
+      "15.0": 0.597,
+      "30.0": 0.602,
+      "mean": 0.576
+    },
+    "sft_lora": {
+      "0.5": 0.559,
+      "1.0": 0.565,
+      "2.0": 0.566,
+      "5.0": 0.573,
+      "10.0": 0.587,
+      "15.0": 0.623,
+      "30.0": 0.634,
+      "mean": 0.587
+    },
+    "verdict": "LoRA > convex by 0.011 overall; convex wins only K=5; LoRA wins high-K decisively"
   }
 }

@@ -1,0 +1,63 @@
+{
+  "tag": "iter3_convex_full",
+  "method": "convex_calib",
+  "mode": "full",
+  "backbone": "mirepnet",
+  "dataset": "bciciv2a",
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "k_grid": [
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    15.0,
+    30.0
+  ],
+  "n_repeats": 5,
+  "seed": 42,
+  "score": 0.5761,
+  "low_k_score": 0.5536,
+  "per_k": {
+    "0.5": 0.5499,
+    "1.0": 0.5573,
+    "2.0": 0.5559,
+    "5.0": 0.5842,
+    "10.0": 0.5871,
+    "15.0": 0.5968,
+    "30.0": 0.6016
+  },
+  "k_star": 0.5,
+  "ceiling": 0.6016,
+  "elapsed_sec": 1063.5,
+  "hparams": {
+    "lr_src": 0.001,
+    "weight_decay": 0.0001,
+    "max_epochs_src": 200,
+    "patience_src": 25,
+    "val_fraction_src": 0.1,
+    "ft_batch_size": 32,
+    "use_ea": false,
+    "ea_epsilon": 1e-06,
+    "n_neurons": 32,
+    "rank": 20,
+    "beta": 0.0001,
+    "rho": 0.01,
+    "gamma_ratio": 1.0,
+    "admm_iters": 50,
+    "pcg_iters": 10,
+    "max_feat_dim": null,
+    "source_cap": 800,
+    "cal_balance": 4.0
+  }
+}
