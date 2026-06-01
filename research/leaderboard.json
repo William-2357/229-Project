@@ -273,7 +273,7 @@
       "mean": 0.595
     }
   },
-  "status": "WIN (unchanged) \u2014 iter-8 LoRA+convex full 0.595. Convex-in-pretraining campaign (iters 14-22): transfer-anchor NEGATIVE; ensemble marginal (0.598, within noise); coupling REFUTED across ALL mechanisms incl. implicit-diff-through-KKT (0.583-0.589 < 0.611). Decoupling is load-bearing. iter-8 winner.",
+  "status": "WIN \u2014 LoRA+convex beats sft_lora on BOTH MIRepNet (proxy 0.611 vs 0.596) and NeuroGPT (full-dim 0.676 vs 0.656). Convex-head advantage GENERALIZES across foundation backbones (given full features; PCA bottleneck must be avoided). Convex-in-pretraining levers (transfer-anchor, coupling) negative; ensemble marginal. Backbone-agnostic recipe: source-FT FM -> (LoRA) -> full-dim convex ReLU head.",
   "generality_experiments_frozen_proxy_9subj": {
     "note": "cross-subject-generality objectives on FROZEN MIRepNet (K=[1,10,30]). None beats frozen-convex 0.582 or LoRA+convex 0.611.",
     "meta_r2d2": 0.5766,
@@ -356,13 +356,19 @@
     }
   },
   "neurogpt_cross_backbone_proxy_9subj": {
-    "note": "Baselines + best-3 methods on NeuroGPT (HF wenhuic/Neuro-GPT, 1024-d; convex head PCA->256). Proxy 9 subj K=[1,10,30], shared source-FT.",
-    "sft_lora": 0.6557,
-    "ensemble_m3": 0.6314,
-    "convex_frozen": 0.6242,
-    "lora_convex": 0.6193,
-    "sft_finetune": 0.6147,
-    "verdict": "REVERSAL vs MIRepNet \u2014 sft_lora WINS by 0.025-0.037; convex head worse than linear head, LoRA hurts the convex head (frozen-convex>LoRA+convex). LoRA+convex win is MIRepNet-specific; convex-head value is strongly backbone-dependent.",
-    "caveat": "1024-d forces convex onto PCA-256 while sft_lora's linear head sees full 1024-d; part of the gap is the PCA handicap, but gap (0.025-0.037) and PCA variance retention mean the verdict holds."
+    "note": "Baselines + best-3 on NeuroGPT (HF wenhuic/Neuro-GPT, 1024-d). Proxy 9 subj K=[1,10,30], shared source-FT. CORRECTED with full-dim convex.",
+    "fulldim": {
+      "lora_convex": 0.6759,
+      "convex_frozen": 0.6715,
+      "sft_lora": 0.6557,
+      "sft_finetune": 0.6147
+    },
+    "pca256_handicapped": {
+      "ensemble_m3": 0.6314,
+      "convex_frozen": 0.6242,
+      "lora_convex": 0.6193
+    },
+    "verdict": "CONVEX WINS on NeuroGPT at FULL 1024-d: LoRA+convex 0.676 > sft_lora 0.656 (+0.020), frozen-convex 0.672 also > baseline. The earlier 'convex loses' was a PCA->256 artifact (~0.05 handicap). LoRA+convex beats sft_lora on BOTH MIRepNet (0.611 vs 0.596) AND NeuroGPT (0.676 vs 0.656) -> the convex-head advantage GENERALIZES (given full features). On NeuroGPT the convex head carries most credit (frozen-convex ~= LoRA+convex); on MIRepNet LoRA does.",
+    "lesson": "Never PCA-bottleneck the convex head on high-dim FMs; the 1024-d ADMM scales fine (~15s compile, 0.2s warm)."
   }
 }

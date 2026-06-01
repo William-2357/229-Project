@@ -548,7 +548,29 @@ CAVEAT (honest): NeuroGPT features are 1024-d; the convex ADMM doesn't scale the
 methods use PCA->256 while sft_lora's linear head sees the FULL 1024-d. Part of the gap is this PCA
 handicap, not purely the convex head. (PCA-256 retains most variance, and the gap is 0.025-0.037, so
 the conclusion—sft_lora wins on NeuroGPT—almost certainly holds; a full-dim convex run would confirm.)
-CONCLUSION: the LoRA+convex win is MIRepNet-SPECIFIC. Convex-head value is strongly backbone-dependent
-(strong on MIRepNet's 256-d MI-pretrained features; absent on NeuroGPT's 1024-d TUH-pretrained features
-and on EEGNet). The robust, backbone-agnostic lever is representation adaptation (LoRA); the convex
-head is a conditional add-on that pays off only on some backbones.
+CONCLUSION (PRELIMINARY — see correction below): the LoRA+convex win looked MIRepNet-specific...
+BUT this was confounded by the PCA->256 handicap. CORRECTED by the full-dim run:
+
+## ===== NEUROGPT FULL-DIM CONVEX (2026-06-01) — PCA was the confound; convex WINS on NeuroGPT too =====
+The PCA->256 caveat turned out to be the WHOLE story. Re-ran the convex methods at FULL 1024-d
+(max_feat_dim=None; the ADMM scales fine — ~15s first solve/compile, 0.2s warm, JIT cache persists).
+Proxy (9 subj, K=[1,10,30], same shared source-FT NeuroGPT):
+    LoRA+convex  (full 1024-d)   0.6759  {1:.624, 10:.693, 30:.711}   <- BEATS sft_lora
+    frozen-convex(full 1024-d)   0.6715  {1:.625, 10:.685, 30:.705}   <- BEATS sft_lora
+    sft_lora     (baseline)      0.6557  {1:.599, 10:.667, 30:.701}
+    [PCA-256: LoRA+convex 0.619, frozen 0.624, ensemble 0.631]  <- PCA cost ~0.05
+    sft_finetune (baseline)      0.6147
+CORRECTED FINDINGS:
+- PCA->256 was a ~0.05 HANDICAP on NeuroGPT — it crushed the convex head (esp. low K: .573 -> .624).
+  The convex ReLU head needs the FULL feature dimensionality; the discarded low-variance dims matter
+  for its activation-pattern geometry. (So PCA-256 did NOT "retain most of what matters" as I'd guessed.)
+- With full features, **LoRA+convex (0.676) BEATS sft_lora (0.656) by +0.020 on NeuroGPT** — the
+  MIRepNet win GENERALIZES. The convex-head advantage is NOT MIRepNet-specific.
+- On NeuroGPT the convex head does most of the work: frozen-convex (0.671) ≈ LoRA+convex (0.676), and
+  frozen-convex ALONE beats sft_lora — i.e. the convex classifier on FROZEN features > LoRA + linear
+  head. (On MIRepNet LoRA was the bigger lever; here it's the convex head. Backbone-dependent SPLIT of
+  credit, but both methods beat the baseline on both backbones.)
+- LESSON: never bottleneck the convex head with PCA when the FM has high-dim features — run full-dim
+  (it's cheap). My earlier "convex loses on NeuroGPT" was a PCA artifact; corrected.
+NET: LoRA+convex beats the sft_lora baseline on BOTH MIRepNet (proxy 0.611 vs 0.596) AND NeuroGPT
+(0.676 vs 0.656). The convex-head advantage generalizes across foundation backbones (given full features).
