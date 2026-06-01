@@ -141,6 +141,15 @@
       "low_k_score": 0.558,
       "dataset": "bciciv2a",
       "new_best": true
+    },
+    {
+      "iter": 9,
+      "mode": "proxy",
+      "tag": "iter9_lora_rank16",
+      "score": 0.6048,
+      "low_k_score": 0.5866,
+      "dataset": "bciciv2a",
+      "new_best": false
     }
   ],
   "bars_to_beat_local_proxy14": {

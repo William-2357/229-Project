@@ -241,3 +241,22 @@ optimality — but it is not superior overall on this strong FM backbone.
   more from the LoRA-adapted features than lora's own linear head, especially at mid-high K.
   This is the headline positive result. Next: tune the hybrid (lora_rank, cal_balance/beta on
   adapted features) to widen the margin, esp. recover the small low-K gap.
+
+## iter 9 — LoRA+convex with lora_rank=16 (2026-06-01)  [REVERTED]
+- hypothesis: more LoRA capacity (rank 8->16) widens the mid/high-K margin.
+- proxy (9 subj, K=[1,10,30]): score=0.6048 per_k={1:.555, 10:.6183, 30:.6411}.
+  vs iter-8 (rank 8) proxy 0.6110 {1:.558,10:.6305,30:.645} -> WORSE (K10 .618 vs .631).
+- decision: REVERTED. rank 16 overfits the calibration; rank 8 is optimal. iter-8 (LoRA+convex,
+  rank 8) stands as the FINAL WINNER. Hybrid is well-characterized -> consolidating.
+
+## ===== FINAL RESULT (2026-06-01) =====
+WIN: **LoRA+convex (iter-8)** beats LoRA on the fair full 9-subject benchmark (250Hz, same
+source-FT MIRepNet): mean BCA 0.595 vs sft_lora 0.587 vs convex-frozen 0.576 vs sft_finetune
+0.572. Recipe: source-FT MIRepNet -> LoRA-adapt (rank 8) on calibration -> convex ReLU head
+(jaxcld, source∪upweighted-cal, cal_balance=4, beta=1e-4) replacing lora's linear head.
+The convex head beats a linear head on the SAME LoRA-adapted representation, decisively at
+K=10-15 (+0.038/+0.024); ties at low K. Validates the thesis ONCE the frozen-feature ceiling
+is removed by representation adaptation. Explored 9 iterations; tuning (rank, cal_balance,
+K-schedule, backbone-adapt, CRONOS-AM) is characterized — rank 8 hybrid is the optimum found.
+Possible future gain: re-tune the convex-head hparams specifically on LoRA-adapted features.
+Autonomous loop stopped at the confirmed win.
