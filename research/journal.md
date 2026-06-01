@@ -93,3 +93,20 @@ User flagged possible MIRepNet input issues. Findings:
   are stronger. iter-1 method is NOT above LoRA at the correct input. Must keep iterating.
 - new bar to beat (proxy): lora 0.5997 / finetune 0.6014. Next: sweep cal_balance (more
   target emphasis) + beta/n_neurons on the cached 250Hz features.
+
+## iter 3 — cal_balance=4, beta=1e-4 (2026-06-01)
+- hypothesis: the stronger 250Hz backbone needs more target emphasis in the convex head
+  fit; lighter group-lasso. (From sweep_convex_head.py over cal_balance/beta/n_neurons.)
+- change: convex_calib HPARAMS cal_balance 1->4, beta 1e-3->1e-4. (sweep best of 9 configs;
+  cal_balance 8-16 and beta 1e-2 are worse.)
+- proxy (subj1-4, 250Hz): score=0.5971 low_k=0.6036 per_k={.5:.610, 1:.597, 2:.584}.
+- vs bars: **WINS low-K** — K=0.5 0.610 vs lora .592 / ft .596 (+0.014-0.018); low_k 0.6036
+  vs lora .599 / ft .601. Loses at K=2 (.584 vs .601). Overall 0.5971 ~tied with lora .5997.
+- decision: KEPT (new convex best, +0.005 over iter-2; clear low-K leadership = the thesis).
+  Not full-swept yet (doesn't clear lora OVERALL). Next idea: K-adaptive cal_balance to
+  recover K>=2 (low cal_balance at low K, higher at high K) → win across the whole curve.
+
+## → AUTONOMOUS LOOP handed off here (see research/LOOP.md)
+Machinery validated end-to-end (reconstruct infra, source-FT MIRepNet, fair baselines,
+sweep, proxy/full eval, honest journaling, no-coauthor commits). Loop pursues the backlog
+to turn the low-K lead into a whole-curve win over LoRA.

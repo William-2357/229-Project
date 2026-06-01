@@ -49,12 +49,14 @@ HPARAMS = dict(
     ea_epsilon=1e-6,
 
     # --- convex ReLU head (jaxcld CVX_ReLU_MLP + ADMM) ---
-    n_neurons=32, rank=20, beta=1e-3, rho=0.01, gamma_ratio=1.0,
+    # iter-3: beta 1e-3->1e-4 (lighter group-lasso; 1e-2 over-regularizes to ~chance).
+    n_neurons=32, rank=20, beta=1e-4, rho=0.01, gamma_ratio=1.0,
     admm_iters=50, pcg_iters=10, max_feat_dim=None,
 
-    # --- the iteration-1 idea: combined source + upweighted calibration fit ---
+    # --- combined source + upweighted calibration fit ---
+    # iter-3: cal_balance 1.0->4.0 (more target emphasis; sweep sweet spot 2-4, 8+ hurts low-K).
     source_cap=800,         # max source feature rows in the convex solve (stratified)
-    cal_balance=1.0,        # calibration total mass as a fraction of the source rows used
+    cal_balance=4.0,        # calibration total mass as a fraction of the source rows used
 )
 
 

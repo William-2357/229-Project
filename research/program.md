@@ -91,11 +91,30 @@ the journal and stop — do not silently change it.
 - **Warm-start across K**: reuse the K=0 convex solution as the ADMM init for K>0.
 - **Ensemble of convex heads** over seeds/feature subsets — cheap, variance-reducing.
 
+## Ranked backlog (post iter-1, MIRepNet — beat sft_lora everywhere)
+
+iter-1 (convex on source∪upweighted-cal) beats lora by only ~0.02 on the proxy. Push the
+margin, prioritising the mid/high-K regime where lora climbs to ~0.53:
+1. **`cal_balance` sweep / K-adaptive**: iter-1 fixed cal_balance=1.0. Try {0.5,2,4} and
+   a schedule that grows with K (more target mass when calibration is reliable).
+2. **`beta` (margin) sweep** {1e-4,1e-2,1e-1}: the core thesis — larger group-lasso margin
+   → flatter low-K curve, more stability. Pair with `n_neurons` {16,32,64}.
+3. **Source reweighting toward target**: weight/subsample source features by similarity to
+   the unlabeled target pool before the convex solve (importance weighting) — sharper
+   target boundary without losing well-posedness.
+4. **CRONOS-AM alt-min**: 2-3 rounds of (convex head solve) ↔ (light backbone update on the
+   reconstructed activations). Most ambitious; do after the cheap knobs are tuned.
+5. **EA front-end on the strong backbone** (`use_ea=True`): modal ea_cld was worse, but
+   re-test on the source-FT MIRepNet — EA may help at high K.
+6. **Convex-head ensemble** over seeds / source subsets — cheap variance reduction.
+
 ## Notes / environment
 
-- Local: single RTX 5090 (32 GB), CUDA. `jax` runs on GPU; torch on CUDA.
-- Backbone for the convex head is a frozen/source-trained **EEGNet** specialist by default
-  (cheap, fast) — foundation backbones need checkpoints not present locally.
-- Data: `--proxy`/`--full` default to real BCIC-IV-2a via MOABB once cached; until then
-  pass `--dataset synthetic` to bootstrap. `run_local.py` picks real data automatically
-  if the cache exists.
+- Local: single RTX 5090 (32 GB), CUDA. `jax` on GPU, torch on CUDA. All deps in `.venv`.
+- Backbone: **source-fine-tuned MIRepNet** (HF `starself/MIRepNet`, `MIRepNet.pth`), frozen
+  after source-FT. Source-FT is disk-cached in `data/sft_checkpoints/` (one file per LOSO
+  fold) and SHARED with the sft_lora/sft_finetune baselines → fair + fast.
+- Data: real BCIC-IV-2a via `research/prep_data_moabb.py`, MIRepNet preprocessing
+  (4–40 Hz, no z-score), cache `data/raw/bciciv2a_mirepnet_cache`.
+- Baselines: `python research/run_local.py --proxy --method foundation_sft_lora|foundation_sft_finetune`.
+  Run once on full; they don't change across convex iterations (reuse cached source-FT).
