@@ -110,3 +110,16 @@ User flagged possible MIRepNet input issues. Findings:
 Machinery validated end-to-end (reconstruct infra, source-FT MIRepNet, fair baselines,
 sweep, proxy/full eval, honest journaling, no-coauthor commits). Loop pursues the backlog
 to turn the low-K lead into a whole-curve win over LoRA.
+
+## iter 4 — K-adaptive cal_balance (2026-06-01)  [REVERTED]
+- hypothesis: raise cal_balance at higher K (more, more-reliable cal trials) to recover the
+  K>=2 regime where lora leads.
+- change: cal_balance_mode=adaptive, cb=clip(n_cal/4, 4, 12). K0.5/1→cb=4, K2→cb=7.5.
+- proxy (subj1-4, 250Hz): score=0.5928 low_k=0.6036 per_k={.5:.610, 1:.597, 2:.571}.
+  K0.5/1 unchanged (cb still 4); K2 got WORSE (.571 vs iter-3 .584).
+- decision: REVERTED (0.5928 < iter-3 0.5971). Raising cal_balance at high K HURTS
+  (matches sweep: cb=8+ worse). Optimal cal_balance ≈ constant 2-4 across K → head/source-cal
+  rebalancing is EXHAUSTED. The K>=2 gap to lora needs REPRESENTATION adaptation, not head
+  reweighting. Next (iter-5): convex head on calibration-adapted features — let the backbone
+  adapt on calibration (like finetune), then put the convex ReLU head on top instead of a
+  linear head. Tests whether the convex head beats a linear head on the SAME adapted features.
