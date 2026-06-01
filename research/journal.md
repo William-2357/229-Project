@@ -320,3 +320,40 @@ rich foundation features (MIRepNet 256-d), neutral/mixed on smaller specialist f
 Caveat: eegnet source-train is GPU-nondeterministic (~±0.02 across runs); within-run comparison
 (shared backbone) is controlled, margins are within noise. Next option: shallowconv/conformer
 (conformer's transformer features may behave more like MIRepNet).
+
+## ===== CONVEX-IN-PRETRAINING PIVOT (2026-06-01) — harness relaxed by user =====
+User RELAXED the "edit only adaptation/convex_calib.py + source-FT is fixed" rule: now allowed
+to put CONVEXITY INTO THE PRE-TRAINING stage, not just the calibration head. Reference: a
+deep technical exchange on the team's ADMM convex-reformulation paper (arXiv 2605.23235),
+which establishes the governing principle for convex transfer learning:
+
+  In a CONVEX model, "pretrain-then-finetune via initialization" does NOT exist — the solution
+  is determined by (data + regularizer + dictionary), not the optimization path, so a warm-start
+  checkpoint carries ZERO inductive bias. Source knowledge can enter the target solve ONLY
+  through: (1) the GATE DICTIONARY {g_i} (which activation patterns are in the model class),
+  (2) the REGULARIZER (an anchor biasing target weights toward source structure), (3) hparams.
+
+Prescribed two-stage convex transfer (the new arc):
+  Stage 1 (convex pre-train): solve the convex ReLU head on source with a FIXED gate dictionary
+    -> v_bar (+ optionally per-pattern population mean/cov for a Mahalanobis anchor).
+  Stage 2 (anchored calibrate): re-solve on target calibration with a quadratic anchor
+    (a/2)||v - v_bar||^2. The anchor transfers source structure AND regularizes the
+    underdetermined low-K solve (the iter-6 crater). Closed-form blended group-prox, so a=0
+    recovers stock ADMM exactly. Implemented in adaptation/convex_transfer.py (anchored_admm)
+    + convex_calib.py (transfer_mode/anchor_a/transfer_stage2). NOTE: the gates G ~ N(0,I) are
+    DATA-INDEPENDENT and the solver uses a constant seed, so the dictionary is ALREADY shared
+    across source/target — the genuinely new transfer channel here is the ANCHOR.
+Goal: beat the standing winner LoRA+convex (iter-8: proxy 0.611, full-9 0.595).
+Verified: anchored_admm(a=0) == stock jaxcld ADMM to 3e-8.
+
+## iter 14 — frozen + cal-only + anchor a=0.01 (2026-06-01)  [REVERTED]
+- hypothesis: a fixed source dictionary + anchor to the source convex head lets the convex head
+  fit on CALIBRATION ONLY (no source pooling) without the iter-6 underdetermination — transfer
+  via the regularizer, per the reference. Isolated on the FROZEN backbone (use_lora=False).
+- change: transfer_mode=anchor, transfer_stage2=cal, anchor_a=0.01 (=rho).
+- proxy (9 subj, K=[1,10,30]): score=0.5240 per_k={1:.422, 10:.564, 30:.586}.
+  vs frozen-convex 0.582 -> WORSE, esp. K=1 (.422 vs .557, a crater).
+- decision: REVERTED. a=0.01 anchor is too WEAK to pull the ~12-trial cal-only solve toward the
+  source head, so low-K lands below even zero-shot source. Confirms: cal-only needs either a
+  much stronger anchor (low-K -> source head) or source pooling. Running sweep_transfer.py over
+  (anchor_a, stage2) to find whether ANY frozen-anchor config beats 0.582 before stacking on LoRA.
