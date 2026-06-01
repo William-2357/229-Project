@@ -123,3 +123,15 @@ to turn the low-K lead into a whole-curve win over LoRA.
   reweighting. Next (iter-5): convex head on calibration-adapted features — let the backbone
   adapt on calibration (like finetune), then put the convex ReLU head on top instead of a
   linear head. Tests whether the convex head beats a linear head on the SAME adapted features.
+
+## iter 5 — smart-hybrid backbone adaptation (2026-06-01)  [REVERTED]
+- hypothesis: fine-tune backbone on calibration when n_cal>=20 (K>=2), else frozen; then
+  convex head on source∪cal adapted features. Adapt the representation only where safe.
+- change: adapt_backbone=True, adapt_min_cal=20, _adapt_on_cal (lr_tgt=1e-5, 100ep, patience15).
+- proxy (subj1-4, 250Hz): score=0.5965 low_k=0.6036 per_k={.5:.610, 1:.597, 2:.582}.
+  K0.5/1 unchanged (frozen, n_cal<20); K2 (adapted) .582 ≈ iter-3 frozen .584 — NO GAIN, and
+  below lora K2 .601. (subj1 helped in smoke, didn't hold across subjects.)
+- decision: REVERTED (0.5965 < iter-3 0.5971). Adapting backbone then convex-on-source∪cal is
+  a wash — the cal-shifted source features likely DILUTE the fit (also why finetune+convex .582
+  < finetune+linear .601 at K2). Next (iter-6): when backbone IS adapted, fit convex head on
+  CALIBRATION ONLY (drop source; the adapted backbone already encodes target structure).

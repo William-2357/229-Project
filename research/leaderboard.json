@@ -78,6 +78,15 @@
       "low_k_score": 0.6036,
       "dataset": "bciciv2a",
       "new_best": false
+    },
+    {
+      "iter": 5,
+      "mode": "proxy",
+      "tag": "iter5_hybrid_adapt",
+      "score": 0.5965,
+      "low_k_score": 0.6036,
+      "dataset": "bciciv2a",
+      "new_best": false
     }
   ],
   "bars_to_beat_local_proxy14": {
