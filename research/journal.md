@@ -135,3 +135,19 @@ to turn the low-K lead into a whole-curve win over LoRA.
   a wash — the cal-shifted source features likely DILUTE the fit (also why finetune+convex .582
   < finetune+linear .601 at K2). Next (iter-6): when backbone IS adapted, fit convex head on
   CALIBRATION ONLY (drop source; the adapted backbone already encodes target structure).
+
+## iter 6 — adapt backbone + convex on CALIBRATION ONLY (2026-06-01)  [REVERTED]
+- hypothesis: with the backbone adapted to target, fit convex head on cal-only (source no
+  longer needed and dilutes); should unlock the adapted representation at K>=2.
+- change: adapt_backbone + (when adapted) X_fit = calibration features only.
+- proxy (subj1-4, 250Hz): score=0.5701 low_k=0.6036 per_k={.5:.610, 1:.597, 2:.503}.
+  K=2 CRATERED to .503 (vs iter-3 .584, lora .601).
+- decision: REVERTED (0.5701 << iter-3 0.5971). Convex 2-layer ReLU head on ~30 points is
+  badly underdetermined (the SAME dip mechanism). The source∪cal anchor is NECESSARY for the
+  convex head's well-posedness — but source dilutes once the backbone is target-adapted.
+  => representation-adaptation line EXHAUSTED (iter-5 dilutes, iter-6 underdetermines).
+- CONCLUSION: best convex = iter-3 (frozen backbone + convex on source∪cal, cal_balance=4,
+  beta=1e-4). Consolidating: run the official full 9-subject sweep (convex iter-3 + sft_lora
+  + sft_finetune at 250Hz) to resolve the proxy tie at scale and produce the definitive curve.
+  Remaining stretch idea if a whole-curve win is still wanted: CRONOS-AM alt-min (convex
+  representation adaptation), which neither dilutes nor underdetermines like iters 5-6 did.
