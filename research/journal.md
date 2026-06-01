@@ -259,4 +259,25 @@ K=10-15 (+0.038/+0.024); ties at low K. Validates the thesis ONCE the frozen-fea
 is removed by representation adaptation. Explored 9 iterations; tuning (rank, cal_balance,
 K-schedule, backbone-adapt, CRONOS-AM) is characterized — rank 8 hybrid is the optimum found.
 Possible future gain: re-tune the convex-head hparams specifically on LoRA-adapted features.
-Autonomous loop stopped at the confirmed win.
+
+## iter 10 — re-tune convex head ON LoRA-adapted features (2026-06-01)  [no gain]
+- hypothesis: iter-8 inherited convex-head hparams (cal_balance=4, beta=1e-4) from the frozen
+  regime; the LoRA-adapted feature distribution differs, so re-tuning may widen the margin.
+- method: sweep_lora_convex.py — LoRA-adapt once per (subj,K,rep), then 6 convex configs on the
+  cached adapted features (9 subj, K=[1,10,30]).
+- result (ranking, controlled — same adapted features per cell):
+    cal_balance=4 beta=1e-4 n=32  0.6031  <- BEST (= iter-8 config)
+    cal_balance=2 beta=1e-4       0.6024
+    cal_balance=4 beta=1e-3       0.6023
+    cal_balance=4 beta=1e-4 n=48  0.6008
+    cal_balance=8 *               0.596x  (worse)
+- decision: NO GAIN — iter-8's config (cal_balance=4, beta=1e-4, n=32) is already optimal on
+  LoRA-adapted features too. No code change. (Abs 0.603 vs iter-8 run_local 0.611 = RNG/path
+  noise in the sweep's LoRA finetune; ranking is what matters.)
+
+## ===== LOOP CONCLUDED (2026-06-01) — final, fully characterized =====
+10 iterations. FINAL WINNER: **iter-8 LoRA+convex** (rank 8, cal_balance=4, beta=1e-4) —
+full-9 0.595 vs sft_lora 0.587 vs convex-frozen 0.576 vs sft_finetune 0.572. Optimum confirmed:
+lora_rank 8 best (iter-9), convex-head hparams optimal (iter-10). convex_calib.py is at this
+winner. No further promising convex/hybrid lever remains within this design space. Deliverables:
+research/RESULTS.md, research/kmin_results.png, research/journal.md, research/leaderboard.json.

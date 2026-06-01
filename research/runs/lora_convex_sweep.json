@@ -1,0 +1,48 @@
+{
+  "configs": [
+    {
+      "cal_balance": 4,
+      "beta": 0.0001,
+      "n_neurons": 32
+    },
+    {
+      "cal_balance": 2,
+      "beta": 0.0001,
+      "n_neurons": 32
+    },
+    {
+      "cal_balance": 8,
+      "beta": 0.0001,
+      "n_neurons": 32
+    },
+    {
+      "cal_balance": 4,
+      "beta": 0.001,
+      "n_neurons": 32
+    },
+    {
+      "cal_balance": 8,
+      "beta": 0.001,
+      "n_neurons": 32
+    },
+    {
+      "cal_balance": 4,
+      "beta": 0.0001,
+      "n_neurons": 48
+    }
+  ],
+  "scores": {
+    "0": 0.6031386304125955,
+    "1": 0.6023607824737999,
+    "2": 0.595673847253368,
+    "3": 0.6022624960873872,
+    "4": 0.5967255476106239,
+    "5": 0.6007736914803908
+  },
+  "best_config": {
+    "cal_balance": 4,
+    "beta": 0.0001,
+    "n_neurons": 32
+  },
+  "best_score": 0.6031386304125955
+}
