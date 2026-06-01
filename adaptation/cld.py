@@ -23,6 +23,11 @@ import jax.numpy as jnp
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
 from jaxcld.optimizers.admm import admm as _run_admm
 
+# Patch jaxcld's Nyström preconditioner to run its qr/cholesky/solve/svd on CPU,
+# avoiding `cuSolver INTERNAL` crashes on Modal GPUs. Must come after the admm
+# import above so the patch overrides the name admm() already bound.
+from . import _jaxcld_cpu_linalg  # noqa: F401
+
 from .base import BaseAdapter, train_epoch, evaluate_model
 
 
@@ -92,6 +97,39 @@ def extract_penultimate_features(
     return feats.numpy().astype(np.float32)
 
 
+def pad_features_to_bucket(
+    X_norm: np.ndarray,
+    y: np.ndarray,
+    bucket: int | None,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Zero-pad a normalized feature matrix up to the next multiple of `bucket`.
+
+    The ADMM/PCG solver is jitted and specialized on the sample count N, so a
+    different N (e.g. one per K-minute calibration size) forces a fresh ~3 min
+    XLA recompile. Rounding N up to a fixed bucket collapses those to one shape.
+
+    This is provably solution-invariant: every CVX_ReLU_MLP operator routes the
+    data through X or X.T (matvec_F/G, rmatvec_F/G, and b_1 = rmatvec_F(Y.T)),
+    which annihilate all-zero rows regardless of their label; the random
+    hyperplane cuts depend only on (feature_dim, seed), not on N; and the ADMM
+    slack/dual rows for a zero input stay zero across iterations. The padded
+    rows therefore never affect u/v/lam or the recovered weights.
+
+    Pass bucket=None to disable. X_norm must already be in normalized space so
+    the appended rows are true zeros (not (0 - mu)/sigma).
+    """
+    if bucket is None or bucket <= 0:
+        return X_norm, y
+    n = X_norm.shape[0]
+    target = ((n + bucket - 1) // bucket) * bucket
+    if target <= n:
+        return X_norm, y
+    pad = target - n
+    X_pad = np.zeros((pad, X_norm.shape[1]), dtype=X_norm.dtype)
+    y_pad = np.zeros(pad, dtype=y.dtype)
+    return np.concatenate([X_norm, X_pad], axis=0), np.concatenate([y, y_pad], axis=0)
+
+
 def fit_cld_head(
     X_feat: np.ndarray,
     y: np.ndarray,
@@ -105,12 +143,15 @@ def fit_cld_head(
     pcg_iters: int,
     seed: int,
     norm_stats: tuple[np.ndarray, np.ndarray] | None = None,
+    pad_bucket: int | None = 256,
 ) -> tuple["CVX_ReLU_MLP", np.ndarray, np.ndarray]:
     """Normalize features, build CVX_ReLU_MLP, run ADMM.
 
     Returns (fitted_model, feature_mean, feature_std).
     If norm_stats=(mu, sigma) is provided, those statistics are used instead
     of computing them from X_feat (useful when X_feat is a small labeled set).
+    pad_bucket rounds the sample count up to a fixed multiple so the jitted
+    solver compiles once across K values (see pad_features_to_bucket).
     """
     if norm_stats is not None:
         mu, sigma = norm_stats
@@ -118,6 +159,7 @@ def fit_cld_head(
         mu = X_feat.mean(axis=0, keepdims=True)
         sigma = X_feat.std(axis=0, keepdims=True) + 1e-8
     X_norm = ((X_feat - mu) / sigma).astype(np.float32)
+    X_norm, y = pad_features_to_bucket(X_norm, y, pad_bucket)
 
     X_jax = jnp.array(X_norm)
     y_jax = jnp.array(y.astype(np.int32))

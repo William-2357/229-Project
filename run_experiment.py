@@ -36,6 +36,9 @@ from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapt
 from adaptation.foundation_source_cld import (
     FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
 )
+from adaptation.foundation_sft_anchored_cld import (
+    FoundationSFTAnchoredCLDAdapter, FoundationSFTAnchoredEACLDAdapter
+)
 from adaptation.foundation_finetune import FoundationFineTuneAdapter
 from adaptation.foundation_lora import FoundationLoRAAdapter
 from adaptation.foundation_source_lora import (
@@ -87,6 +90,8 @@ METHOD_REGISTRY = {
     "foundation_sft_ea_lora": FoundationSourceFineTuneEALoRAAdapter,
     "foundation_sft_cld": FoundationSourceFineTuneCLDAdapter,
     "foundation_sft_ea_cld": FoundationSourceFineTuneEACLDAdapter,
+    "foundation_sft_anchored_cld": FoundationSFTAnchoredCLDAdapter,
+    "foundation_sft_ea_anchored_cld": FoundationSFTAnchoredEACLDAdapter,
 }
 
 ALL_METHODS = list(METHOD_REGISTRY.keys())
@@ -115,6 +120,7 @@ SUPERVISED_METHODS = {
     "foundation_cld", "foundation_ea_cld",
     "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
     "foundation_sft_cld", "foundation_sft_ea_cld",
+    "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
 }
 UNSUPERVISED_METHODS = {
     "loso", "ea", "tta",
@@ -291,12 +297,16 @@ def main() -> None:
         dataset = dataset_cls(n_subjects=n_subj, seed=args.seed)
     else:
         data_dir = Path(args.data_dir) / args.dataset
-        from data.preprocessing import BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX
+        from data.preprocessing import (
+            BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX, BACKBONE_TARGET_SFREQ,
+        )
         preprocess_cfg = BACKBONE_PREPROCESS_CONFIGS.get(args.backbone)
         cache_suffix = BACKBONE_CACHE_SUFFIX.get(args.backbone)
+        target_sfreq = BACKBONE_TARGET_SFREQ.get(args.backbone, 200.0)
         cache_dir = str(data_dir.parent / f"{args.dataset}_{cache_suffix}_cache") if cache_suffix else None
         dataset = dataset_cls(
             str(data_dir),
+            target_sfreq=target_sfreq,
             preprocess_config=preprocess_cfg,
             **({"cache_dir": cache_dir} if cache_dir else {}),
         )

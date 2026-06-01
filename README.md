@@ -30,12 +30,14 @@ data/raw/bciciv2a/A02T.npz
 ### 2. Foundation Backbones (`models/foundations.py`)
 All expose `get_features(X)` and `feature_dim` via the `FoundationBackbone` interface.
 
-| Model | Key Details |
-|-------|------------|
-| `MIRepNet` | Resamples to 250 Hz, maps to 45-channel template, 256-dim features |
-| `NeuroGPT` | Encoder + embedder portions, 22 channels, 250 Hz / 2-second chunks |
-| `CBraMod` | Spectral patch embedding, mean-pools to one feature vector |
-| `LaBraM` | Channel-index mapping, temporal patching, own feature normalization |
+| Model | Feature dim | Key Details |
+|-------|-------------|------------|
+| `MIRepNet` | 256 | Maps to 45-channel template; receives native 250 Hz data (no resampling round-trip) |
+| `NeuroGPT` | 1024 | Encoder + embedder portions, 22 channels, 250 Hz / 2-second chunks |
+| `CBraMod` | — | Spectral patch embedding, mean-pools to one feature vector |
+| `LaBraM` | — | Channel-index mapping, temporal patching, own feature normalization |
+
+> **Sampling rates:** `MIRepNet` and `NeuroGPT` now run on native **250 Hz** data — the dataset is delivered at the backbone's native rate rather than resampled down and back up, eliminating a lossy round-trip. `LaBraM` and `CBraMod` run at 200 Hz. Per-backbone target rates live in `BACKBONE_TARGET_SFREQ` (`data/preprocessing.py`); **delete stale caches after changing a rate.**
 
 ## Preprocessing
 
@@ -102,6 +104,27 @@ Stage 2: Freeze backbone; apply lightweight target adaptation.
 
 SFT hyperparameter defaults (hardcoded in each adapter file):
 - `lr_src=1e-3`, `weight_decay=1e-4`, `max_epochs_src=200`, `patience_src=25`
+
+### CLD implementation notes
+
+The CLD methods (`cld`, `ea_cld`, `foundation_cld`, `foundation_sft_cld`, and the
+anchored variants) use a **JAX-based** convex ADMM head via the `jaxcld` library.
+A few non-obvious details:
+
+- **XLA recompilation fixed via fixed-bucket padding.** The jitted PCG/ADMM solver
+  recompiled on every call because the sample count `N` varied across K values
+  (and across source vs. target stages), and `jit` retraces on shape changes.
+  Features are now zero-padded up to a fixed bucket size (`pad_features_to_bucket`
+  in `adaptation/cld.py`) so the solver compiles once and is reused. The padding is
+  solution-invariant.
+- **Nyström preconditioner pinned to CPU.** On Modal GPUs, `jaxcld`'s Nyström
+  preconditioner (`rand_nys_appx`) crashed with `cuSolver INTERNAL` because its
+  `qr`/`cholesky`/`solve_triangular`/`svd` are cuSolver routines. These act on
+  tiny (PCA-reduced) matrices, so `adaptation/_jaxcld_cpu_linalg.py` monkey-patches
+  them onto the CPU while the expensive sketch matvecs and PCG/ADMM matmuls (cuBLAS)
+  stay on GPU. Numerically identical to upstream.
+- **High-dim backbones are PCA-reduced** before the CLD head (e.g. NeuroGPT's
+  1024-dim features) to keep the ADMM weight tensors small enough for XLA.
 
 ## Running Experiments
 

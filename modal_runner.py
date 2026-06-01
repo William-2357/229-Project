@@ -32,7 +32,7 @@ from pathlib import Path
 #CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
 
 DATASET = "bciciv2a"
-BACKBONE = "labram"          # mirepnet | neurogpt | reve | cbramod
+BACKBONE = "mirepnet"          # mirepnet | neurogpt | cbramod
 METHODS = [
     "foundation_sft_loso",     # K=0 zero-shot: source-finetuned backbone, no target adapt
     "foundation_sft_ea",       # K=0 zero-shot: EA + source-finetuned backbone
@@ -42,10 +42,10 @@ METHODS = [
     "foundation_sft_ea_lora",  # K>0: EA + source-finetuned backbone + LoRA
     "foundation_sft_cld",              # K>0: source-finetuned backbone + CLD head
     "foundation_sft_ea_cld",           # K>0: EA + source-finetuned backbone + CLD head
-    "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM
-    "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM
+   # "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM
+   # "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM
 ]
-CHECKPOINT_PATH = "/data/labram-base.pth"  # path inside container (mounted from eeg-data volume)
+CHECKPOINT_PATH = "/data/MIRepNet.pth"  # path inside container (mounted from eeg-data volume)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -222,13 +222,17 @@ def run_job(
     if dataset_name == "synthetic":
         dataset = SyntheticDataset(n_subjects=9, seed=seed)
     elif dataset_name == "bciciv2a":
-        from data.preprocessing import BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX
+        from data.preprocessing import (
+            BACKBONE_PREPROCESS_CONFIGS, BACKBONE_CACHE_SUFFIX, BACKBONE_TARGET_SFREQ,
+        )
         preprocess_cfg = BACKBONE_PREPROCESS_CONFIGS.get(backbone_name)
         cache_suffix   = BACKBONE_CACHE_SUFFIX.get(backbone_name)
+        target_sfreq   = BACKBONE_TARGET_SFREQ.get(backbone_name, 200.0)
         cache_dir      = f"/data/bciciv2a_{cache_suffix}_cache" if cache_suffix else "/data/bciciv2a_cache"
         dataset = BCICIVDataset(
             "/data/bciciv2a",
             cache_dir=cache_dir,
+            target_sfreq=target_sfreq,
             **({"preprocess_config": preprocess_cfg} if preprocess_cfg else {}),
         )
     else:

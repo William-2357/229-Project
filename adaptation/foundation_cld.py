@@ -111,18 +111,17 @@ class FoundationCLDAdapter(BaseAdapter):
         # At small k the labeled set is tiny (e.g. 60 samples in 1024-d), making
         # per-feature mean/std noisy. Unlabeled target data is large regardless of k.
         if target_unlabeled is not None and len(target_unlabeled) >= 2:
-            # Unlabeled target features are identical across all repeats (same X_unlabeled) — cache.
+            # Unlabeled target features + PCA are identical across all repeats — cache both.
             tgt_cache_key = "foundation_cld_tgt_feats"
             if source_cache is not None and tgt_cache_key in source_cache:
-                X_unlab = source_cache[tgt_cache_key]
+                X_unlab, self._feat_pca = source_cache[tgt_cache_key]
             else:
-                X_unlab = extract_foundation_features(
+                X_unlab_raw = extract_foundation_features(
                     backbone, target_unlabeled, self.device, self.batch_size
                 )
+                X_unlab, self._feat_pca = maybe_reduce_features(X_unlab_raw, self.max_feat_dim, self.seed)
                 if source_cache is not None:
-                    source_cache[tgt_cache_key] = X_unlab
-            # PCA fitted on the large unlabeled set; applied to the (possibly small) fit features.
-            X_unlab, self._feat_pca = maybe_reduce_features(X_unlab, self.max_feat_dim, self.seed)
+                    source_cache[tgt_cache_key] = (X_unlab, self._feat_pca)
             if self._feat_pca is not None:
                 X_feat = self._feat_pca.transform(X_feat).astype(np.float32)
             norm_stats = (

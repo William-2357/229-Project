@@ -1,111 +1,141 @@
-"""Plot experiment results — one figure per dataset/backbone combo.
-
-Auto-discovers all modal_summary.json files under results/.
 """
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+Plot k-minutes vs Mean BCA for all backbones.
+- Foundation backbones: loaded from foundation_results/
+- Specialist backbones: loaded from results/bciciv2a/
+One figure per backbone, saved to plots/.
+"""
+
 import json
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 from pathlib import Path
 
-ADAPTATION = {'finetune', 'lora', 'ea_lora'}
+ROOT = Path(__file__).parent
+FOUNDATION_ROOT = ROOT / "foundation_results"
+SPECIALIST_ROOT = ROOT / "results" / "bciciv2a"
+OUT_DIR = ROOT / "plots"
+OUT_DIR.mkdir(exist_ok=True)
 
-COLORS = {
-    'loso':     '#1f77b4',
-    'ea':       '#ff7f0e',
-    'tta':      '#2ca02c',
-    'finetune': '#d62728',
-    'lora':     '#9467bd',
-    'ea_lora':  '#8c564b',
-    'cld':      '#e377c2',
-    'ea_cld':   '#17becf',
-}
-MARKERS = {'finetune': 'o', 'lora': 's', 'ea_lora': '^', 'cld': 'D', 'ea_cld': 'P'}
-LABELS = {
-    'loso': 'LOSO', 'ea': 'EA', 'tta': 'TTA',
-    'finetune': 'Fine-tune', 'lora': 'LoRA', 'ea_lora': 'EA+LoRA',
-    'cld': 'CLD', 'ea_cld': 'EA+CLD',
-}
-DATASET_LABELS = {
-    'bciciv2a': 'BCI Competition IV 2a',
-    'synthetic': 'Synthetic',
-}
-BACKBONE_LABELS = {
-    'eegnet': 'EEGNet',
-    'shallowconv': 'ShallowConvNet',
-    'conformer': 'EEG-Conformer',
+FOUNDATION_BACKBONES = ["mirepnet", "labram", "cbramod", "neurogpt"]
+SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]
+
+# Color + linestyle keyed by *base* method name (after stripping foundation_sft_/foundation_ prefix)
+METHOD_STYLES: dict[str, dict] = {
+    "loso":         {"color": "#1f77b4", "ls": "--"},
+    "ea":           {"color": "#ff7f0e", "ls": "--"},
+    "tta":          {"color": "#2ca02c", "ls": "--"},
+    "finetune":     {"color": "#9467bd", "ls": "-"},
+    "lora":         {"color": "#ff7f0e", "ls": "-"},
+    "ea_lora":      {"color": "#2ca02c", "ls": "-"},
+    "cld":          {"color": "#d62728", "ls": "-"},
+    "ea_cld":       {"color": "#8c564b", "ls": "-"},
+    "linear_probe": {"color": "#e377c2", "ls": "-"},
 }
 
-
-def load_results(json_path: str) -> pd.DataFrame:
-    with open(json_path) as f:
-        raw = json.load(f)
-    rows = []
-    for _, k_entries in raw.items():
-        for k_str, entry in k_entries.items():
-            rows.append({
-                'method':     entry['_meta']['method'],
-                'subject_id': entry['subject_id'],
-                'k_minutes':  float(k_str),
-                'bca':        entry['bca'],
-            })
-    df = pd.DataFrame(rows)
-    return (
-        df.groupby(['method', 'k_minutes'])['bca']
-        .agg(mean_bca='mean', std_bca='std')
-        .reset_index()
-    )
+BACKBONE_DISPLAY = {
+    "eegnet":      "EEGNet",
+    "shallowconv": "ShallowConvNet",
+    "conformer":   "EEG-Conformer",
+    "mirepnet":    "MirepNet",
+    "labram":      "LaBraM",
+    "cbramod":     "CBraMod",
+    "neurogpt":    "NeuroGPT",
+}
 
 
-json_paths = [Path('results/bciciv2a/mirepnet/modal_summary.json')]
-for json_path in sorted(Path('results').glob('*/*/modal_summary.json')):
-    backbone = json_path.parent.name
-    dataset = json_path.parent.parent.name
+def base_method(method: str) -> str:
+    for prefix in ("foundation_sft_", "foundation_"):
+        if method.startswith(prefix):
+            return method[len(prefix):]
+    return method
 
-    df = load_results(json_path)
+
+def load_curves(path: Path) -> dict[str, dict[float, float]]:
+    """Returns {method: {k_minutes: mean_bca_across_subjects}}."""
+    with open(path) as f:
+        summary = json.load(f)
+
+    # Accumulate: method -> k -> [bca, ...]
+    acc: dict[str, dict[float, list[float]]] = {}
+    for key, k_results in summary.items():
+        method = key.split("/")[0]
+        for k_str, metrics in k_results.items():
+            bca = metrics.get("bca")
+            if bca is None:
+                continue
+            acc.setdefault(method, {}).setdefault(float(k_str), []).append(bca)
+
+    return {
+        method: {k: float(np.mean(vals)) for k, vals in k_map.items()}
+        for method, k_map in acc.items()
+    }
+
+
+def plot_backbone(backbone: str, curves: dict[str, dict[float, float]]):
+    display = BACKBONE_DISPLAY.get(backbone, backbone.capitalize())
+    title = f"{display} Calibration Performance Sweep ($k$-minutes vs Mean BCA)"
 
     fig, ax = plt.subplots(figsize=(10, 6))
 
-    # Source-only methods: horizontal dashed lines
-    for method in ['loso', 'ea', 'tta']:
-        d = df[(df['method'] == method) & (df['k_minutes'] == 0.0)]
-        if len(d) == 0:
+    # Sort: supervised (multi-k) first, then unsupervised (k=0 only)
+    def sort_key(m):
+        return (set(curves[m].keys()) == {0.0}, m)
+
+    for method in sorted(curves.keys(), key=sort_key):
+        km = curves[method]
+        xs = sorted(km.keys())
+        ys = [km[x] for x in xs]
+        bm = base_method(method)
+        style = METHOD_STYLES.get(bm, {"color": None, "ls": "-"})
+
+        ax.plot(
+            xs, ys,
+            marker="o", markersize=5, linewidth=2,
+            label=method,
+            color=style["color"],
+            linestyle=style["ls"],
+        )
+
+    ax.set_xlabel("Calibration Window ($k$ minutes)", fontsize=12)
+    ax.set_ylabel("Mean Balanced Classification Accuracy (BCA)", fontsize=12)
+    ax.set_title(title, fontsize=13, fontweight="bold")
+    ax.grid(True, linestyle="--", alpha=0.6)
+    ax.yaxis.set_minor_locator(ticker.AutoMinorLocator())
+
+    ax.legend(
+        title="Adaptation Method",
+        bbox_to_anchor=(1.02, 1),
+        loc="upper left",
+        borderaxespad=0,
+        frameon=True,
+        fontsize=9,
+    )
+
+    fig.tight_layout()
+    out_path = OUT_DIR / f"{backbone}_kmin_bca.png"
+    fig.savefig(out_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"Saved: {out_path}")
+
+
+def main():
+    for backbone in FOUNDATION_BACKBONES:
+        path = FOUNDATION_ROOT / backbone / "modal_summary.json"
+        if not path.exists():
+            print(f"Skipping {backbone}: {path} not found")
             continue
-        mean = d['mean_bca'].values[0]
-        std = d['std_bca'].values[0]
-        ax.axhline(mean, color=COLORS[method], linestyle='--', linewidth=2,
-                   label=LABELS[method], alpha=0.85)
-        if not np.isnan(std):
-            ax.axhspan(mean - std, mean + std, color=COLORS[method], alpha=0.08)
+        plot_backbone(backbone, load_curves(path))
 
-    # Adaptation methods: learning curves
-    for method in ['finetune', 'lora', 'ea_lora', 'cld', 'ea_cld']:
-        d = df[df['method'] == method].sort_values('k_minutes')
-        if len(d) == 0:
+    for backbone in SPECIALIST_BACKBONES:
+        path = SPECIALIST_ROOT / backbone / "modal_summary.json"
+        if not path.exists():
+            print(f"Skipping {backbone}: {path} not found")
             continue
-        k_vals = d['k_minutes'].values
-        means = d['mean_bca'].values
-        stds = d['std_bca'].values
-        ax.plot(k_vals, means, marker=MARKERS[method], markersize=8,
-                linewidth=2.5, label=LABELS[method], color=COLORS[method], alpha=0.9)
-        ax.fill_between(k_vals, means - stds, means + stds,
-                        alpha=0.15, color=COLORS[method])
+        plot_backbone(backbone, load_curves(path))
 
-    ax.axhline(0.25, color='gray', linestyle=':', linewidth=1.2, label='Chance (25%)')
-    ax.set_xlabel('Minutes of Target Calibration Data', fontsize=13, fontweight='bold')
-    ax.set_ylabel('Balanced Class Accuracy (BCA)', fontsize=13, fontweight='bold')
-    ds_label = DATASET_LABELS.get(dataset, dataset)
-    bb_label = BACKBONE_LABELS.get(backbone, backbone)
-    ax.set_title(f'{bb_label} — {ds_label}\nAdaptation Methods vs Calibration Time',
-                 fontsize=14, fontweight='bold')
-    ax.set_ylim([0.2, 1.0])
-    ax.legend(fontsize=11, loc='lower right', framealpha=0.9,
-              ncol=2, title='Method', title_fontsize=11)
-    ax.grid(True, alpha=0.3)
-    ax.set_axisbelow(True)
+    print(f"\nAll plots saved to {OUT_DIR}/")
 
-    plt.tight_layout()
-    out_path = json_path.parent / 'comparison.png'
-    plt.savefig(out_path, dpi=150, bbox_inches='tight')
-    print(f'✓ Saved: {out_path}')
-    plt.close()
+
+if __name__ == "__main__":
+    main()

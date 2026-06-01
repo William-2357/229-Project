@@ -142,9 +142,15 @@ class FoundationSourceFineTuneCLDAdapter(BaseAdapter):
             X_fit, y_fit = X_src, y_src
 
         backbone = self._backbone_model.to(self.device)
-        # Extract source features for PCA fitting (source is always available and large).
-        X_src_feat = extract_foundation_features(backbone, X_src, self.device, self.batch_size)
-        X_src_feat, self._feat_pca = maybe_reduce_features(X_src_feat, self.max_feat_dim, self.seed)
+        # Source features + PCA are identical across K values and repeats — cache both.
+        _src_feat_key = "sft_cld_src_feats"
+        if source_cache is not None and _src_feat_key in source_cache:
+            X_src_feat, self._feat_pca = source_cache[_src_feat_key]
+        else:
+            X_src_feat = extract_foundation_features(backbone, X_src, self.device, self.batch_size)
+            X_src_feat, self._feat_pca = maybe_reduce_features(X_src_feat, self.max_feat_dim, self.seed)
+            if source_cache is not None:
+                source_cache[_src_feat_key] = (X_src_feat, self._feat_pca)
 
         if target_labeled is not None and len(target_labeled[0]) >= 2:
             X_feat_raw = extract_foundation_features(backbone, X_fit, self.device, self.batch_size)

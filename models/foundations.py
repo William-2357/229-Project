@@ -311,7 +311,7 @@ class _NeuroGPTEmbedder(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # x: (B, 27, 40) → flatten → embed
-        return self.embed_model["model"](x.flatten(1))    # (B, 768)
+        return self.embed_model["model"](x.flatten(1))    # (B, 1024)
 
 
 class NeuroGPTBackbone(FoundationBackbone):
@@ -331,7 +331,7 @@ class NeuroGPTBackbone(FoundationBackbone):
     Checkpoint loads encoder.* and embedder.* keys; decoder.* (GPT) is skipped.
     """
 
-    _EMB_DIM   = _NeuroGPTEmbedder.EMB_DIM     # 768
+    _EMB_DIM   = _NeuroGPTEmbedder.EMB_DIM     # 1024
     _CHUNK_LEN = 500                             # samples at 250 Hz (2 s)
     _TARGET_SFREQ = 250.0
 

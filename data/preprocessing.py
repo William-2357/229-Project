@@ -218,3 +218,24 @@ BACKBONE_CACHE_SUFFIX: dict[str, str] = {
     "neurogpt": "neurogpt",
     "mirepnet": "mirepnet",
 }
+
+# Target sampling rate per backbone (Hz). Backbones not listed use 200 Hz.
+#
+# BCIC-IV 2a is recorded natively at 250 Hz. MIRepNet and NeuroGPT were
+# pretrained at 250 Hz, so feeding them 250 Hz data avoids the lossy
+# 250 -> 200 -> 250 resampling round-trip and matches the exact rate (sample
+# alignment, filter phase) their checkpoints expect.
+#
+# LaBraM and CBraMod were pretrained at 200 Hz, so they stay at 200 Hz (their
+# 0.1-75 Hz / 0.5-75 Hz content is fully preserved below the 100 Hz Nyquist).
+# NOTE: CBraMod does no internal resampling, so it MUST be fed its native rate.
+#
+# Caches are per-backbone (BACKBONE_CACHE_SUFFIX), so the 250 Hz MIRepNet/
+# NeuroGPT caches never collide with the 200 Hz LaBraM/CBraMod caches. After
+# changing a backbone's rate, delete its stale cache dir so it recomputes.
+BACKBONE_TARGET_SFREQ: dict[str, float] = {
+    "mirepnet": 250.0,
+    "neurogpt": 250.0,
+    "labram":   200.0,
+    "cbramod":  200.0,
+}
