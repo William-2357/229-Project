@@ -101,16 +101,19 @@ not this offline benchmark.
 **ensemble M=3 = 0.598 vs iter-8 0.595 (+0.003, within noise)** — gains at K=5/30 offset by small
 losses at K=0.5/10/15. Highest recorded, but not a decisive win, and 3× the compute.
 
-**Result 3 — coupling the representation to the convex head (CRONOS-AM) is REFUTED.** iter-8 is
-*decoupled*: LoRA trains via a throwaway linear head, the convex head is fit post-hoc. We coupled
-them — alternate `global convex-head solve` ↔ `LoRA update on cal CE backpropped through the fixed
-convex head` (the real CRONOS-AM, enabled by the relaxed harness). Both re-solve frequencies
-(rounds=3 and rounds=6) give **0.589 vs iter-8 0.611 (−0.022), worse at every K.** **Why decoupling
-wins (the insight):** representation learning wants a *smooth, co-adapting* objective — iter-8's
-linear head rotates with the features each SGD step, a clean gradient. The convex head's power is as
-a *global-optimal, post-hoc* classifier of nonlinear structure in already-good features; used as the
-representation's *training target* it is static and ill-conditioned (dead ReLUs, two-sided neurons
-with negative W₂) and **degrades** the features. The decoupling is **load-bearing**, not incidental.
+**Result 3 — coupling the representation to the convex head is REFUTED (every mechanism).** iter-8
+is *decoupled*: LoRA trains via a throwaway linear head, the convex head is fit post-hoc. We coupled
+them two ways: (i) **CRONOS-AM** — alternate `global convex solve` ↔ `LoRA update through the FIXED
+convex head` (rounds=3/6 → 0.589); (ii) **implicit differentiation through eq-2's KKT** — unroll
+prox-gradient steps on the convex program warm-started at the optimum so `∂V*/∂Z` flows (the head is
+*not* frozen; validated: forward argmax==jax, autograd-vs-finite-diff rel-err 3e-7). Implicit gives
+0.584 (weak unroll) / 0.587 (strong). **All four variants cluster at 0.583–0.589, ~0.02–0.03 below
+iter-8's 0.611 — structural, not a tuning artifact.** **Why decoupling wins (the insight):**
+representation learning wants a *smooth, co-adapting* objective — iter-8's linear head rotates with
+the features each SGD step. The convex head's activation-pattern/global-optimality structure that
+makes it an excellent *post-hoc classifier* makes it a *poor objective for shaping the
+representation* — whether frozen OR differentiated at its optimum. The decoupling is **load-bearing**:
+adapt the representation freely, classify convexly post-hoc.
 
 **Standing winner unchanged: iter-8 LoRA+convex (full 0.595).** The robust lever remains
 per-target representation adaptation (LoRA) + a convex head; convex transfer, ensembling, and

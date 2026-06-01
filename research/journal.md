@@ -485,3 +485,43 @@ not incidental. (Theoretically-cleaner coupling — implicit/unrolled differenti
 ADMM solve so the head is always-optimal-and-differentiable — remains untried; cross-framework
 torch+jax autodiff, high effort, and the robust negative above predicts limited upside.)
 WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595 / proxy 0.611). couple_mode default = none.
+
+## iter 21 — IMPLICIT coupling: differentiate eq.2's KKT (unrolled) (2026-06-01)  [REVERTED]
+- motivation (user): the fixed-head coupling (iter-19/20) froze the convex head during the rep step
+  -> no dV*/dZ. Do it RIGHT: differentiate THROUGH the optimal head so the backbone sees how the
+  convex classifier responds to feature changes. Since diffcp/cvxpylayers are unavailable, unroll
+  prox-gradient steps on eq.2 warm-started at the jax optimum V0 (Neumann approx of the KKT/implicit
+  gradient). New module adaptation/convex_implicit.py (solve_unrolled, eq2_logits).
+- validation: forward F(V0) argmax matches jax stacked_predict 100%; autograd vs finite-diff
+  gradient max rel err 3e-7 (gradcheck OK). couple_mode=implicit; rounds=3, unroll T=5, gamma=1e-3.
+- proxy (9 subj, K=[1,10,30]): score=0.5836 per_k={1:.550, 10:.595, 30:.606}.
+  vs iter-8 0.611: WORSE (-0.027). vs CRONOS-AM 0.5885: ~tie (slightly worse at K30).
+- decision: REVERTED. The CORRECT implicit gradient through the optimal head does NOT rescue
+  coupling. Caveat: at gamma=1e-3,T=5 the unroll moves V little -> weak dV*/dZ (≈ fixed-head). Running
+  a stronger-unroll variant (gamma=3e-3, T=10) to give the implicit gradient real magnitude before
+  the final verdict.
+
+## iter 22 — implicit coupling, STRONGER unroll (gamma=3e-3, T=10) (2026-06-01)  [REVERTED]
+- proxy (9 subj, K=[1,10,30]): score=0.5870 per_k={1:.548, 10:.599, 30:.615}.
+  vs iter-21 (weak unroll) 0.5836: +0.003 (stronger dV*/dZ recovers slightly toward CRONOS-AM).
+  vs iter-8 0.611: still -0.024.
+- decision: REVERTED. A meaningful implicit gradient still doesn't beat decoupling.
+
+## ===== COUPLING — FINAL VERDICT (2026-06-01) =====
+Tested the FULL coupling family vs iter-8 decoupled LoRA+convex (proxy 0.611):
+    iter-19 CRONOS-AM fixed-head, rounds=3   0.5885
+    iter-20 CRONOS-AM fixed-head, rounds=6   0.5886
+    iter-21 implicit (KKT/unroll), weak      0.5836
+    iter-22 implicit (KKT/unroll), strong    0.5870
+ALL cluster at 0.583-0.589, ~0.02-0.03 BELOW iter-8. Coupling is ROBUSTLY REFUTED across every
+mechanism — fixed head, frequent re-solve, AND correct implicit differentiation through eq.2's KKT
+conditions (validated: forward argmax==jax, gradcheck rel-err 3e-7). The gap is STRUCTURAL, not a
+tuning artifact (stronger implicit gradient only nudges 0.5836->0.5870).
+INSIGHT (well-supported): the convex head's activation-pattern/global-optimality structure that
+makes it an EXCELLENT post-hoc CLASSIFIER makes it a POOR objective for shaping the representation.
+Representation learning wants a smooth, co-adapting target (iter-8's linear head rotates with the
+features); the convex head — whether frozen or differentiated-at-its-optimum — is a worse training
+signal than a plain linear head. So convex heads should stay DECOUPLED: adapt the representation
+freely, classify convexly post-hoc. Decoupling is load-bearing, not incidental.
+WINNER UNCHANGED: iter-8 LoRA+convex (full 0.595 / proxy 0.611). All new machinery (convex_implicit,
+couple_mode) retained as research artifacts; default couple_mode=none.

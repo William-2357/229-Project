@@ -273,7 +273,7 @@
       "mean": 0.595
     }
   },
-  "status": "WIN (unchanged) \u2014 iter-8 LoRA+convex full 0.595. Convex-in-pretraining campaign (iters 14-20): transfer-anchor NEGATIVE (offline pooling>anchor); ensemble marginal (full 0.598, within noise); coupled CRONOS-AM REFUTED (0.589<0.611, decoupling is load-bearing). iter-8 remains the robust winner.",
+  "status": "WIN (unchanged) \u2014 iter-8 LoRA+convex full 0.595. Convex-in-pretraining campaign (iters 14-22): transfer-anchor NEGATIVE; ensemble marginal (0.598, within noise); coupling REFUTED across ALL mechanisms incl. implicit-diff-through-KKT (0.583-0.589 < 0.611). Decoupling is load-bearing. iter-8 winner.",
   "generality_experiments_frozen_proxy_9subj": {
     "note": "cross-subject-generality objectives on FROZEN MIRepNet (K=[1,10,30]). None beats frozen-convex 0.582 or LoRA+convex 0.611.",
     "meta_r2d2": 0.5766,
@@ -333,6 +333,26 @@
       }
     },
     "vs_iter8_proxy": "-0.022 (worse at every K); identical across re-solve frequency -> moving-target ruled out",
-    "verdict": "REFUTED \u2014 coupling underperforms the decoupled iter-8. Decoupling is load-bearing: LoRA wants a smooth co-adapting (linear) head as its SGD target; the convex head's value is global-optimal POST-HOC classification, not as a static training target (ill-conditioned: dead ReLUs / negative-W2 neurons)."
+    "verdict": "REFUTED \u2014 coupling underperforms the decoupled iter-8. Decoupling is load-bearing: LoRA wants a smooth co-adapting (linear) head as its SGD target; the convex head's value is global-optimal POST-HOC classification, not as a static training target (ill-conditioned: dead ReLUs / negative-W2 neurons).",
+    "implicit_diff_iters21_22": {
+      "note": "Implicit/unrolled differentiation through eq-2's KKT (dV*/dZ flows), since diffcp/cvxpylayers unavailable. Validated: forward argmax==jax, gradcheck rel-err 3e-7.",
+      "iter21_weak_unroll_g1e-3_T5": {
+        "proxy": 0.5836,
+        "per_k": {
+          "1.0": 0.5497,
+          "10.0": 0.5952,
+          "30.0": 0.6057
+        }
+      },
+      "iter22_strong_unroll_g3e-3_T10": {
+        "proxy": 0.587,
+        "per_k": {
+          "1.0": 0.5476,
+          "10.0": 0.5985,
+          "30.0": 0.615
+        }
+      },
+      "verdict": "REFUTED too. Full coupling family (fixed-head 0.5885/0.5886, implicit 0.5836/0.5870) clusters ~0.02-0.03 below iter-8 0.611; structural, not tuning. Convex head = great post-hoc classifier, poor representation-shaping objective."
+    }
   }
 }
