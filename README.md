@@ -99,11 +99,43 @@ Stage 2: Freeze backbone; apply lightweight target adaptation.
 | `foundation_sft_finetune` | SFT backbone + full target fine-tune |
 | `foundation_sft_lora` | SFT backbone + LoRA |
 | `foundation_sft_ea_lora` | EA + SFT backbone + LoRA |
-| `foundation_sft_cld` | SFT backbone + CLD head |
-| `foundation_sft_ea_cld` | EA + SFT backbone + CLD head |
+| `foundation_sft_cld` | SFT backbone + CLD head (Stage 2 on **target calibration only**) |
+| `foundation_sft_ea_cld` | EA + SFT backbone + CLD head (target-only) |
+| `foundation_sft_anchored_cld` | SFT backbone + **source-anchored** 2-stage CLD (low-K fix) |
+| `foundation_sft_ea_anchored_cld` | EA + SFT backbone + source-anchored 2-stage CLD |
 
 SFT hyperparameter defaults (hardcoded in each adapter file):
 - `lr_src=1e-3`, `weight_decay=1e-4`, `max_epochs_src=200`, `patience_src=25`
+
+### Source-anchored CLD (low-K fix)
+
+Plain `foundation_sft_cld` fits the convex head on the **target calibration trials
+only**, which underperforms at small K (few-shot). The `*_anchored_cld` variants
+implement the fix from `reve_kmin_convexnn_v3.ipynb`: a **two-stage** convex solve.
+
+- **Stage 1** — cold ADMM on the source pool; saves the convex-program primal `(u, v)`.
+- **Stage 2** (K > 0) — rebuild `CVX_ReLU_MLP` on **source + weighted calibration**
+  (calibration rows repeated to approximate a `target_mass` share of the loss), warm-started
+  from the Stage-1 primal (same seed → same random hyperplanes), with the ADMM dual `lam`
+  reset. The **Stage-1 feature scaler is reused** so the warm-started weights stay valid.
+- K = 0 uses the Stage-1 model directly.
+
+**Per-backbone HP tuning.** The two knobs that define Stage 2 (`beta`, `target_mass`)
+are grid-searched (`{3e-4,1e-3,3e-3} × {0.15,0.35,0.55}`) on a **leak-free, source-internal
+validation split** (a held-out source slice acts as a pseudo-target). HPs are **tuned once
+per backbone** (not per fold): a single "primer" job per anchored variant selects and
+persists them to the volume (`{backbone}_anchored_{ea_}hp_seed{seed}.json`), and the
+remaining folds reuse them. EA and non-EA variants tune separately (EA whitens the feature
+space). HPs are tuned on the foundation-feature space, not copied from the REVE notebook.
+
+### `fit_time` semantics (foundation SFT methods)
+
+For the SFT adapters, `fit_time` measures **only the per-K target adaptation** — the timer
+starts after the frozen, source-fine-tuned backbone is ready. Source fine-tuning (cached to
+disk), backbone loading, and source feature extraction are excluded so methods are comparable.
+The frozen backbone, source features, and Stage-1 solve are cached across K within a job.
+(Note: results predating this change bundled SFT training/model-reload into `fit_time` and are
+**not** directly comparable across methods — e.g. LoRA's K=0.5 included a full source fine-tune.)
 
 ### CLD implementation notes
 
@@ -117,14 +149,27 @@ A few non-obvious details:
   Features are now zero-padded up to a fixed bucket size (`pad_features_to_bucket`
   in `adaptation/cld.py`) so the solver compiles once and is reused. The padding is
   solution-invariant.
+- **Anchored Stage 2 pads to a `target_mass`-invariant size.** In the source-anchored
+  variants, `X_aug = source + repeated-calibration` changes row count with both K and
+  `target_mass`, so next-multiple padding still retraced per call (a NeuroGPT EA run
+  took ~7 min vs ~2 min). `fit_stage2_anchored` now pads to `n_src·(1+odds)` rounded up
+  plus one bucket — a function of `n_src` and `target_mass` only (both constant for a
+  sweep) — so Stage 2 compiles once. The EA variant also caches the aligned source.
+- **GPU backend forced and verified.** `modal_runner.py` sets `JAX_PLATFORMS=cuda,cpu`
+  on the image (cuda default; cpu kept for the Nyström pin) and the worker raises if
+  `jax.default_backend()` isn't a GPU — a silent CPU fallback would run the solver
+  ~10–20× slower and otherwise look identical.
 - **Nyström preconditioner pinned to CPU.** On Modal GPUs, `jaxcld`'s Nyström
   preconditioner (`rand_nys_appx`) crashed with `cuSolver INTERNAL` because its
   `qr`/`cholesky`/`solve_triangular`/`svd` are cuSolver routines. These act on
   tiny (PCA-reduced) matrices, so `adaptation/_jaxcld_cpu_linalg.py` monkey-patches
   them onto the CPU while the expensive sketch matvecs and PCG/ADMM matmuls (cuBLAS)
   stay on GPU. Numerically identical to upstream.
-- **High-dim backbones are PCA-reduced** before the CLD head (e.g. NeuroGPT's
-  1024-dim features) to keep the ADMM weight tensors small enough for XLA.
+- **PCA reduction is available but disabled by default** (`max_feat_dim=None`).
+  When set, high-dim backbones (e.g. NeuroGPT's 1024-dim features) are PCA-reduced
+  before the CLD head to keep the ADMM weight tensors small enough for XLA. With it
+  off, the CLD head fits on the full feature space; only NeuroGPT (1024 > 256) was
+  ever affected — all other backbones (≤256-dim) are bit-identical either way.
 
 ## Running Experiments
 

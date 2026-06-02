@@ -10,6 +10,7 @@ Binary:     rank=20, beta=1e-3, rho=0.01, n_neurons=10
 Multiclass: rank=20, beta=1e-3, rho=0.01, n_neurons=32
 """
 
+import os
 import time
 import copy
 import numpy as np
@@ -22,6 +23,20 @@ jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 import jax.numpy as jnp
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
 from jaxcld.optimizers.admm import admm as _run_admm
+
+# Set CLD_TIMING=1 to print a compile-vs-solve breakdown for the ADMM solver.
+# The first call pays the XLA compile; a warm re-run on an identical fresh model
+# (done once per process) isolates the steady-state solve, so the gap = compile.
+_CLD_TIMING = os.environ.get("CLD_TIMING", "") not in ("", "0", "false", "False")
+_CLD_TIMING_WARM_DONE = False
+
+
+def _block_cld(model) -> None:
+    """Force completion of the ADMM solver's output arrays (for honest timing)."""
+    leaves = [getattr(model, a, None) for a in ("theta1", "theta2", "v", "u")]
+    leaves = [x for x in leaves if x is not None]
+    if leaves:
+        jax.block_until_ready(leaves)
 
 # Patch jaxcld's Nyström preconditioner to run its qr/cholesky/solve/svd on CPU,
 # avoiding `cuSolver INTERNAL` crashes on Modal GPUs. Must come after the admm
@@ -171,14 +186,48 @@ def fit_cld_head(
     )
     cld.init_model()
 
-    _run_admm(cld, {
+    admm_params = {
         'rank': rank,
         'beta': beta,
         'gamma_ratio': gamma_ratio,
         'admm_iters': admm_iters,
         'pcg_iters': pcg_iters,
         'check_opt': False,
-    })
+    }
+
+    if not _CLD_TIMING:
+        _run_admm(cld, admm_params)
+        return cld, mu, sigma
+
+    # --- Diagnostic timing: separate XLA compile from steady-state solve ------
+    global _CLD_TIMING_WARM_DONE
+    t0 = time.perf_counter()
+    _run_admm(cld, admm_params)
+    _block_cld(cld)
+    t_first = time.perf_counter() - t0
+
+    msg = (
+        f"[cld-timing] fit_cld_head backend={jax.default_backend()} "
+        f"n={X_norm.shape[0]} d={X_norm.shape[1]} P_S={n_neurons} "
+        f"admm_iters={admm_iters} pcg_iters={pcg_iters} "
+        f"first(compile+solve)={t_first:.3f}s"
+    )
+    if not _CLD_TIMING_WARM_DONE:
+        # Re-run on an identical fresh model: kernels are now compiled, so this
+        # measures pure solve. Done once per process (shapes are constant within
+        # a job) to avoid doubling every call.
+        cld_warm = CVX_ReLU_MLP(
+            X=X_jax, y=y_jax, n_classes=n_classes, P_S=n_neurons,
+            beta=beta, rho=rho, seed=key,
+        )
+        cld_warm.init_model()
+        t1 = time.perf_counter()
+        _run_admm(cld_warm, admm_params)
+        _block_cld(cld_warm)
+        t_warm = time.perf_counter() - t1
+        _CLD_TIMING_WARM_DONE = True
+        msg += f" warm(solve-only)={t_warm:.3f}s est_compile={t_first - t_warm:.3f}s"
+    print(msg, flush=True)
 
     return cld, mu, sigma
 

@@ -20,7 +20,7 @@ import torch.nn as nn
 
 from .base import BaseAdapter
 from .foundation_tta import _run_foundation_t3a
-from .foundation_source_finetune import build_source_finetuned_foundation_model
+from .foundation_source_finetune import load_or_build_sft_model
 from models.foundations import FoundationBackbone, FoundationWithHead
 
 
@@ -81,17 +81,12 @@ class FoundationSFTTTAAdapter(BaseAdapter):
         X_src, y_src = source_data
         n_classes = len(np.unique(y_src))
 
-        # Step 1: Source fine-tune (cached across K values and repeats)
-        cache_key = ("foundation_sft_tta_source_ft", self.seed)
-        if source_cache is not None and cache_key in source_cache:
-            model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
-            model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
-        else:
-            model = build_source_finetuned_foundation_model(
-                self.backbone, n_classes, X_src, y_src, **self._source_ft_kwargs()
-            )
-            if source_cache is not None:
-                source_cache[cache_key] = copy.deepcopy(model.state_dict())
+        # Step 1: Source fine-tune — shared disk checkpoint across ALL foundation
+        # SFT methods (see load_or_build_sft_model), reused across jobs/runs.
+        model = load_or_build_sft_model(
+            self.backbone, n_classes, X_src, y_src,
+            seed=self.seed, source_cache=source_cache, **self._source_ft_kwargs(),
+        )
 
         # Step 2: Freeze backbone — T3A only adjusts head prototypes
         model.freeze_backbone()

@@ -19,7 +19,7 @@ import torch
 import torch.nn as nn
 
 from .base import BaseAdapter, train_epoch, evaluate_model
-from .foundation_source_finetune import build_source_finetuned_foundation_model
+from .foundation_source_finetune import load_or_build_sft_model
 from models.foundations import FoundationBackbone, FoundationWithHead
 
 
@@ -121,25 +121,22 @@ class FoundationSFTFineTuneAdapter(BaseAdapter):
             raise ValueError("FoundationSFTFineTuneAdapter requires source_data")
 
         self._seed()
-        t0 = time.time()
 
         X_src, y_src = source_data
         n_classes = len(np.unique(y_src))
 
-        # Source fine-tune (cached — same result for all K/repeat calls on this subject)
-        cache_key = ("foundation_sft_finetune_source_ft", self.seed)
-        if source_cache is not None and cache_key in source_cache:
-            model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
-            model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
-        else:
-            model = build_source_finetuned_foundation_model(
-                self.backbone, n_classes, X_src, y_src, **self._source_ft_kwargs()
-            )
-            if source_cache is not None:
-                source_cache[cache_key] = copy.deepcopy(model.state_dict())
-
+        # Source fine-tune — one-time, shared source-side cost; excluded from
+        # fit_time so the timer measures only per-K target adaptation. Reuses a
+        # disk checkpoint shared across ALL SFT methods/jobs/runs (see
+        # load_or_build_sft_model), so the ~3-4 min fine-tune isn't recomputed.
+        model = load_or_build_sft_model(
+            self.backbone, n_classes, X_src, y_src,
+            seed=self.seed, source_cache=source_cache, **self._source_ft_kwargs(),
+        )
         model.freeze_backbone()
 
+        # ---- fit_time covers target adaptation only (frozen backbone is ready) ----
+        t0 = time.time()
         if target_labeled is not None and len(target_labeled[0]) >= 2:
             X_cal, y_cal = target_labeled
             model = self._finetune_target(model, X_cal, y_cal)

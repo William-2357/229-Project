@@ -21,7 +21,7 @@ import torch.nn as nn
 
 from .base import BaseAdapter
 from .ea import compute_mean_covariance, matrix_sqrt_inv, euclidean_align
-from .foundation_source_finetune import build_source_finetuned_foundation_model
+from .foundation_source_finetune import load_or_build_sft_model
 from models.foundations import FoundationBackbone, FoundationWithHead
 
 
@@ -83,17 +83,13 @@ class FoundationSFTLOSOAdapter(BaseAdapter):
         X_src, y_src = source_data
         n_classes = len(np.unique(y_src))
 
-        cache_key = ("foundation_sft_loso_source_ft", self.seed)
-        if source_cache is not None and cache_key in source_cache:
-            model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
-            model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
-        else:
-            model = build_source_finetuned_foundation_model(
-                self.backbone, n_classes, X_src, y_src, **self._source_ft_kwargs()
-            )
-            if source_cache is not None:
-                source_cache[cache_key] = copy.deepcopy(model.state_dict())
-
+        # SFT backbone — shared disk checkpoint across ALL foundation SFT methods
+        # (see load_or_build_sft_model), so the ~2-4min source fine-tune is reused
+        # across methods/jobs/runs instead of recomputed per job.
+        model = load_or_build_sft_model(
+            self.backbone, n_classes, X_src, y_src,
+            seed=self.seed, source_cache=source_cache, **self._source_ft_kwargs(),
+        )
         model.freeze_backbone()
         self._model = model
         self._fit_time = time.time() - t0
@@ -172,18 +168,13 @@ class FoundationSFTEAAdapter(FoundationSFTLOSOAdapter):
         R_tgt = compute_mean_covariance(target_unlabeled, self.epsilon)
         self._target_R_inv_sqrt = matrix_sqrt_inv(R_tgt)
 
-        # Source fine-tune on aligned source (cached — alignment is fixed per subject)
-        cache_key = ("foundation_sft_ea_source_ft", self.seed)
-        if source_cache is not None and cache_key in source_cache:
-            model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
-            model.load_state_dict(copy.deepcopy(source_cache[cache_key]))
-        else:
-            model = build_source_finetuned_foundation_model(
-                self.backbone, n_classes, X_src_aligned, y_src, **self._source_ft_kwargs()
-            )
-            if source_cache is not None:
-                source_cache[cache_key] = copy.deepcopy(model.state_dict())
-
+        # Source fine-tune on EA-aligned source — shared disk checkpoint keyed by
+        # the aligned source data, so it's shared with the other EA SFT methods
+        # (foundation_sft_ea_cld / ea_lora / ea_anchored_cld) and reused across runs.
+        model = load_or_build_sft_model(
+            self.backbone, n_classes, X_src_aligned, y_src,
+            seed=self.seed, source_cache=source_cache, **self._source_ft_kwargs(),
+        )
         model.freeze_backbone()
         self._model = model
         self._fit_time = time.time() - t0

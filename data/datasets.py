@@ -1,5 +1,6 @@
 """Dataset classes for BCIC-IV-2a EEG datasets."""
 
+import os
 import numpy as np
 from pathlib import Path
 from abc import ABC, abstractmethod
@@ -85,7 +86,11 @@ class BaseEEGDataset(ABC):
                 path = self._cache_path(subject_id, sess)
                 if path is not None:
                     path.parent.mkdir(parents=True, exist_ok=True)
-                    np.savez_compressed(path, X=X, y=y)
+                    # Atomic write: temp file + rename so concurrent jobs (and
+                    # interrupted writes) can never leave a torn npz for readers.
+                    tmp = path.with_suffix(f".tmp.{os.getpid()}.npz")
+                    np.savez_compressed(tmp, X=X, y=y)
+                    os.replace(tmp, path)
             all_X.append(X)
             all_y.append(y)
 
@@ -139,7 +144,9 @@ class BaseEEGDataset(ABC):
                     notch_freqs=self._notch_freqs,
                     **self.preprocess_config,
                 )
-                np.savez_compressed(path, X=X, y=y)
+                tmp = path.with_suffix(f".tmp.{os.getpid()}.npz")
+                np.savez_compressed(tmp, X=X, y=y)
+                os.replace(tmp, path)
                 print(f"    saved {path.name}  X={X.shape}")
 
 

@@ -20,7 +20,7 @@ from peft import LoraConfig, get_peft_model
 from .base import BaseAdapter, train_epoch, evaluate_model
 from .ea import compute_mean_covariance, matrix_sqrt_inv, euclidean_align
 from .foundation_lora import _get_lora_target_modules
-from .foundation_source_finetune import build_source_finetuned_foundation_model
+from .foundation_source_finetune import load_or_build_sft_model
 from models.foundations import FoundationBackbone, FoundationWithHead
 
 
@@ -163,35 +163,38 @@ class FoundationSourceFineTuneLoRAAdapter(BaseAdapter):
             raise ValueError("FoundationSourceFineTuneLoRAAdapter requires source_data")
 
         self._seed()
-        t0 = time.time()
 
         X_src, y_src = source_data
         n_classes = len(np.unique(y_src))
 
-        cache_key = ("foundation_sft_lora_source_ft", self.seed)
-        if source_cache is not None and cache_key in source_cache:
-            cached = source_cache[cache_key]
-            source_state = copy.deepcopy(cached["state_dict"])
-            self._selected_rank = cached["rank"]
+        # Source fine-tune + rank selection is a one-time, shared source-side cost
+        # (excluded from fit_time — the timer below covers only per-K LoRA
+        # adaptation). The fine-tune reuses a disk checkpoint shared across ALL SFT
+        # methods/jobs/runs (see load_or_build_sft_model), so the ~3-4 min source
+        # fine-tune isn't recomputed. Rank selection is cached in-memory per job.
+        sft_model = load_or_build_sft_model(
+            self.backbone, n_classes, X_src, y_src,
+            seed=self.seed, source_cache=source_cache, **self._source_ft_kwargs(),
+        )
+        source_state = copy.deepcopy(sft_model.state_dict())
+        if self.rank is not None:
+            self._selected_rank = self.rank
         else:
-            model = build_source_finetuned_foundation_model(
-                self.backbone, n_classes, X_src, y_src, **self._source_ft_kwargs()
-            )
-            source_state = copy.deepcopy(model.state_dict())
-            self._selected_rank = (
-                self.rank if self.rank is not None
-                else self._select_rank_by_source_cv(source_state, n_classes, X_src, y_src)
-            )
-            if source_cache is not None:
-                source_cache[cache_key] = {
-                    "state_dict": copy.deepcopy(source_state),
-                    "rank": self._selected_rank,
-                }
+            rank_key = ("foundation_sft_lora_rank", self.seed)
+            if source_cache is not None and rank_key in source_cache:
+                self._selected_rank = source_cache[rank_key]
+            else:
+                self._selected_rank = self._select_rank_by_source_cv(
+                    source_state, n_classes, X_src, y_src)
+                if source_cache is not None:
+                    source_cache[rank_key] = self._selected_rank
 
         model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
         model.load_state_dict(copy.deepcopy(source_state))
         model.freeze_backbone()
 
+        # ---- fit_time covers LoRA adaptation only (frozen backbone is ready) ----
+        t0 = time.time()
         if target_labeled is None or len(target_labeled[0]) < 2:
             self._model = model
             self._fit_time = time.time() - t0
