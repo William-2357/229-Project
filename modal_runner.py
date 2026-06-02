@@ -32,20 +32,28 @@ from pathlib import Path
 #CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
 
 DATASET = "bciciv2a"
-BACKBONE = "mirepnet"          # mirepnet | neurogpt | cbramod
+# Foundation backbone: cbramod | labram | mirepnet | neurogpt (override with --backbone).
+# Each needs its pretrained checkpoint (override with --checkpoint-path):
+#   cbramod  -> /data/CBraMod_checkpoint.pth
+#   labram   -> /data/labram-base.pth
+#   mirepnet -> /data/MIRepNet.pth
+#   neurogpt -> /data/neuro_gpt.pt
+# For SPECIALIST backbones (eegnet/shallowconv/conformer) use the bare method names
+# (loso/ea/tta/finetune/lora/ea_lora/cld/ea_cld/anchored_cld/ea_anchored_cld) + checkpoint None.
+BACKBONE = "cbramod"
 METHODS = [
-    "foundation_sft_loso",     # K=0 zero-shot: source-finetuned backbone, no target adapt
-    "foundation_sft_ea",       # K=0 zero-shot: EA + source-finetuned backbone
-    "foundation_sft_tta",      # K=0 zero-shot: source-finetuned backbone + T3A
-    "foundation_sft_finetune", # K>0: source-finetuned backbone + target finetune
-    "foundation_sft_lora",     # K>0: source-finetuned backbone + LoRA
-    "foundation_sft_ea_lora",  # K>0: EA + source-finetuned backbone + LoRA
-    "foundation_sft_cld",              # K>0: source-finetuned backbone + CLD head
-    "foundation_sft_ea_cld",           # K>0: EA + source-finetuned backbone + CLD head
-   # "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM
-   # "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM
+    "foundation_sft_loso",             # K=0 zero-shot: source-finetuned backbone, no target adapt
+    "foundation_sft_ea",               # K=0 zero-shot: EA + source-finetuned backbone
+    "foundation_sft_tta",              # K=0 zero-shot: source-finetuned backbone + T3A
+    "foundation_sft_finetune",         # K>0: source-finetuned backbone + target finetune
+    "foundation_sft_lora",             # K>0: source-finetuned backbone + LoRA
+    "foundation_sft_ea_lora",          # K>0: EA + source-finetuned backbone + LoRA
+    "foundation_sft_cld",              # K>0: source-finetuned backbone + CLD head (target-only)
+    "foundation_sft_ea_cld",           # K>0: EA + source-finetuned backbone + CLD head (target-only)
+    "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM (low-K fix, HP-grid)
+    "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM (low-K fix, HP-grid)
 ]
-CHECKPOINT_PATH = "/data/MIRepNet.pth"  # path inside container (mounted from eeg-data volume)
+CHECKPOINT_PATH = "/data/CBraMod_checkpoint.pth"  # MUST match BACKBONE (see table above)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -86,6 +94,15 @@ image = (
         "jax[cuda12]",
         "jaxcld>=0.1.0",
     )
+    # Force the GPU (cuda) backend as JAX's default *before* any import can
+    # initialize a backend — config.update() inside the function is too late if
+    # something imports jax first. CPU is kept available (listed second) because
+    # the Nyström preconditioner is deliberately pinned to it (jax.devices("cpu")).
+    # JAX_PLATFORMS: force cuda as default backend (cpu kept for the Nyström pin).
+    # (CLD_TIMING="1" can be added here to print a per-call compile-vs-solve
+    # breakdown for the ADMM solver — diagnostic only; it adds a per-iteration
+    # block_until_ready sync that inflates fit_time, so leave it off for timing runs.)
+    .env({"JAX_PLATFORMS": "cuda,cpu"})
     .add_local_python_source(
         "adaptation", "data", "evaluation", "models", "plotting",
         copy=True,
@@ -102,12 +119,13 @@ UNSUPERVISED = {
     "foundation_sft_loso", "foundation_sft_ea", "foundation_sft_tta",
 }
 SUPERVISED = {
+    "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
     "finetune", "lora", "ea_lora", "cld", "ea_cld",
+    "anchored_cld", "ea_anchored_cld",
     "foundation_finetune", "foundation_lora", "foundation_ea_lora",
     "foundation_cld", "foundation_ea_cld",
     "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
     "foundation_sft_cld", "foundation_sft_ea_cld",
-    "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
     "foundation_sft_kadaptive_anchored_cld",
 }
 
@@ -144,6 +162,18 @@ def run_job(
     jax.config.update("jax_platform_name", "gpu")
     jax.config.update("jax_compilation_cache_dir", "/root/.cache/jax_xla")
 
+    # Verify JAX actually landed on the GPU. A silent CPU fallback (e.g. cuda
+    # backend failing to initialize) would run the CLD/ADMM solver ~10-20x
+    # slower and otherwise look identical — fail loud instead.
+    _jax_backend = jax.default_backend()
+    print(f"[jax] default_backend={_jax_backend} devices={jax.devices()}", flush=True)
+    if _jax_backend not in ("gpu", "cuda"):
+        raise RuntimeError(
+            f"JAX did not initialize a GPU backend (default_backend={_jax_backend}, "
+            f"devices={jax.devices()}). Refusing to run on CPU — check the cuda12 "
+            f"install / JAX_PLATFORMS env."
+        )
+
 
     from data.datasets import BCICIVDataset
     from data.synthetic import SyntheticDataset
@@ -157,6 +187,7 @@ def run_job(
     from adaptation.ea_lora import EALoRAAdapter
     from adaptation.cld import CLDAdapter
     from adaptation.stacked import EACLDAdapter
+    from adaptation.anchored_cld import AnchoredCLDAdapter, EAAnchoredCLDAdapter
     from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
     from adaptation.foundation_source_cld import (
         FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
@@ -192,6 +223,8 @@ def run_job(
         "ea_lora": EALoRAAdapter,
         "cld": CLDAdapter,
         "ea_cld": EACLDAdapter,
+        "anchored_cld": AnchoredCLDAdapter,
+        "ea_anchored_cld": EAAnchoredCLDAdapter,
         "linear_probe": LinearProbeAdapter,
         "foundation_loso": FoundationLOSOAdapter,
         "foundation_ea": FoundationEAAdapter,
@@ -364,6 +397,36 @@ def orchestrate(
         print("All jobs already completed.")
         return all_results
 
+    # Tune-once-per-backbone, separately per anchored variant (EA vs non-EA tune
+    # in different feature spaces). Run ONE job per distinct anchored method FIRST
+    # so each selects + persists its (beta, target_mass) to the volume; the
+    # remaining anchored jobs of that variant then reuse it (~9x cheaper). Cheap on
+    # resume: if a variant's HP file already exists, its primer just reads it.
+    anchored_methods = [m for m in method_list if "anchored" in m]
+    primer_jobs = []
+    for m in anchored_methods:
+        m_pending = [(mm, s) for (mm, s) in pending_jobs if mm == m]
+        if m_pending:
+            primer_jobs.append(m_pending[0])
+    if primer_jobs:
+        print(f"Priming per-backbone HP selection: "
+              f"{[f'{m}/subject_{s:02d}' for m, s in primer_jobs]}", flush=True)
+        for (method, subject_id), result in zip(
+            primer_jobs,
+            run_job.starmap([
+                (m, s, dataset, backbone, k_minutes, n_repeats, seed, checkpoint_path)
+                for m, s in primer_jobs
+            ]),
+        ):
+            key = f"{method}/subject_{subject_id:02d}"
+            all_results[key] = result
+            out_path.write_text(json.dumps(all_results, indent=2))
+            print(f"  Finished (primer): {key}", flush=True)
+        pending_jobs = [j for j in pending_jobs if j not in primer_jobs]
+        if not pending_jobs:
+            print(f"\nAll done. Results saved to {out_path}")
+            return all_results
+
     for (method, subject_id), result in zip(
         pending_jobs,
         run_job.starmap(
@@ -410,6 +473,30 @@ def main(
 
     if n_subjects != "all":
         all_subjects = all_subjects[:int(n_subjects)]
+
+    # Fail fast on backbone/method-family mismatch BEFORE dispatching GPU jobs.
+    # Foundation backbones use the foundation_* / foundation_sft_* methods; specialist
+    # backbones (eegnet/shallowconv/conformer) use the bare method names. Mixing them
+    # hands a frozen foundation backbone to a specialist adapter (or vice versa),
+    # which otherwise crashes deep in a worker (e.g. "element 0 ... does not require grad").
+    FOUNDATION_BACKBONES = {"cbramod", "labram", "mirepnet", "neurogpt"}
+    is_foundation = backbone in FOUNDATION_BACKBONES
+    foundation_methods = [m for m in method_list if m.startswith("foundation")]
+    specialist_methods = [m for m in method_list if not m.startswith("foundation")]
+    if is_foundation and specialist_methods:
+        raise ValueError(
+            f"Backbone '{backbone}' is a foundation model, but these methods are "
+            f"specialist-only: {specialist_methods}. Use the foundation_* variants "
+            f"(e.g. foundation_sft_anchored_cld / foundation_sft_ea_anchored_cld), or "
+            f"run a specialist backbone (eegnet/shallowconv/conformer)."
+        )
+    if not is_foundation and foundation_methods:
+        raise ValueError(
+            f"Backbone '{backbone}' is a specialist model, but these methods are "
+            f"foundation-only: {foundation_methods}. Drop the foundation_ prefix "
+            f"(e.g. anchored_cld / ea_anchored_cld), or run a foundation backbone "
+            f"(cbramod/labram/mirepnet/neurogpt)."
+        )
 
     print(
         f"Starting orchestrator: {len(method_list) * len(all_subjects)} jobs | "

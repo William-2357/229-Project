@@ -63,7 +63,7 @@ class FoundationCLDAdapter(BaseAdapter):
         pcg_iters: int = 10,
         n_neurons: int | None = None,
         batch_size: int = 32,
-        max_feat_dim: int = 256,
+        max_feat_dim: int | None = None,  # None = no PCA; CLD runs on full features
     ):
         if not isinstance(backbone, FoundationBackbone):
             raise TypeError(

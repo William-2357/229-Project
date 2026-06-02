@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 FOUNDATION_ROOT = ROOT / "foundation_results"
-SPECIALIST_ROOT = ROOT / "results" / "bciciv2a"
+SPECIALIST_ROOT = ROOT / "specialist_results"
 OUT_DIR = ROOT / "plots"
 OUT_DIR.mkdir(exist_ok=True)
 
@@ -22,15 +22,17 @@ SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]
 
 # Color + linestyle keyed by *base* method name (after stripping foundation_sft_/foundation_ prefix)
 METHOD_STYLES: dict[str, dict] = {
-    "loso":         {"color": "#1f77b4", "ls": "--"},
-    "ea":           {"color": "#ff7f0e", "ls": "--"},
-    "tta":          {"color": "#2ca02c", "ls": "--"},
-    "finetune":     {"color": "#9467bd", "ls": "-"},
-    "lora":         {"color": "#ff7f0e", "ls": "-"},
-    "ea_lora":      {"color": "#2ca02c", "ls": "-"},
-    "cld":          {"color": "#d62728", "ls": "-"},
-    "ea_cld":       {"color": "#8c564b", "ls": "-"},
-    "linear_probe": {"color": "#e377c2", "ls": "-"},
+    "loso":         {"color": "#1f77b4", "ls": "--"},  # blue
+    "ea":           {"color": "#ff7f0e", "ls": "--"},  # orange
+    "tta":          {"color": "#2ca02c", "ls": "--"},  # green
+    "finetune":     {"color": "#9467bd", "ls": "-"},   # purple
+    "lora":         {"color": "#17becf", "ls": "-"},   # cyan
+    "ea_lora":      {"color": "#bcbd22", "ls": "-"},   # olive
+    "cld":             {"color": "#d62728", "ls": "-"},   # red
+    "ea_cld":          {"color": "#8c564b", "ls": "-"},   # brown
+    "anchored_cld":    {"color": "#393b79", "ls": "-"},   # dark indigo
+    "ea_anchored_cld": {"color": "#7f7f7f", "ls": "-"},   # gray
+    "linear_probe":    {"color": "#e377c2", "ls": "-"},   # pink
 }
 
 BACKBONE_DISPLAY = {

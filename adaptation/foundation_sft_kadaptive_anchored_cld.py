@@ -120,6 +120,10 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
                  anchor_var_eps: float = 1e-4,
                  max_feat_dim: int | None = None,         # None = full dim (tested best); 256 = PCA
                  **kwargs):
+        # tested-best base config for this method: fixed beta=1e-4 and NO union HP-selection
+        # (the base's hp_select tunes beta/target_mass for the source∪cal UNION, not this anchor).
+        kwargs.setdefault("beta", 1e-4)
+        kwargs.setdefault("hp_select", False)
         super().__init__(backbone, device, seed, max_feat_dim=max_feat_dim, **kwargs)
         self.anchor_a_base = anchor_a_base
         self.anchor_n_ref = anchor_n_ref
@@ -192,11 +196,12 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
         X_norm = ((X - mu) / sigma).astype(np.float32)
         X_norm, y = pad_features_to_bucket(X_norm, y, 256)
         m = _build_cld(X_norm, y, n_classes, n_neurons, self.beta, self.rho, self.seed)
+        # cold-start + explicit anchor, full admm_iters — as tested (the anchor, not warm-starting,
+        # carries the source information; the convex solve converges to the same anchored optimum).
         _admm_anchored(
             m,
             dict(rank=self.rank, beta=self.beta, gamma_ratio=self.gamma_ratio,
-                 admm_iters=self.admm_iters_stage2, pcg_iters=self.pcg_iters),
+                 admm_iters=self.admm_iters, pcg_iters=self.pcg_iters),
             v_anchor=v_bar, anchor_a=a_eff,
-            u_init=stage1_model.u, v_init=stage1_model.v,            # warm-start from the source head
         )
         return m
