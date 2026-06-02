@@ -144,6 +144,18 @@ def k_minute_sweep(
     (X_cal_pool, y_cal_pool), (X_te, y_te) = dataset.get_target_data(subject_id)
     X_unlabeled = X_cal_pool  # all target trials as unlabeled context
 
+    # Per-subject (subject-grouped) source for subject-aware adapters — e.g. the K-adaptive
+    # anchored CLD's per-pattern prior a_i ~ 1/Var_s(v_i). Additive + cached: other adapters
+    # ignore this key, and it depends only on the source split (same across K/repeats).
+    if source_cache is not None and "source_per_subject" not in source_cache:
+        try:
+            src_subj = [s for s in dataset.subject_ids if s != subject_id]
+            source_cache["source_per_subject"] = [
+                dataset.get_subject_data(s, sessions=[1]) for s in src_subj
+            ]
+        except Exception:
+            pass  # dataset without per-subject access -> adaptive mode falls back to isotropic
+
     if n_classes is None:
         n_classes = len(np.unique(y_src))
 

@@ -584,23 +584,27 @@ class FoundationSFTAnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
             if self._feat_pca is not None:
                 X_calib_feat = self._feat_pca.transform(X_calib_feat).astype(np.float32)
 
-            self._cld_model = fit_stage2_anchored(
-                X_src_feat, y_src,
-                X_calib_feat, y_calib,
-                stage1_model, mu, sigma,
-                n_classes=n_classes, n_neurons=n_neurons,
-                rank=self.rank, beta=self.beta, rho=self.rho,
-                gamma_ratio=self.gamma_ratio,
-                admm_iters=self.admm_iters_stage2,
-                pcg_iters=self.pcg_iters,
-                seed=self.seed,
-                target_mass=self.target_mass,
+            self._cld_model = self._fit_stage2(
+                X_src_feat, y_src, X_calib_feat, y_calib,
+                stage1_model, mu, sigma, n_classes, n_neurons, source_cache,
             )
         else:
             self._cld_model = stage1_model
 
         self._fit_time = time.time() - t0
         return self
+
+    def _fit_stage2(self, X_src_feat, y_src, X_calib_feat, y_calib,
+                    stage1_model, mu, sigma, n_classes, n_neurons, source_cache=None):
+        """Stage-2 solve (overridable hook). Base: source-anchored warm-start on
+        source∪weighted-calibration. Subclasses can swap in a different stage-2 objective."""
+        return fit_stage2_anchored(
+            X_src_feat, y_src, X_calib_feat, y_calib, stage1_model, mu, sigma,
+            n_classes=n_classes, n_neurons=n_neurons,
+            rank=self.rank, beta=self.beta, rho=self.rho, gamma_ratio=self.gamma_ratio,
+            admm_iters=self.admm_iters_stage2, pcg_iters=self.pcg_iters,
+            seed=self.seed, target_mass=self.target_mass,
+        )
 
     def _get_features(self, X: np.ndarray) -> np.ndarray:
         backbone = self._backbone_model.to(self.device)

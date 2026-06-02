@@ -126,6 +126,7 @@ SUPERVISED = {
     "foundation_cld", "foundation_ea_cld",
     "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
     "foundation_sft_cld", "foundation_sft_ea_cld",
+    "foundation_sft_kadaptive_anchored_cld",
 }
 
 
@@ -207,6 +208,9 @@ def run_job(
     from adaptation.foundation_sft_anchored_cld import (
         FoundationSFTAnchoredCLDAdapter, FoundationSFTAnchoredEACLDAdapter
     )
+    from adaptation.foundation_sft_kadaptive_anchored_cld import (
+        FoundationSFTKAdaptiveAnchoredCLDAdapter
+    )
     from evaluation.protocols import loso_evaluation, k_minute_sweep
     from evaluation.results import save_result
 
@@ -240,6 +244,7 @@ def run_job(
         "foundation_sft_ea_cld": FoundationSourceFineTuneEACLDAdapter,
         "foundation_sft_anchored_cld": FoundationSFTAnchoredCLDAdapter,
         "foundation_sft_ea_anchored_cld": FoundationSFTAnchoredEACLDAdapter,
+        "foundation_sft_kadaptive_anchored_cld": FoundationSFTKAdaptiveAnchoredCLDAdapter,
     }
 
     torch.manual_seed(seed)
