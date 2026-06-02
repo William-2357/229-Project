@@ -370,5 +370,25 @@
     },
     "verdict": "CONVEX WINS on NeuroGPT at FULL 1024-d: LoRA+convex 0.676 > sft_lora 0.656 (+0.020), frozen-convex 0.672 also > baseline. The earlier 'convex loses' was a PCA->256 artifact (~0.05 handicap). LoRA+convex beats sft_lora on BOTH MIRepNet (0.611 vs 0.596) AND NeuroGPT (0.676 vs 0.656) -> the convex-head advantage GENERALIZES (given full features). On NeuroGPT the convex head carries most credit (frozen-convex ~= LoRA+convex); on MIRepNet LoRA does.",
     "lesson": "Never PCA-bottleneck the convex head on high-dim FMs; the 1024-d ADMM scales fine (~15s compile, 0.2s warm)."
+  },
+  "improved_2step_anchoring_kadaptive": {
+    "note": "User direction: improve 2-step anchoring; the a factor is very sensitive. FIX: data-relative prior anchor_a_mode=kadaptive, a_eff=a_base*n_ref/n_cal (auto-recedes as calibration grows). P:=a_base*n_ref is the effective knob.",
+    "neurogpt_fulldim_frozen_adaptive": {
+      "P30": 0.6661,
+      "P60": 0.671,
+      "P120": 0.6777,
+      "P240": 0.6585,
+      "P360": 0.6517,
+      "peak": "P120=0.6777"
+    },
+    "neurogpt_lora_isotropic_P120": 0.6736,
+    "mirepnet_frozen_adaptive": {
+      "P15": 0.5647,
+      "P30": 0.5729,
+      "P60": 0.5746,
+      "P120": 0.5686,
+      "peak": "P60=0.5746"
+    },
+    "verdict": "WIN on NeuroGPT: kadaptive anchor 0.6777 BEATS union (0.6715/0.6759) and baseline (0.6557); fixed-a anchor was 0.654. LOSES on MIRepNet: best 0.5746 < union 0.582. Backbone-dependent \u2014 anchoring wins when source is less task-aligned (NeuroGPT/TUH); pooling wins when source spans the task subspace (MIRepNet/MI). The data-relative prior universally fixes the a-sensitivity (smooth in P, no low-K crater)."
   }
 }

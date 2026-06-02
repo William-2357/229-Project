@@ -611,3 +611,23 @@ prior lets calibration dominate, vs the union which always carries 800 source ro
 So the user's instinct was right — `a` was the bottleneck; making it data-relative turns 2-step anchoring
 from losing-to-union into beating-it. Next: peak P, LoRA+kadaptive-anchor, and does the fix generalize
 back to MIRepNet (where fixed-a anchoring also lost to the union)?
+
+## IMPROVED ANCHORING — peak-P, LoRA combo, MIRepNet generalization (2026-06-02)
+Peak-P (the effective knob P=a_base*n_ref; a_eff=P/n_cal):
+- NeuroGPT frozen: P=60 0.671, P=120 0.6777 (PEAK), P=240 0.6585, P=360 0.6517 -> clean interior optimum P=120.
+- MIRepNet frozen: P=15 0.5647, P=30 0.5729, P=60 0.5746 (peak), P=120 0.5686.
+LoRA + kadaptive-anchor (NeuroGPT, isotropic): 0.6736 -> LoRA adds nothing (NeuroGPT is convex-head-
+dominant); frozen-adaptive-kadaptive (0.6777) stays best.
+GENERALIZATION (backbone-dependent, like everything here):
+- NeuroGPT: K-adaptive anchoring 0.6777 BEATS union (frozen 0.6715 / LoRA 0.6759) and baseline (0.6557). WIN.
+- MIRepNet: K-adaptive anchoring (best P=60) 0.5746 LOSES to the union (0.582). Union still wins.
+WHY THE SPLIT: on MIRepNet (256-d, MI-pretrained) source-feature POOLING spans the MI subspace very well
+(union strong, cal_balance=4 heavily tuned) -> cal-only anchor can't match it at low K. On NeuroGPT
+(1024-d, TUH-pretrained, weaker MI features) the union OVER-weights less-MI-relevant source; the receding
+data-relative prior lets calibration dominate at high K -> wins (K30 .721 vs union .705).
+NET: the data-relative (K-adaptive) prior is a real, principled improvement to 2-step anchoring — it FIXES
+the a-sensitivity universally (smooth in P, no crater) and FLIPS the anchor from losing-to-union into
+BEATING it on NeuroGPT (the new NeuroGPT best, 0.6777). On MIRepNet the union remains best. Which wins is
+backbone-dependent: anchoring wins when source is less task-aligned (NeuroGPT), pooling wins when source
+spans the task subspace (MIRepNet). Convex_calib defaults unchanged (iter-8 union = MIRepNet winner);
+kadaptive anchor is the recommended NeuroGPT config.
