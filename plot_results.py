@@ -1,7 +1,7 @@
 """
 Plot k-minutes vs Mean BCA for all backbones.
 - Foundation backbones: loaded from foundation_results/
-- Specialist backbones: loaded from results/bciciv2a/
+- Specialist backbones: loaded from specialist_results/
 One figure per backbone, saved to plots/.
 """
 
