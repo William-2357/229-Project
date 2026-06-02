@@ -591,3 +591,23 @@ REPLICATING the MIRepNet iters 14-16 result on a 2nd backbone. The anchor is com
 than ~12 cal rows + a source-head prior. Too-weak anchor craters K=1; too-strong collapses to the
 source head. Confirms: offline (source available), feature POOLING > anchoring to a source-head
 summary; the anchor's niche is the online/streaming regime. Convex-in-pretraining default stays UNION.
+
+## ===== IMPROVED 2-STEP ANCHORING — K-adaptive (data-relative) prior (2026-06-01) [BEATS UNION] =====
+User: the 2-step anchoring is promising; the `a` factor is very sensitive — improve it. DIAGNOSIS:
+cal-only is underdetermined at low K (needs LARGE a to fill the null space) but data should dominate
+at high K (needs SMALL a) -> one fixed a can't do both (a=0.1 craters K=1, a=10 flattens K=10/30).
+FIX: data-relative prior — anchor_a_mode=kadaptive scales a_eff = a_base * n_ref / n_cal, so the
+prior auto-recedes as calibration grows (strong null-space regularization at low K, light at high K).
+Combined with the per-pattern (Mahalanobis-spirit) adaptive weighting.
+Proxy (NeuroGPT full-dim, frozen, cal-only, 9 subj K=[1,10,30]); P := a_base*n_ref is the effective knob:
+    P=30   0.6661  {1:.615, 10:.686, 30:.698}
+    P=60   0.6710  {1:.622, 10:.686, 30:.705}
+    P=120  0.6777  {1:.618, 10:.694, 30:.721}   <- BEST (ab2_n60 == ab1_n120, confirms P-parametrization)
+  refs: frozen-convex UNION 0.6715 | LoRA+convex UNION 0.6759 | sft_lora 0.6557 | fixed-a anchor best 0.6543
+RESULT: K-adaptive anchoring (P=120) = 0.6777 BEATS the union (frozen 0.6715, LoRA 0.6759) AND the
+baseline (0.6557) on NeuroGPT. Fixed-a anchoring was 0.654 (lost to union); the data-relative fix adds
++0.024 and flips it to the best method. The win is at HIGH K (K30 .721 vs union .705): the receding
+prior lets calibration dominate, vs the union which always carries 800 source rows (cal_balance-capped).
+So the user's instinct was right — `a` was the bottleneck; making it data-relative turns 2-step anchoring
+from losing-to-union into beating-it. Next: peak P, LoRA+kadaptive-anchor, and does the fix generalize
+back to MIRepNet (where fixed-a anchoring also lost to the union)?

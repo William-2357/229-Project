@@ -78,6 +78,10 @@ HPARAMS = dict(
     transfer_stage2="cal",    # cal | source_cal : fit set for the anchored target solve
     anchor_a_base=0.1,        # adaptive: mean per-pattern anchor strength (distributed by 1/var)
     anchor_var_eps=1e-4,      # adaptive: cross-subject variance floor for the 1/var weighting
+    anchor_a_mode="fixed",    # fixed | kadaptive : kadaptive scales a by n_ref/n_cal so the prior
+                              #   recedes as calibration grows (a data-relative prior; fixes the
+                              #   a-sensitivity — strong at low K, light at high K)
+    anchor_n_ref=60.0,        # kadaptive: calibration count at which the prior == its base strength
     # --- cross-subject-generality objective ---
     generality_mode="none",   # none | meta_r2d2 | group_dro | irm
     gen_adapter_rank=16,      # low-rank adapter A(f)=f+(f@U)@V for meta/irm
@@ -346,9 +350,13 @@ class ConvexCalibAdapter(BaseAdapter):
         else:
             X_fit, y_fit = cal_feat, y_cal
         Xn = ((X_fit - mu) / sigma).astype(np.float32)
+        # data-relative prior: scale the anchor by n_ref/n_cal so it auto-recedes as calibration
+        # grows (strong null-space regularization at low K, light at high K) — fixes a-sensitivity.
+        scale = (h["anchor_n_ref"] / max(len(cal_feat), 1)) if h["anchor_a_mode"] == "kadaptive" else 1.0
+        a_eff = (np.asarray(a_vec) * scale) if not np.isscalar(a_vec) else a_vec * scale
         tgt = build_fixed_gate_model(Xn, y_fit, n_classes, h["n_neurons"],
                                      h["beta"], h["rho"], jax.random.PRNGKey(self.seed + 1), G)
-        anchored_admm(tgt, self._admm_params(), v_anchor=v_bar, anchor_a=a_vec)
+        anchored_admm(tgt, self._admm_params(), v_anchor=v_bar, anchor_a=a_eff)
         self._cld_model, self._feat_mu, self._feat_sigma = tgt, mu, sigma
 
     # -- BaseAdapter interface ---------------------------------------------
