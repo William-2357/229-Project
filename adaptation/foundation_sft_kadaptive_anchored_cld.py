@@ -27,6 +27,7 @@ was 0.654 (+0.024 from the data-relative fix). Wins where source is less task-al
 from __future__ import annotations
 
 import os
+import time
 
 import jax
 import jax.numpy as jnp
@@ -79,6 +80,10 @@ def _admm_anchored(model, admm_params, v_anchor, anchor_a, u_init=None, v_init=N
         a = jnp.zeros((P,), dtype=jnp.float32)
     thresh = beta / (rho + a)                                         # per-column prox threshold
 
+    # Pure-solve wall clock (Nyström setup + all ADMM iters) -> model._solve_time,
+    # read into the adapter's train_time. First call per shape includes the XLA
+    # compile (warm-repeat mean is the compile-free figure; cf. fit_time_warm).
+    _t_solve_start = time.perf_counter()
     U, S_nys, model.seed = rand_nys_appx(model, rank, model.seed)
     Mnys = Nys_Precond(U, S_nys, d, model.rho, model.P_S)
     b_1 = model.batch_rmatvec_F(Y.T) / model.rho
@@ -98,6 +103,8 @@ def _admm_anchored(model, admm_params, v_anchor, anchor_a, u_init=None, v_init=N
     model.u, model.v, model.s, model.lam, model.nu = u, v, s, lam, nu
     W1, w2 = model.get_ncvx_weights(v)
     model.theta1, model.theta2 = W1, w2
+    jax.block_until_ready([model.theta1, model.theta2])
+    model._solve_time = time.perf_counter() - _t_solve_start
 
 
 def _build_cld(X_norm, y, n_classes, n_neurons, beta, rho, seed):
@@ -213,6 +220,9 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
                  admm_iters=self.admm_iters, pcg_iters=self.pcg_iters),
             v_anchor=v_bar, anchor_a=a_eff,
         )
+        # Pure target-training time = this Stage-2 solve only (the source-side adaptive
+        # anchor build above is cached across K and excluded).
+        self._train_time = float(getattr(m, "_solve_time", 0.0))
         return m
 
 

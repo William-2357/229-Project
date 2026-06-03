@@ -183,10 +183,15 @@ def k_minute_sweep(
                 source_cache=source_cache,
             )
             fit_time = time.time() - t0
+            # Pure on-target training time (ADMM solve / finetune epoch loop only),
+            # excluding backbone load, cache reads, and feature extraction. 0.0 for
+            # adapters that don't adapt on target data. See BaseAdapter.train_time.
+            train_fit_time = float(getattr(adapter, "train_time", 0.0) or 0.0)
 
             preds = adapter.predict(X_te)
             m = compute_all_metrics(y_te, preds)
             m["fit_time"] = fit_time
+            m["train_fit_time"] = train_fit_time
             m["k_minutes"] = float(k)
             m["n_cal_trials"] = int(len(X_cal))
             m["repeat"] = repeat

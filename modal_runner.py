@@ -360,6 +360,13 @@ def run_job(
                 # warm repeats so fit_time_warm reflects steady-state solve time only.
                 "fit_time_warm": float(np.mean([r["fit_time"] for r in repeats[1:]]))
                 if len(repeats) > 1 else float(np.mean([r["fit_time"] for r in repeats])),
+                # Pure on-target training time (ADMM solve / finetune epoch loop only),
+                # excluding backbone load, cache reads, and feature extraction. As with
+                # fit_time, repeat 0 of each K pays the XLA compile, so train_fit_time_warm
+                # (warm repeats) is the compile-free figure.
+                "train_fit_time": float(np.mean([r.get("train_fit_time", 0.0) for r in repeats])),
+                "train_fit_time_warm": float(np.mean([r.get("train_fit_time", 0.0) for r in repeats[1:]]))
+                if len(repeats) > 1 else float(np.mean([r.get("train_fit_time", 0.0) for r in repeats])),
                 "k_minutes": float(k),
                 "n_cal_trials": repeats[0]["n_cal_trials"],
                 "protocol": "k_minute_sweep",

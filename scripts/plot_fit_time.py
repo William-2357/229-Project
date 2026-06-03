@@ -1,16 +1,28 @@
 """Plot fit_time vs K, one line per adaptation = mean across all models.
-Single panel, log y-axis. Drops neurogpt and K=0-only methods."""
+Single panel, log y-axis. Drops neurogpt and K=0-only methods.
 
+--metric (or FITTIME_METRIC) selects which {slug}fit_time_by_k.csv to read and
+names the output; default fit_time_warm. Use train_fit_time_warm for pure
+on-target training time (reads train_fit_time_by_k.csv -> train_fit_time_vs_k.png).
+Run the matching aggregate_*.py --metric first to build the CSV."""
+
+import argparse
 from pathlib import Path
 
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from fittime_metrics import resolve_metric, add_metric_arg
+
+_ap = argparse.ArgumentParser(description=__doc__)
+add_metric_arg(_ap)
+metric = resolve_metric(_ap.parse_args().metric)
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "results" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-df = pd.read_csv(ROOT / "fit_time_by_k.csv")
+df = pd.read_csv(ROOT / f"{metric.slug}fit_time_by_k.csv")
 
 # Normalize method names: strip the foundation prefix so e.g.
 # "foundation_sft_lora" overlays with conventional "lora".
@@ -42,9 +54,10 @@ for i, method in enumerate(ADAPTATIONS):
             label=LABELS.get(method, method))
 
 ax.set_xlabel("K (calibration minutes)")
-ax.set_ylabel("Mean fit_time (s)")
+ax.set_ylabel(f"Mean {metric.label}")
 ax.grid(True, which="both", ls=":", alpha=0.4)
 ax.legend()
 fig.tight_layout()
-fig.savefig(OUT_DIR / "fit_time_vs_k.png", dpi=150, bbox_inches="tight")
-print(f"wrote {OUT_DIR / 'fit_time_vs_k.png'}")
+out_path = OUT_DIR / f"{metric.slug}fit_time_vs_k.png"
+fig.savefig(out_path, dpi=150, bbox_inches="tight")
+print(f"wrote {out_path} [metric={metric.name}]")

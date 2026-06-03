@@ -123,10 +123,13 @@ class FineTuneAdapter(BaseAdapter):
             if source_cache is not None:
                 source_cache[cache_key] = copy.deepcopy(model.state_dict())
 
-        # Step 2: Fine-tune on target calibration set (if provided)
+        # Step 2: Fine-tune on target calibration set (if provided).
+        # train_time covers only this target epoch loop (excludes source pre-train).
         if target_labeled is not None:
             X_cal, y_cal = target_labeled
+            t_train = time.time()
             model = self._finetune_target(model, X_cal, y_cal)
+            self._train_time = time.time() - t_train
 
         self._model = model
         self._fit_time = time.time() - t0

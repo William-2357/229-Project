@@ -95,6 +95,7 @@ class EACLDAdapter(BaseAdapter):
             source_cache=source_cache,
         )
 
+        self._train_time = self._cld_adapter.train_time
         self._fit_time = time.time() - t0
         return self
 

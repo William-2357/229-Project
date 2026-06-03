@@ -1,16 +1,27 @@
 """Final fit-time plots: no-pad (solid) vs pad-256 (dashed), compile-excluded, K<=15.
 
 Reads results/fittime/<bb>/modal_summary.json (padding=false) and
-results/fittime256/<bb>/modal_summary.json (padding=256), uses fit_time_warm.
-Produces:
-  results/figures/fit_time_vs_k_by_model.png  - one panel per backbone
-  results/figures/fit_time_vs_k.png           - averaged across models (neurogpt excluded as outlier)
+results/fittime256/<bb>/modal_summary.json (padding=256).
+Produces (slug = "" for fit_time, "train_" for train_fit_time):
+  results/figures/{slug}fit_time_vs_k_by_model.png  - one panel per backbone
+  results/figures/{slug}fit_time_vs_k.png           - averaged across models (neurogpt excluded as outlier)
+
+--metric (or FITTIME_METRIC) picks the timing metric; default fit_time_warm.
+Use train_fit_time_warm for the pure on-target training time. See
+scripts/fittime_metrics.py.
 """
+import argparse
 import json
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
+
+from fittime_metrics import resolve_metric, add_metric_arg
+
+_ap = argparse.ArgumentParser(description=__doc__)
+add_metric_arg(_ap)
+metric = resolve_metric(_ap.parse_args().metric)
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "results" / "figures"
@@ -43,7 +54,9 @@ def curve(summary, keys):
             continue
         for k, r in cells.items():
             if isinstance(r, dict) and float(k) in KS:
-                perk.setdefault(float(k), []).append(r.get("fit_time_warm", r.get("fit_time")))
+                v = metric.get(r)
+                if v is not None:
+                    perk.setdefault(float(k), []).append(v)
     xs = [k for k in KS if k in perk]
     return xs, [np.mean(perk[k]) for k in xs]
 
@@ -82,12 +95,13 @@ for ax in axes[4:7]:
     ax.set_xlabel("Minutes of Target Data", fontsize=11, fontweight="bold")
 axes[0].set_xlabel("Minutes of Target Data", fontsize=11, fontweight="bold")  # bottom of col0 hidden? keep
 for i in (0, 4):
-    axes[i].set_ylabel("Fit time (s)", fontsize=11, fontweight="bold")
+    axes[i].set_ylabel(metric.label, fontsize=11, fontweight="bold")
 fig.legend(handles=legend_handles(), loc="center", bbox_to_anchor=(0.88, 0.25),
            ncol=2, fontsize=11, frameon=True)
 plt.tight_layout()
-plt.savefig(OUT_DIR / "fit_time_vs_k_by_model.png", dpi=150, bbox_inches="tight"); plt.close()
-print(f"Saved {OUT_DIR / 'fit_time_vs_k_by_model.png'}")
+_by_model = OUT_DIR / f"{metric.slug}fit_time_vs_k_by_model.png"
+plt.savefig(_by_model, dpi=150, bbox_inches="tight"); plt.close()
+print(f"Saved {_by_model} [metric={metric.name}]")
 
 # ---- averaged across models (exclude neurogpt outlier) ----
 avg_bb = [bb for _, bb in BB_ORDER if bb != "neurogpt"]
@@ -118,9 +132,10 @@ for lab, keys in CONV:
     if xs2:
         ax.plot(xs2, ys2, marker="s", ms=4, lw=1.4, ls="--", color=COL[lab])
 ax.set_xlabel("Minutes of Target Data Available", fontsize=12, fontweight="bold")
-ax.set_ylabel("Fit time (s, compile-excluded)", fontsize=12, fontweight="bold")
+ax.set_ylabel(metric.label, fontsize=12, fontweight="bold")
 ax.grid(True, alpha=0.3); ax.set_axisbelow(True)
 ax.legend(handles=legend_handles(), ncol=2, fontsize=9)
 plt.tight_layout()
-plt.savefig(OUT_DIR / "fit_time_vs_k.png", dpi=150, bbox_inches="tight"); plt.close()
-print(f"Saved {OUT_DIR / 'fit_time_vs_k.png'}")
+_avg = OUT_DIR / f"{metric.slug}fit_time_vs_k.png"
+plt.savefig(_avg, dpi=150, bbox_inches="tight"); plt.close()
+print(f"Saved {_avg} [metric={metric.name}]")

@@ -125,6 +125,9 @@ class KAdaptiveAnchoredCLDAdapter(AnchoredCLDAdapter):
                  admm_iters=self.admm_iters, pcg_iters=self.pcg_iters),
             v_anchor=v_bar, anchor_a=a_eff,
         )
+        # Pure target-training time = this Stage-2 solve only (the source-side adaptive
+        # anchor build above is cached across K and excluded).
+        self._train_time = float(getattr(m, "_solve_time", 0.0))
         return m
 
 

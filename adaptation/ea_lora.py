@@ -76,6 +76,7 @@ class EALoRAAdapter(BaseAdapter):
             )
             self._lora_adapter.fit(source_data=(X_src_aligned, y_src),
                                    target_labeled=None, source_cache=source_cache)
+            self._train_time = self._lora_adapter.train_time
             self._fit_time = time.time() - t0
             return self
 
@@ -118,6 +119,7 @@ class EALoRAAdapter(BaseAdapter):
             source_cache=source_cache,
         )
 
+        self._train_time = self._lora_adapter.train_time
         self._fit_time = time.time() - t0
         return self
 

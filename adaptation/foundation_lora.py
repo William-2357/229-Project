@@ -197,9 +197,13 @@ class FoundationLoRAAdapter(BaseAdapter):
         # get_peft_model marks LoRA params as trainable; backbone weights stay frozen
         lora_model = get_peft_model(model, lora_config)
 
-        # Step 3: Fine-tune LoRA params + head on target calibration
+        # Step 3: Fine-tune LoRA params + head on target calibration.
+        # train_time covers only this target LoRA epoch loop (excludes the source
+        # linear probe and the LoRA model build).
         X_cal, y_cal = target_labeled
+        t_train = time.time()
         lora_model = self._finetune_lora(lora_model, X_cal, y_cal)
+        self._train_time = time.time() - t_train
 
         self._model = lora_model
         self._fit_time = time.time() - t0

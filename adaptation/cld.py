@@ -200,16 +200,22 @@ def fit_cld_head(
         'check_opt': False,
     }
 
-    if not _CLD_TIMING:
-        _run_admm(cld, admm_params)
-        return cld, mu, sigma
-
-    # --- Diagnostic timing: separate XLA compile from steady-state solve ------
-    global _CLD_TIMING_WARM_DONE
+    # Always measure pure-solve wall time and stamp it on the model as
+    # _solve_time (adapters read it into self._train_time). block_until_ready
+    # makes the async GPU solve honest. On the first call per shape this also
+    # contains the XLA compile (repeats 1+ reuse the cached kernels), so the
+    # compile-free figure is the warm-repeat mean — same convention as fit_time_warm.
     t0 = time.perf_counter()
     _run_admm(cld, admm_params)
     _block_cld(cld)
     t_first = time.perf_counter() - t0
+    cld._solve_time = t_first
+
+    if not _CLD_TIMING:
+        return cld, mu, sigma
+
+    # --- Diagnostic timing: separate XLA compile from steady-state solve ------
+    global _CLD_TIMING_WARM_DONE
 
     msg = (
         f"[cld-timing] fit_cld_head backend={jax.default_backend()} "
@@ -339,6 +345,7 @@ class CLDAdapter(BaseAdapter):
             self.admm_iters, self.pcg_iters, self.seed,
         )
 
+        self._train_time = float(getattr(self._cld_model, "_solve_time", 0.0))
         self._fit_time = time.time() - t0
         return self
 

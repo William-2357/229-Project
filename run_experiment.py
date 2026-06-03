@@ -32,6 +32,10 @@ from adaptation.lora import LoRAAdapter
 from adaptation.ea_lora import EALoRAAdapter
 from adaptation.cld import CLDAdapter
 from adaptation.stacked import EACLDAdapter
+from adaptation.anchored_cld import AnchoredCLDAdapter, EAAnchoredCLDAdapter
+from adaptation.kadaptive_anchored_cld import (
+    KAdaptiveAnchoredCLDAdapter, KAdaptiveAnchoredEACLDAdapter
+)
 from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
 from adaptation.foundation_source_cld import (
     FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
@@ -40,7 +44,8 @@ from adaptation.foundation_sft_anchored_cld import (
     FoundationSFTAnchoredCLDAdapter, FoundationSFTAnchoredEACLDAdapter
 )
 from adaptation.foundation_sft_kadaptive_anchored_cld import (
-    FoundationSFTKAdaptiveAnchoredCLDAdapter
+    FoundationSFTKAdaptiveAnchoredCLDAdapter,
+    FoundationSFTKAdaptiveAnchoredEACLDAdapter,
 )
 from adaptation.foundation_finetune import FoundationFineTuneAdapter
 from adaptation.foundation_lora import FoundationLoRAAdapter
@@ -75,6 +80,11 @@ METHOD_REGISTRY = {
     "ea_lora": EALoRAAdapter,
     "cld": CLDAdapter,
     "ea_cld": EACLDAdapter,
+    # Specialist source-anchored / K-adaptive convex CLD (train backbone from scratch)
+    "anchored_cld": AnchoredCLDAdapter,
+    "ea_anchored_cld": EAAnchoredCLDAdapter,
+    "kadaptive_anchored_cld": KAdaptiveAnchoredCLDAdapter,
+    "ea_kadaptive_anchored_cld": KAdaptiveAnchoredEACLDAdapter,
     # Foundation model adapters — require a FoundationBackbone
     "linear_probe": LinearProbeAdapter,
     "foundation_loso": FoundationLOSOAdapter,
@@ -96,6 +106,7 @@ METHOD_REGISTRY = {
     "foundation_sft_anchored_cld": FoundationSFTAnchoredCLDAdapter,
     "foundation_sft_ea_anchored_cld": FoundationSFTAnchoredEACLDAdapter,
     "foundation_sft_kadaptive_anchored_cld": FoundationSFTKAdaptiveAnchoredCLDAdapter,
+    "foundation_sft_ea_kadaptive_anchored_cld": FoundationSFTKAdaptiveAnchoredEACLDAdapter,
 }
 
 ALL_METHODS = list(METHOD_REGISTRY.keys())
@@ -120,12 +131,14 @@ def build_any_backbone(
 # Methods that require labeled calibration (K > 0)
 SUPERVISED_METHODS = {
     "finetune", "lora", "ea_lora", "cld", "ea_cld",
+    "anchored_cld", "ea_anchored_cld",
+    "kadaptive_anchored_cld", "ea_kadaptive_anchored_cld",
     "foundation_finetune", "foundation_lora", "foundation_ea_lora",
     "foundation_cld", "foundation_ea_cld",
     "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
     "foundation_sft_cld", "foundation_sft_ea_cld",
     "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
-    "foundation_sft_kadaptive_anchored_cld",
+    "foundation_sft_kadaptive_anchored_cld", "foundation_sft_ea_kadaptive_anchored_cld",
 }
 UNSUPERVISED_METHODS = {
     "loso", "ea", "tta",
@@ -219,6 +232,16 @@ def run_method_on_subject(
                 "ci_lo": float(np.mean([r["ci_lo"] for r in repeats])),
                 "ci_hi": float(np.mean([r["ci_hi"] for r in repeats])),
                 "fit_time": float(np.mean([r["fit_time"] for r in repeats])),
+                # Compile-excluded fit time: repeat 0 of each K pays the JAX/XLA compile
+                # (+ one-time anchor build); repeats 1+ reuse it. Mean the warm repeats.
+                "fit_time_warm": float(np.mean([r["fit_time"] for r in repeats[1:]]))
+                if len(repeats) > 1 else float(np.mean([r["fit_time"] for r in repeats])),
+                # Pure on-target training time (ADMM solve / finetune epoch loop only),
+                # excluding backbone load, cache reads, and feature extraction. repeat 0
+                # of each K pays the XLA compile, so train_fit_time_warm is compile-free.
+                "train_fit_time": float(np.mean([r.get("train_fit_time", 0.0) for r in repeats])),
+                "train_fit_time_warm": float(np.mean([r.get("train_fit_time", 0.0) for r in repeats[1:]]))
+                if len(repeats) > 1 else float(np.mean([r.get("train_fit_time", 0.0) for r in repeats])),
                 "k_minutes": float(k),
                 "n_cal_trials": repeats[0]["n_cal_trials"],
                 "protocol": "k_minute_sweep",

@@ -256,6 +256,7 @@ class LoRAAdapter(BaseAdapter):
                 ft = FineTuneAdapter(self.backbone, str(self.device), self.seed)
                 ft.fit(source_data, target_unlabeled, target_labeled)
                 self._model = ft._model
+                self._train_time = ft.train_time
                 self._fit_time = time.time() - t0
                 return self
 
@@ -277,7 +278,11 @@ class LoRAAdapter(BaseAdapter):
         final_target_modules = _get_lora_target_modules(backbone_for_lora, rank=self._selected_rank)
 
         lora_model = build_lora_model(backbone_for_lora, self._selected_rank, final_target_modules)
+        # train_time covers only the target LoRA epoch loop (excludes the LoRA model
+        # build, source pre-train, and rank selection).
+        t_train = time.time()
         lora_model = self._finetune_lora(lora_model, X_cal, y_cal)
+        self._train_time = time.time() - t_train
 
         self._model = lora_model
         self._fit_time = time.time() - t0

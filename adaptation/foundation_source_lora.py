@@ -215,7 +215,11 @@ class FoundationSourceFineTuneLoRAAdapter(BaseAdapter):
         ))
 
         X_cal, y_cal = target_labeled
+        # train_time covers only the target LoRA epoch loop (excludes SFT load,
+        # rank selection, and the LoRA model build).
+        t_train = time.time()
         lora_model = self._finetune_lora(lora_model, X_cal, y_cal)
+        self._train_time = time.time() - t_train
 
         self._model = lora_model
         self._fit_time = time.time() - t0

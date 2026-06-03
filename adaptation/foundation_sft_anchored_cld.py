@@ -95,6 +95,12 @@ def _admm_warm(
     s = jnp.zeros(sample_shape)
     nu = jnp.zeros(sample_shape)
 
+    # Pure-solve wall clock (Nyström setup + all ADMM iters). Stamped on the model
+    # as _solve_time and read into the adapter's train_time. The first call per
+    # shape also pays the XLA compile here (repeats 1+ are warm), so the compile-
+    # free figure is the warm-repeat mean (cf. fit_time_warm).
+    _t_solve_start = time.perf_counter()
+
     if _CLD_TIMING:
         _t_setup = time.perf_counter()
     U, S_nys, model.seed = rand_nys_appx(model, rank, model.seed)
@@ -148,6 +154,8 @@ def _admm_warm(
     W1, w2 = model.get_ncvx_weights(v)
     model.theta1 = W1
     model.theta2 = w2
+    jax.block_until_ready([model.theta1, model.theta2])
+    model._solve_time = time.perf_counter() - _t_solve_start
 
 
 # ---------------------------------------------------------------------------
@@ -594,9 +602,11 @@ class FoundationSFTAnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
             self._cld_model = self._fit_stage2(
                 X_src_feat, y_src, X_calib_feat, y_calib,
                 stage1_model, mu, sigma, n_classes, n_neurons, source_cache,
-            )
+            )  # sets self._train_time to the Stage-2 solve time
         else:
+            # K=0: Stage 1 (source) model used directly — no target training.
             self._cld_model = stage1_model
+            self._train_time = 0.0
 
         self._fit_time = time.time() - t0
         return self
@@ -605,13 +615,15 @@ class FoundationSFTAnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
                     stage1_model, mu, sigma, n_classes, n_neurons, source_cache=None):
         """Stage-2 solve (overridable hook). Base: source-anchored warm-start on
         source∪weighted-calibration. Subclasses can swap in a different stage-2 objective."""
-        return fit_stage2_anchored(
+        m = fit_stage2_anchored(
             X_src_feat, y_src, X_calib_feat, y_calib, stage1_model, mu, sigma,
             n_classes=n_classes, n_neurons=n_neurons,
             rank=self.rank, beta=self.beta, rho=self.rho, gamma_ratio=self.gamma_ratio,
             admm_iters=self.admm_iters_stage2, pcg_iters=self.pcg_iters,
             seed=self.seed, target_mass=self.target_mass,
         )
+        self._train_time = float(getattr(m, "_solve_time", 0.0))
+        return m
 
     def _get_features(self, X: np.ndarray) -> np.ndarray:
         backbone = self._backbone_model.to(self.device)

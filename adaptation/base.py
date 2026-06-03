@@ -22,6 +22,11 @@ class BaseAdapter(ABC):
         self.device = torch.device(device)
         self.seed = seed
         self._fit_time: float = 0.0
+        # Pure target-training time: wall-clock of only the on-target optimization
+        # (ADMM solve / finetune epoch loop), excluding backbone load, cache reads,
+        # feature extraction, and HP selection. Adapters that adapt on target data
+        # set this; everything else leaves it 0.0. See the train_time property.
+        self._train_time: float = 0.0
 
     def _seed(self):
         torch.manual_seed(self.seed)
@@ -69,6 +74,17 @@ class BaseAdapter(ABC):
     @property
     def fit_time(self) -> float:
         return self._fit_time
+
+    @property
+    def train_time(self) -> float:
+        """Pure target-training time (target-data optimization only).
+
+        Excludes the one-time/shared source-side costs that ``fit_time`` may
+        include on a cold call (backbone load/build, source feature extraction,
+        HP selection) plus calibration feature extraction. For ADMM solves the
+        first repeat per K still pays the XLA compile here, so a compile-free
+        figure is the warm-repeat mean (cf. ``fit_time_warm``)."""
+        return self._train_time
 
     def _to_tensor(self, X: np.ndarray) -> torch.Tensor:
         return torch.FloatTensor(X).to(self.device)

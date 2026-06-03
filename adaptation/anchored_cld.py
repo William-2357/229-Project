@@ -216,8 +216,11 @@ class AnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
             self._cld_model = self._fit_stage2(
                 X_src_feat, y_src, X_calib_feat, y_calib,
                 stage1_model, mu, sigma, n_classes, n_neurons, source_cache)
+            # _fit_stage2 sets self._train_time to the Stage-2 solve time
         else:
+            # K=0: Stage 1 (source) model used directly — no target training.
             self._cld_model = stage1_model
+            self._train_time = 0.0
 
         self._fit_time = time.time() - t0
         return self
@@ -227,13 +230,15 @@ class AnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
         """Stage-2 solve (overridable hook). Base: source-anchored warm-start on
         source∪weighted-calibration. Subclasses can swap in a different stage-2 objective
         (cf. foundation_sft_anchored_cld.FoundationSFTAnchoredCLDAdapter._fit_stage2)."""
-        return fit_stage2_anchored(
+        m = fit_stage2_anchored(
             X_src_feat, y_src, X_calib_feat, y_calib, stage1_model, mu, sigma,
             n_classes=n_classes, n_neurons=n_neurons,
             rank=self.rank, beta=self.beta, rho=self.rho, gamma_ratio=self.gamma_ratio,
             admm_iters=self.admm_iters_stage2, pcg_iters=self.pcg_iters,
             seed=self.seed, target_mass=self.target_mass,
         )
+        self._train_time = float(getattr(m, "_solve_time", 0.0))
+        return m
 
     def _get_features(self, X: np.ndarray) -> np.ndarray:
         X_feat = extract_penultimate_features(

@@ -203,6 +203,7 @@ class FoundationSourceFineTuneCLDAdapter(BaseAdapter):
             norm_stats=norm_stats,
         )
 
+        self._train_time = float(getattr(self._cld_model, "_solve_time", 0.0))
         self._fit_time = time.time() - t0
         return self
 

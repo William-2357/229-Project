@@ -1,16 +1,27 @@
 """Plot fit_time vs K, faceted by model (one panel per backbone),
-one line per adaptation. Log y-axis. K-spanning methods only."""
+one line per adaptation. Log y-axis. K-spanning methods only.
 
+--metric (or FITTIME_METRIC) selects which {slug}fit_time_by_k.csv to read and
+names the output; default fit_time_warm. Use train_fit_time_warm for pure
+on-target training time. Run the matching aggregate_*.py --metric first."""
+
+import argparse
 from pathlib import Path
 
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from fittime_metrics import resolve_metric, add_metric_arg
+
+_ap = argparse.ArgumentParser(description=__doc__)
+add_metric_arg(_ap)
+metric = resolve_metric(_ap.parse_args().metric)
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "results" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-df = pd.read_csv(ROOT / "fit_time_by_k.csv")
+df = pd.read_csv(ROOT / f"{metric.slug}fit_time_by_k.csv")
 df["method"] = df["method"].str.replace("foundation_sft_", "", regex=False)
 
 ADAPTATIONS = ["finetune", "lora", "ea_lora", "cld", "ea_cld",
@@ -55,11 +66,12 @@ for ax in axes[len(models):]:
     ax.set_visible(False)
 
 for r in range(nrows):
-    axes[r * ncols].set_ylabel("Mean fit_time (s)")
+    axes[r * ncols].set_ylabel(f"Mean {metric.label}")
 
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="upper center", ncol=len(ADAPTATIONS),
            bbox_to_anchor=(0.5, 1.04), frameon=False)
 fig.tight_layout()
-fig.savefig(OUT_DIR / "fit_time_vs_k_by_model.png", dpi=150, bbox_inches="tight")
-print(f"wrote {OUT_DIR / 'fit_time_vs_k_by_model.png'}")
+out_path = OUT_DIR / f"{metric.slug}fit_time_vs_k_by_model.png"
+fig.savefig(out_path, dpi=150, bbox_inches="tight")
+print(f"wrote {out_path} [metric={metric.name}]")

@@ -145,7 +145,11 @@ class FoundationFineTuneAdapter(BaseAdapter):
 
         if target_labeled is not None and len(target_labeled[0]) >= 2:
             X_cal, y_cal = target_labeled
+            # train_time covers only the target fine-tune epoch loop (excludes the
+            # source linear probe / backbone build).
+            t_train = time.time()
             model = self._finetune_target(model, X_cal, y_cal)
+            self._train_time = time.time() - t_train
 
         self._model = model
         self._fit_time = time.time() - t0
