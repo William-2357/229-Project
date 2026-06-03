@@ -83,6 +83,8 @@ Three-tier architecture:
 | `ea_cld` | `adaptation/stacked.py` | EA + CLD |
 | `anchored_cld` | `adaptation/anchored_cld.py` | Source-anchored 2-stage CLD (low-K fix; specialist analogue of `foundation_sft_anchored_cld`) |
 | `ea_anchored_cld` | `adaptation/anchored_cld.py` | EA + source-anchored 2-stage CLD |
+| `kadaptive_anchored_cld` | `adaptation/kadaptive_anchored_cld.py` | K-adaptive explicit-anchor CLD (data-relative source prior; specialist analogue of `foundation_sft_kadaptive_anchored_cld`) |
+| `ea_kadaptive_anchored_cld` | `adaptation/kadaptive_anchored_cld.py` | EA + K-adaptive explicit-anchor CLD |
 
 **Tier 2 — Foundation (frozen backbone)** adapters:
 
@@ -115,6 +117,8 @@ Stage 2: Freeze backbone; apply lightweight target adaptation.
 | `foundation_sft_ea_cld` | EA + SFT backbone + CLD head (target-only) |
 | `foundation_sft_anchored_cld` | SFT backbone + **source-anchored** 2-stage CLD (low-K fix) |
 | `foundation_sft_ea_anchored_cld` | EA + SFT backbone + source-anchored 2-stage CLD |
+| `foundation_sft_kadaptive_anchored_cld` | SFT backbone + **K-adaptive** explicit-anchor CLD (data-relative source prior, cal-only Stage 2) |
+| `foundation_sft_ea_kadaptive_anchored_cld` | EA + SFT backbone + K-adaptive explicit-anchor CLD |
 
 SFT hyperparameter defaults (hardcoded in each adapter file):
 - `lr_src=1e-3`, `weight_decay=1e-4`, `max_epochs_src=200`, `patience_src=25`
@@ -139,6 +143,55 @@ per backbone** (not per fold): a single "primer" job per anchored variant select
 persists them to the volume (`{backbone}_anchored_{ea_}hp_seed{seed}.json`), and the
 remaining folds reuse them. EA and non-EA variants tune separately (EA whitens the feature
 space). HPs are tuned on the foundation-feature space, not copied from the REVE notebook.
+(This grid applies only to the *warm-anchored* variants above; the K-adaptive variants
+below use a fixed `beta` and no HP grid.)
+
+### K-adaptive source-anchored CLD
+
+The warm-anchored variants above tie Stage 2 to the source *implicitly* (warm-start + a
+short ADMM on source∪weighted-calibration), governed by the fixed `beta`/`target_mass`
+grid. A single fixed anchor strength is brittle — too strong and it flattens at high K,
+too weak and it craters at low K. The `*_kadaptive_anchored_cld` variants
+(`adaptation/foundation_sft_kadaptive_anchored_cld.py` for foundation SFT,
+`adaptation/kadaptive_anchored_cld.py` for specialists) replace it with an **explicit,
+data-relative quadratic anchor** on the **calibration-only** solve:
+
+```
+Stage 2:  min_v  ½‖F(v) − y_cal‖²  +  (a_eff/2)‖v − v_anchor‖²  +  beta·grouplasso(v)
+          a_eff = a_base · n_ref / n_cal
+```
+
+The anchor strength `a_eff` **scales inversely with the number of calibration trials**:
+strong when calibration is scarce (low K — it fills the underdetermined null space) and
+receding as K grows (high K — the data dominates). Source therefore enters via the anchor
+term, not by pooling rows. Defaults `anchor_a_base=2.0`, `anchor_n_ref=60.0` (product 120,
+the tested-best value); `beta=1e-4` fixed, `hp_select=False`.
+
+- **`anchor_mode="adaptive"` (default)** — a **per-pattern** prior `a_i ∝ 1/Var_s(v_iˢ)`
+  built from a multi-task per-source-subject convex solve: hyperplanes conserved across
+  source subjects are anchored hard, variable ones are left free to fit the target. Needs
+  `source_per_subject` (supplied via `source_cache`); falls back to the pooled-source
+  **isotropic** anchor (`stage1_model.v`, strength 1) when per-subject source is unavailable.
+- **`stage2_data="cal"` (default, tested best)** — Stage 2 sees calibration rows only.
+  `"source_cal"` instead pools source + `target_mass`-weighted calibration (like the
+  warm-anchored variant) while still applying the explicit anchor.
+- **EA variants** align the source (per-subject when available), target-unlabeled, and
+  calibration before the convex pipeline; the per-pattern anchor solves on the *aligned*
+  per-subject source so it lives in the same whitened space.
+- **K = 0** uses the Stage-1 source model directly (as with the warm-anchored variants).
+
+When to use which: the K-adaptive anchor wins where source is less task-aligned (tested
+NeuroGPT full-dim, cal-only, adaptive → **0.678 BCA**, beating the source∪cal union at
+0.672/0.676 and `foundation_sft_lora` at 0.656; the fixed-`a` anchor scored 0.654). On a
+MI-pretrained backbone whose source already spans the task (e.g. MIRepNet) the warm
+source∪cal union still wins — it is **backbone-dependent**.
+
+**A/B knobs (foundation variant).** The foundation adapter reads four env vars (baked into
+the Modal image at build from the local env; defaults = tested config): `KADAPT_A_BASE`
+(anchor base strength), `KADAPT_ANCHOR_MODE` (`adaptive`|`isotropic`), `KADAPT_STAGE2`
+(`cal`|`source_cal`), and `KADAPT_SFT_EPOCHS` (`0` skips source fine-tuning and anchors the
+**raw frozen** backbone features — SFT can overfit source and hurt cal-only transfer). The
+specialist variant takes the same knobs as constructor args.
 
 ### `fit_time` semantics (foundation SFT methods)
 
@@ -199,10 +252,13 @@ python run_experiment.py --dataset bciciv2a --backbone labram \
 modal run modal_runner.py
 ```
 
-Default Modal config (set at the top of `modal_runner.py`): **CBraMod** backbone with the full
-foundation-SFT method suite, A10G GPU, 20 concurrent jobs (`MAX_CONCURRENCY`), 5 repeats per K
-(`N_REPEATS`), K-minutes sweep `[0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]`. Change `BACKBONE` /
-`METHODS` / `CHECKPOINT_PATH` there or via `--backbone` / `--methods` / `--checkpoint-path`.
+Default Modal config (set at the top of `modal_runner.py`): **CBraMod** backbone with the
+default foundation-SFT method list (the baselines plus the warm `*_anchored_cld` variants),
+A10G GPU, 20 concurrent jobs (`MAX_CONCURRENCY`), 5 repeats per K (`N_REPEATS`), K-minutes
+sweep `[0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]`. Change `BACKBONE` / `METHODS` /
+`CHECKPOINT_PATH` there or via `--backbone` / `--methods` / `--checkpoint-path`. The
+`*_kadaptive_anchored_cld` variants are registered but not in the default list — add them
+via `--methods`; the `KADAPT_*` env vars (see above) are baked into the image at build time.
 
 > Per the **calibration ceiling** above, the K=30 sweep point is redundant with K≈15.3 (same
 > ~230 trials); it is kept only for backward-comparability with earlier runs.
@@ -232,7 +288,8 @@ backbone family) rather than a single `results/` tree:
 - `foundation_results/{cbramod,labram,mirepnet,neurogpt}/` — foundation backbones
 - `specialist_results/{eegnet,shallowconv,conformer}/` — specialist backbones
 
-Each backbone folder holds its `modal_summary.json` (the file consumed by `plot_results.py`).
+Each backbone folder holds its `modal_summary.json` (the file consumed by the plotting
+scripts under `scripts/`, e.g. `scripts/plot_results.py`).
 
 ## Key Files
 
