@@ -13,7 +13,17 @@ Methods are evaluated at K=0 (zero/few-shot) and across K in minutes of labeled 
 
 ## Dataset
 
-**BCIC-IV-2a** — 9 subjects, 22 EEG channels, 4 motor imagery classes, 250 Hz, session 1 only.
+**BCIC-IV-2a** — 9 subjects, 22 EEG channels, 4 motor imagery classes, 250 Hz, session 1 only (288 trials/subject, 72 per class).
+
+Trials are extracted as **4-second epochs** (`epoch_len_sec=4.0`). The K-minute sweep
+(`evaluation/protocols.py:minutes_to_trials`) converts minutes to a balanced trial count as
+`n_trials = 15 × K` (15 four-second epochs per minute), sampled stratified across the 4 classes.
+
+> **Calibration ceiling.** The target calibration pool is the first 80% of the session ≈ **230
+> trials ≈ 15.3 min** of 4-second epochs. Balanced sampling saturates there, so **K=15 already
+> consumes ~97% of the pool and any K ≳ 15.3 (e.g. K=30) reuses the same ~230 trials** — it is
+> *not* a true 30-minute condition. Treat K > 15 as the "full calibration pool" plateau for both
+> accuracy and `fit_time`.
 
 Expected raw layout:
 ```
@@ -71,6 +81,8 @@ Three-tier architecture:
 | `ea_lora` | `adaptation/ea_lora.py` | EA + LoRA |
 | `cld` | `adaptation/cld.py` | Convex label denoising head (JAX) |
 | `ea_cld` | `adaptation/stacked.py` | EA + CLD |
+| `anchored_cld` | `adaptation/anchored_cld.py` | Source-anchored 2-stage CLD (low-K fix; specialist analogue of `foundation_sft_anchored_cld`) |
+| `ea_anchored_cld` | `adaptation/anchored_cld.py` | EA + source-anchored 2-stage CLD |
 
 **Tier 2 — Foundation (frozen backbone)** adapters:
 
@@ -187,25 +199,40 @@ python run_experiment.py --dataset bciciv2a --backbone labram \
 modal run modal_runner.py
 ```
 
-Default Modal config: LaBraM backbone, A10G GPU, 20 concurrent jobs, K-minutes sweep `[0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]`.
+Default Modal config (set at the top of `modal_runner.py`): **CBraMod** backbone with the full
+foundation-SFT method suite, A10G GPU, 20 concurrent jobs (`MAX_CONCURRENCY`), 5 repeats per K
+(`N_REPEATS`), K-minutes sweep `[0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]`. Change `BACKBONE` /
+`METHODS` / `CHECKPOINT_PATH` there or via `--backbone` / `--methods` / `--checkpoint-path`.
+
+> Per the **calibration ceiling** above, the K=30 sweep point is redundant with K≈15.3 (same
+> ~230 trials); it is kept only for backward-comparability with earlier runs.
 
 The orchestrator is restart-friendly — it resumes from an existing `modal_summary.json` and checkpoints after each finished job.
 
 ## Results Layout
 
+At runtime, `save_result` (`evaluation/results.py`) and the Modal orchestrator write per-job
+JSON to `{output_dir}/{dataset}/{backbone}/{method}/`, with a per-backbone `modal_summary.json`
+checkpointed after each job (on Modal, `output_dir` is `/project/results`):
+
 ```
-results/
+results/                        # runtime output dir (Modal: /project/results)
   {dataset}/
     {backbone}/
       {method}/
         subject_01_k0.5.json
-        subject_01_k1.0.json
         ...
       summary.csv
       modal_summary.json
 ```
 
-Current result directories: `eegnet`, `shallowconv`, `conformer` (specialist); `cbramod`, `mirepnet`, `neurogpt`, `labram` (foundation).
+In this repo, the **curated** results are committed under two top-level folders (split by
+backbone family) rather than a single `results/` tree:
+
+- `foundation_results/{cbramod,labram,mirepnet,neurogpt}/` — foundation backbones
+- `specialist_results/{eegnet,shallowconv,conformer}/` — specialist backbones
+
+Each backbone folder holds its `modal_summary.json` (the file consumed by `plot_results.py`).
 
 ## Key Files
 

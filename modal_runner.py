@@ -1,6 +1,6 @@
 """Modal runner for EEG calibration efficiency experiments.
 
-Fans out one GPU job per (method, subject_id) with max 10 concurrent GPUs.
+Fans out one GPU job per (method, subject_id) with max MAX_CONCURRENCY (10) concurrent GPUs.
 
 Setup (one-time):
     modal volume create eeg-data
