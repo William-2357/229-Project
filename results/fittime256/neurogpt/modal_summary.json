@@ -1,0 +1,1622 @@
+{
+  "foundation_sft_kadaptive_anchored_cld/subject_01": {
+    "0.5": {
+      "bca": 0.44230769230769235,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.26842727631060304,
+      "ci_lo": 0.28711484593837533,
+      "ci_hi": 0.5119047619047619,
+      "fit_time": 12.510597515106202,
+      "fit_time_warm": 3.1094442009925842,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.153528"
+      }
+    },
+    "1.0": {
+      "bca": 0.45357142857142857,
+      "std_bca": 0.009210469568263865,
+      "kappa": 0.2815642841378297,
+      "ci_lo": 0.28711484593837533,
+      "ci_hi": 0.5352380952380953,
+      "fit_time": 3.017960262298584,
+      "fit_time_warm": 2.971729874610901,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.154390"
+      }
+    },
+    "2.0": {
+      "bca": 0.4703907203907204,
+      "std_bca": 0.026354965586540373,
+      "kappa": 0.3030565446031601,
+      "ci_lo": 0.2894957983193277,
+      "ci_hi": 0.5635714285714286,
+      "fit_time": 3.2288192749023437,
+      "fit_time_warm": 3.2646676898002625,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.154826"
+      }
+    },
+    "5.0": {
+      "bca": 0.5527472527472528,
+      "std_bca": 0.03480276520351826,
+      "kappa": 0.40077360216590313,
+      "ci_lo": 0.34901960784313724,
+      "ci_hi": 0.6935714285714286,
+      "fit_time": 3.142880392074585,
+      "fit_time_warm": 3.1282354593276978,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.155191"
+      }
+    },
+    "10.0": {
+      "bca": 0.6232905982905983,
+      "std_bca": 0.028055043922019494,
+      "kappa": 0.484288619605473,
+      "ci_lo": 0.49635854341736696,
+      "ci_hi": 0.7252380952380952,
+      "fit_time": 3.1901421546936035,
+      "fit_time_warm": 3.1939135789871216,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.155543"
+      }
+    },
+    "15.0": {
+      "bca": 0.6540903540903541,
+      "std_bca": 0.014707427268488095,
+      "kappa": 0.5130491708911618,
+      "ci_lo": 0.5138655462184873,
+      "ci_hi": 0.7585714285714286,
+      "fit_time": 3.1471291542053224,
+      "fit_time_warm": 3.1866607069969177,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.155892"
+      }
+    },
+    "30.0": {
+      "bca": 0.6796398046398047,
+      "std_bca": 0.0,
+      "kappa": 0.54563258911085,
+      "ci_lo": 0.5364145658263305,
+      "ci_hi": 0.8035714285714286,
+      "fit_time": 3.1479591369628905,
+      "fit_time_warm": 3.117964744567871,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T10:44:05.156222"
+      }
+    }
+  },
+  "foundation_sft_kadaptive_anchored_cld/subject_02": {
+    "0.5": {
+      "bca": 0.4738095238095238,
+      "std_bca": 0.00714285714285714,
+      "kappa": 0.3035368889875432,
+      "ci_lo": 0.4523809523809524,
+      "ci_hi": 0.5061507936507936,
+      "fit_time": 11.566625213623047,
+      "fit_time_warm": 2.8074334263801575,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.671408"
+      }
+    },
+    "1.0": {
+      "bca": 0.46571428571428575,
+      "std_bca": 0.01742167440945401,
+      "kappa": 0.29442763946296885,
+      "ci_lo": 0.4482142857142857,
+      "ci_hi": 0.4816468253968253,
+      "fit_time": 2.7202450752258303,
+      "fit_time_warm": 2.6967061161994934,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.672053"
+      }
+    },
+    "2.0": {
+      "bca": 0.4830952380952381,
+      "std_bca": 0.024471743157199247,
+      "kappa": 0.3175675524575642,
+      "ci_lo": 0.42666666666666664,
+      "ci_hi": 0.5561507936507936,
+      "fit_time": 2.7200782775878904,
+      "fit_time_warm": 2.7133251428604126,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.672451"
+      }
+    },
+    "5.0": {
+      "bca": 0.5211904761904761,
+      "std_bca": 0.03114773516478674,
+      "kappa": 0.3686608983292744,
+      "ci_lo": 0.4920238095238094,
+      "ci_hi": 0.5644841269841269,
+      "fit_time": 3.401678133010864,
+      "fit_time_warm": 3.4794368147850037,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.672788"
+      }
+    },
+    "10.0": {
+      "bca": 0.4864285714285714,
+      "std_bca": 0.01985777091618382,
+      "kappa": 0.3195645706941952,
+      "ci_lo": 0.41690476190476183,
+      "ci_hi": 0.5594246031746032,
+      "fit_time": 2.871438217163086,
+      "fit_time_warm": 2.8716319799423218,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.673114"
+      }
+    },
+    "15.0": {
+      "bca": 0.4364285714285714,
+      "std_bca": 0.008670067360015752,
+      "kappa": 0.25146271453185404,
+      "ci_lo": 0.37916666666666665,
+      "ci_hi": 0.4866071428571429,
+      "fit_time": 2.928777837753296,
+      "fit_time_warm": 2.940205931663513,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.673445"
+      }
+    },
+    "30.0": {
+      "bca": 0.42976190476190473,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.2425801345468935,
+      "ci_lo": 0.3863095238095238,
+      "ci_hi": 0.46924603174603174,
+      "fit_time": 2.7741645336151124,
+      "fit_time_warm": 2.715468645095825,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:44.673764"
+      }
+    }
+  },
+  "foundation_sft_ea_kadaptive_anchored_cld/subject_01": {
+    "0.5": {
+      "bca": 0.44230769230769235,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.26842727631060304,
+      "ci_lo": 0.28711484593837533,
+      "ci_hi": 0.5119047619047619,
+      "fit_time": 12.363951444625854,
+      "fit_time_warm": 2.917337656021118,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.273612"
+      }
+    },
+    "1.0": {
+      "bca": 0.4574175824175824,
+      "std_bca": 0.014327917374071766,
+      "kappa": 0.2858715585967904,
+      "ci_lo": 0.28711484593837533,
+      "ci_hi": 0.5435714285714285,
+      "fit_time": 2.796060800552368,
+      "fit_time_warm": 2.79183292388916,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.274326"
+      }
+    },
+    "2.0": {
+      "bca": 0.4703907203907204,
+      "std_bca": 0.026354965586540373,
+      "kappa": 0.30311106269611726,
+      "ci_lo": 0.2894957983193277,
+      "ci_hi": 0.5635714285714286,
+      "fit_time": 2.751776123046875,
+      "fit_time_warm": 2.755330502986908,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.274746"
+      }
+    },
+    "5.0": {
+      "bca": 0.549969474969475,
+      "std_bca": 0.038800255712713165,
+      "kappa": 0.3964123012018045,
+      "ci_lo": 0.3442577030812325,
+      "ci_hi": 0.6935714285714286,
+      "fit_time": 2.8046905517578127,
+      "fit_time_warm": 2.771222233772278,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.275102"
+      }
+    },
+    "10.0": {
+      "bca": 0.6232905982905983,
+      "std_bca": 0.028055043922019494,
+      "kappa": 0.48424534834815686,
+      "ci_lo": 0.49635854341736696,
+      "ci_hi": 0.7252380952380952,
+      "fit_time": 2.7794321060180662,
+      "fit_time_warm": 2.7895626425743103,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.275427"
+      }
+    },
+    "15.0": {
+      "bca": 0.6540903540903541,
+      "std_bca": 0.014707427268488095,
+      "kappa": 0.5130491708911618,
+      "ci_lo": 0.5138655462184873,
+      "ci_hi": 0.7585714285714286,
+      "fit_time": 2.7967382431030274,
+      "fit_time_warm": 2.8038368225097656,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.275756"
+      }
+    },
+    "30.0": {
+      "bca": 0.6796398046398047,
+      "std_bca": 0.0,
+      "kappa": 0.54563258911085,
+      "ci_lo": 0.5364145658263305,
+      "ci_hi": 0.8035714285714286,
+      "fit_time": 2.8232350826263426,
+      "fit_time_warm": 2.847581624984741,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:33:46.276078"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_01": {
+    "0.5": {
+      "bca": 0.24490231990231992,
+      "std_bca": 0.08589944267237637,
+      "kappa": -0.004685700464295617,
+      "ci_lo": 0.17295518207282912,
+      "ci_hi": 0.30557422969187675,
+      "fit_time": 4.33340048789978,
+      "fit_time_warm": 4.189177870750427,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.949903"
+      }
+    },
+    "1.0": {
+      "bca": 0.2376984126984127,
+      "std_bca": 0.05093690175961165,
+      "kappa": -0.018648356382501376,
+      "ci_lo": 0.17823529411764705,
+      "ci_hi": 0.2857114127702363,
+      "fit_time": 2.9728368759155273,
+      "fit_time_warm": 2.939527451992035,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.950573"
+      }
+    },
+    "2.0": {
+      "bca": 0.5731074481074481,
+      "std_bca": 0.06518312759742548,
+      "kappa": 0.4136517193016916,
+      "ci_lo": 0.4731810672987143,
+      "ci_hi": 0.668375350140056,
+      "fit_time": 4.334156847000122,
+      "fit_time_warm": 4.396177053451538,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.951024"
+      }
+    },
+    "5.0": {
+      "bca": 0.5963980463980464,
+      "std_bca": 0.06748079789005067,
+      "kappa": 0.4430357971054383,
+      "ci_lo": 0.5200280112044818,
+      "ci_hi": 0.639072039072039,
+      "fit_time": 3.0020718574523926,
+      "fit_time_warm": 3.0058950185775757,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.951388"
+      }
+    },
+    "10.0": {
+      "bca": 0.6535103785103784,
+      "std_bca": 0.024482406584568354,
+      "kappa": 0.5132077438918203,
+      "ci_lo": 0.5875781081663434,
+      "ci_hi": 0.7055462184873951,
+      "fit_time": 2.8867130279541016,
+      "fit_time_warm": 2.8667911887168884,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.951735"
+      }
+    },
+    "15.0": {
+      "bca": 0.7126068376068376,
+      "std_bca": 0.022149059748072932,
+      "kappa": 0.5866252824613112,
+      "ci_lo": 0.6205882352941177,
+      "ci_hi": 0.7835714285714286,
+      "fit_time": 2.817936325073242,
+      "fit_time_warm": 2.831505298614502,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.952068"
+      }
+    },
+    "30.0": {
+      "bca": 0.7167277167277167,
+      "std_bca": 0.0,
+      "kappa": 0.591229444009397,
+      "ci_lo": 0.6372549019607843,
+      "ci_hi": 0.7785714285714286,
+      "fit_time": 2.945427417755127,
+      "fit_time_warm": 2.9890608191490173,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.952376"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_02": {
+    "0.5": {
+      "bca": 0.2657142857142857,
+      "std_bca": 0.06938505396903366,
+      "kappa": 0.020457148701695616,
+      "ci_lo": 0.2251984126984127,
+      "ci_hi": 0.32452380952380955,
+      "fit_time": 4.635214042663574,
+      "fit_time_warm": 4.3339791893959045,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.899284"
+      }
+    },
+    "1.0": {
+      "bca": 0.19595238095238096,
+      "std_bca": 0.07561014101320193,
+      "kappa": -0.07128497781861816,
+      "ci_lo": 0.16944444444444443,
+      "ci_hi": 0.21484126984126983,
+      "fit_time": 2.8202622890472413,
+      "fit_time_warm": 2.8251394033432007,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.899958"
+      }
+    },
+    "2.0": {
+      "bca": 0.6721428571428572,
+      "std_bca": 0.02367342051758189,
+      "kappa": 0.5626487704244774,
+      "ci_lo": 0.6287698412698413,
+      "ci_hi": 0.7095833333333333,
+      "fit_time": 4.081345891952514,
+      "fit_time_warm": 3.712679386138916,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.900357"
+      }
+    },
+    "5.0": {
+      "bca": 0.8461904761904762,
+      "std_bca": 0.021100665753432894,
+      "kappa": 0.7931470104301551,
+      "ci_lo": 0.7636904761904761,
+      "ci_hi": 0.8949404761904762,
+      "fit_time": 3.3228646755218505,
+      "fit_time_warm": 3.040400266647339,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.900687"
+      }
+    },
+    "10.0": {
+      "bca": 0.8952380952380953,
+      "std_bca": 0.012733087578210454,
+      "kappa": 0.8575623166120099,
+      "ci_lo": 0.815952380952381,
+      "ci_hi": 0.9263888888888889,
+      "fit_time": 2.7978900909423827,
+      "fit_time_warm": 2.7966336011886597,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.901040"
+      }
+    },
+    "15.0": {
+      "bca": 0.9054761904761905,
+      "std_bca": 0.008164965809277232,
+      "kappa": 0.8713481351304703,
+      "ci_lo": 0.8242857142857142,
+      "ci_hi": 0.9375,
+      "fit_time": 2.7838959217071535,
+      "fit_time_warm": 2.7835946679115295,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.901375"
+      }
+    },
+    "30.0": {
+      "bca": 0.898809523809524,
+      "std_bca": 0.0,
+      "kappa": 0.8621782178217823,
+      "ci_lo": 0.8142857142857143,
+      "ci_hi": 0.9375,
+      "fit_time": 2.8687259197235107,
+      "fit_time_warm": 2.889377474784851,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:08.901698"
+      }
+    }
+  },
+  "foundation_sft_cld/subject_03": {
+    "0.5": {
+      "bca": 0.2595238095238095,
+      "std_bca": 0.05645920406236709,
+      "kappa": 0.012547061088617629,
+      "ci_lo": 0.21204365079365078,
+      "ci_hi": 0.31259920634920635,
+      "fit_time": 6.1480179786682125,
+      "fit_time_warm": 4.4905378222465515,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.727241"
+      }
+    },
+    "1.0": {
+      "bca": 0.31476190476190474,
+      "std_bca": 0.08951431053961831,
+      "kappa": 0.08598441739562517,
+      "ci_lo": 0.2765873015873016,
+      "ci_hi": 0.3406547619047619,
+      "fit_time": 3.3817653179168703,
+      "fit_time_warm": 3.3712966442108154,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.727997"
+      }
+    },
+    "2.0": {
+      "bca": 0.5961904761904762,
+      "std_bca": 0.022327697532381285,
+      "kappa": 0.46219486617716854,
+      "ci_lo": 0.5117063492063492,
+      "ci_hi": 0.6926190476190477,
+      "fit_time": 3.804962158203125,
+      "fit_time_warm": 3.6929641366004944,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.728450"
+      }
+    },
+    "5.0": {
+      "bca": 0.6964285714285714,
+      "std_bca": 0.04401865199385383,
+      "kappa": 0.5954730695177017,
+      "ci_lo": 0.657420634920635,
+      "ci_hi": 0.7536904761904761,
+      "fit_time": 3.731812524795532,
+      "fit_time_warm": 3.8978956937789917,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.728849"
+      }
+    },
+    "10.0": {
+      "bca": 0.7197619047619048,
+      "std_bca": 0.020141224745292043,
+      "kappa": 0.6277098646309758,
+      "ci_lo": 0.6853968253968254,
+      "ci_hi": 0.7796428571428572,
+      "fit_time": 3.203074073791504,
+      "fit_time_warm": 3.195229709148407,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.729229"
+      }
+    },
+    "15.0": {
+      "bca": 0.7307142857142858,
+      "std_bca": 0.014114047938360871,
+      "kappa": 0.6414904058852248,
+      "ci_lo": 0.7280952380952381,
+      "ci_hi": 0.76,
+      "fit_time": 3.127964162826538,
+      "fit_time_warm": 3.094761908054352,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.729637"
+      }
+    },
+    "30.0": {
+      "bca": 0.7238095238095238,
+      "std_bca": 0.0,
+      "kappa": 0.632183908045977,
+      "ci_lo": 0.7238095238095238,
+      "ci_hi": 0.748015873015873,
+      "fit_time": 3.01823205947876,
+      "fit_time_warm": 3.0183321237564087,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_cld",
+        "saved_at": "2026-06-03T12:36:38.729994"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_01": {
+    "0.5": {
+      "bca": 0.227014652014652,
+      "std_bca": 0.060307804613397326,
+      "kappa": -0.03484684148282711,
+      "ci_lo": 0.1900980392156863,
+      "ci_hi": 0.25952919629390214,
+      "fit_time": 11.47292456626892,
+      "fit_time_warm": 4.957058370113373,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.702354"
+      }
+    },
+    "1.0": {
+      "bca": 0.23174603174603176,
+      "std_bca": 0.037459772224383146,
+      "kappa": -0.02301903105292604,
+      "ci_lo": 0.19950944480356245,
+      "ci_hi": 0.2624509803921569,
+      "fit_time": 3.1472369194030763,
+      "fit_time_warm": 3.118777632713318,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.703087"
+      }
+    },
+    "2.0": {
+      "bca": 0.5731074481074481,
+      "std_bca": 0.06518312759742548,
+      "kappa": 0.4137064104335246,
+      "ci_lo": 0.4731810672987143,
+      "ci_hi": 0.668375350140056,
+      "fit_time": 4.359315347671509,
+      "fit_time_warm": 4.432948648929596,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.703498"
+      }
+    },
+    "5.0": {
+      "bca": 0.5963980463980464,
+      "std_bca": 0.06748079789005067,
+      "kappa": 0.4430357971054383,
+      "ci_lo": 0.5200280112044818,
+      "ci_hi": 0.639072039072039,
+      "fit_time": 3.073110818862915,
+      "fit_time_warm": 3.0278056263923645,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.703912"
+      }
+    },
+    "10.0": {
+      "bca": 0.6535103785103784,
+      "std_bca": 0.024482406584568354,
+      "kappa": 0.5132077438918203,
+      "ci_lo": 0.5875781081663434,
+      "ci_hi": 0.7055462184873951,
+      "fit_time": 2.9988139152526854,
+      "fit_time_warm": 3.009264647960663,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.704505"
+      }
+    },
+    "15.0": {
+      "bca": 0.7126068376068376,
+      "std_bca": 0.022149059748072932,
+      "kappa": 0.5866252824613112,
+      "ci_lo": 0.6205882352941177,
+      "ci_hi": 0.7835714285714286,
+      "fit_time": 2.926632022857666,
+      "fit_time_warm": 2.922742247581482,
+      "k_minutes": 15.0,
+      "n_cal_trials": 222,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.704976"
+      }
+    },
+    "30.0": {
+      "bca": 0.7167277167277167,
+      "std_bca": 0.0,
+      "kappa": 0.591229444009397,
+      "ci_lo": 0.6372549019607843,
+      "ci_hi": 0.7785714285714286,
+      "fit_time": 2.9098177433013914,
+      "fit_time_warm": 2.8959048986434937,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 1,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:59.705320"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_02": {
+    "0.5": {
+      "bca": 0.25547619047619047,
+      "std_bca": 0.06801610453554713,
+      "kappa": 0.006007731731483434,
+      "ci_lo": 0.21785714285714283,
+      "ci_hi": 0.29115079365079366,
+      "fit_time": 6.084529638290405,
+      "fit_time_warm": 4.398342609405518,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.778923"
+      }
+    },
+    "1.0": {
+      "bca": 0.2692857142857143,
+      "std_bca": 0.06023103666530886,
+      "kappa": 0.026924455429735407,
+      "ci_lo": 0.2130753968253968,
+      "ci_hi": 0.3227579365079365,
+      "fit_time": 3.40777006149292,
+      "fit_time_warm": 3.413305640220642,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.779727"
+      }
+    },
+    "2.0": {
+      "bca": 0.3845238095238095,
+      "std_bca": 0.05225634529492821,
+      "kappa": 0.18163076230022807,
+      "ci_lo": 0.31011904761904757,
+      "ci_hi": 0.481468253968254,
+      "fit_time": 4.706631326675415,
+      "fit_time_warm": 4.524519860744476,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.780148"
+      }
+    },
+    "5.0": {
+      "bca": 0.3780952380952381,
+      "std_bca": 0.05009967389377937,
+      "kappa": 0.17284094801699837,
+      "ci_lo": 0.2883333333333333,
+      "ci_hi": 0.4446428571428571,
+      "fit_time": 3.421037721633911,
+      "fit_time_warm": 3.42005318403244,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.780503"
+      }
+    },
+    "10.0": {
+      "bca": 0.3628571428571428,
+      "std_bca": 0.02461034201794773,
+      "kappa": 0.1511849146402286,
+      "ci_lo": 0.33966269841269836,
+      "ci_hi": 0.3936706349206349,
+      "fit_time": 3.3677666664123533,
+      "fit_time_warm": 3.3857447504997253,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.780838"
+      }
+    },
+    "15.0": {
+      "bca": 0.4023809523809523,
+      "std_bca": 0.01775366845934023,
+      "kappa": 0.20560763297250956,
+      "ci_lo": 0.38769841269841265,
+      "ci_hi": 0.42190476190476184,
+      "fit_time": 3.330345296859741,
+      "fit_time_warm": 3.351052939891815,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.781193"
+      }
+    },
+    "30.0": {
+      "bca": 0.41309523809523807,
+      "std_bca": 0.0,
+      "kappa": 0.21962801741195093,
+      "ci_lo": 0.41309523809523807,
+      "ci_hi": 0.4172619047619047,
+      "fit_time": 3.479336738586426,
+      "fit_time_warm": 3.4846365451812744,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:44.781550"
+      }
+    }
+  },
+  "foundation_sft_ea_cld/subject_03": {
+    "0.5": {
+      "bca": 0.3223809523809523,
+      "std_bca": 0.09562836702829798,
+      "kappa": 0.09515944655821232,
+      "ci_lo": 0.2606547619047619,
+      "ci_hi": 0.38009920634920635,
+      "fit_time": 6.480182409286499,
+      "fit_time_warm": 5.137798428535461,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.926731"
+      }
+    },
+    "1.0": {
+      "bca": 0.32404761904761903,
+      "std_bca": 0.06911901071140528,
+      "kappa": 0.09907304968796235,
+      "ci_lo": 0.2623611111111111,
+      "ci_hi": 0.3841468253968254,
+      "fit_time": 3.425647497177124,
+      "fit_time_warm": 3.388137638568878,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.927456"
+      }
+    },
+    "2.0": {
+      "bca": 0.5869047619047618,
+      "std_bca": 0.05016977977548926,
+      "kappa": 0.4486883602775352,
+      "ci_lo": 0.5270833333333333,
+      "ci_hi": 0.6592857142857144,
+      "fit_time": 4.111346483230591,
+      "fit_time_warm": 4.031004190444946,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.927931"
+      }
+    },
+    "5.0": {
+      "bca": 0.641904761904762,
+      "std_bca": 0.037746919503090406,
+      "kappa": 0.5224063857317058,
+      "ci_lo": 0.5930555555555556,
+      "ci_hi": 0.7032142857142858,
+      "fit_time": 4.1287047386169435,
+      "fit_time_warm": 4.044678270816803,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.928534"
+      }
+    },
+    "10.0": {
+      "bca": 0.6997619047619048,
+      "std_bca": 0.03479287596171197,
+      "kappa": 0.6003289804253535,
+      "ci_lo": 0.645436507936508,
+      "ci_hi": 0.7616666666666667,
+      "fit_time": 3.0928561210632326,
+      "fit_time_warm": 3.0306562185287476,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.929041"
+      }
+    },
+    "15.0": {
+      "bca": 0.7071428571428571,
+      "std_bca": 0.0105677814386534,
+      "kappa": 0.6096304169587738,
+      "ci_lo": 0.6871626984126984,
+      "ci_hi": 0.746329365079365,
+      "fit_time": 2.964283084869385,
+      "fit_time_warm": 2.961806833744049,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.929410"
+      }
+    },
+    "30.0": {
+      "bca": 0.7238095238095238,
+      "std_bca": 0.0,
+      "kappa": 0.6324752475247525,
+      "ci_lo": 0.7212301587301587,
+      "ci_hi": 0.7410714285714286,
+      "fit_time": 2.940113878250122,
+      "fit_time_warm": 2.896393597126007,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_cld",
+        "saved_at": "2026-06-03T12:36:42.929760"
+      }
+    }
+  },
+  "foundation_sft_kadaptive_anchored_cld/subject_03": {
+    "0.5": {
+      "bca": 1.0,
+      "std_bca": 0.0,
+      "kappa": 1.0,
+      "ci_lo": 1.0,
+      "ci_hi": 1.0,
+      "fit_time": 10.898243808746338,
+      "fit_time_warm": 2.672725260257721,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.037917"
+      }
+    },
+    "1.0": {
+      "bca": 1.0,
+      "std_bca": 0.0,
+      "kappa": 1.0,
+      "ci_lo": 1.0,
+      "ci_hi": 1.0,
+      "fit_time": 2.7221685886383056,
+      "fit_time_warm": 2.723589777946472,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.038550"
+      }
+    },
+    "2.0": {
+      "bca": 1.0,
+      "std_bca": 0.0,
+      "kappa": 1.0,
+      "ci_lo": 1.0,
+      "ci_hi": 1.0,
+      "fit_time": 2.722553539276123,
+      "fit_time_warm": 2.70048063993454,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.038930"
+      }
+    },
+    "5.0": {
+      "bca": 0.9964285714285716,
+      "std_bca": 0.0071428571428571175,
+      "kappa": 0.9953986513288378,
+      "ci_lo": 0.9928571428571429,
+      "ci_hi": 1.0,
+      "fit_time": 2.766221761703491,
+      "fit_time_warm": 2.7308151721954346,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.039253"
+      }
+    },
+    "10.0": {
+      "bca": 0.9928571428571429,
+      "std_bca": 0.008748177652797035,
+      "kappa": 0.9907973026576755,
+      "ci_lo": 0.9857142857142858,
+      "ci_hi": 1.0,
+      "fit_time": 2.786792755126953,
+      "fit_time_warm": 2.816070079803467,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.039563"
+      }
+    },
+    "15.0": {
+      "bca": 1.0,
+      "std_bca": 0.0,
+      "kappa": 1.0,
+      "ci_lo": 1.0,
+      "ci_hi": 1.0,
+      "fit_time": 2.824557828903198,
+      "fit_time_warm": 2.8077110052108765,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.040244"
+      }
+    },
+    "30.0": {
+      "bca": 1.0,
+      "std_bca": 0.0,
+      "kappa": 1.0,
+      "ci_lo": 1.0,
+      "ci_hi": 1.0,
+      "fit_time": 2.8228110790252687,
+      "fit_time_warm": 2.8224263191223145,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:36:46.040608"
+      }
+    }
+  },
+  "foundation_sft_ea_kadaptive_anchored_cld/subject_02": {
+    "0.5": {
+      "bca": 0.4392857142857142,
+      "std_bca": 0.007142857142857139,
+      "kappa": 0.2585343289333078,
+      "ci_lo": 0.39166666666666666,
+      "ci_hi": 0.5052579365079365,
+      "fit_time": 20.593292045593262,
+      "fit_time_warm": 2.927082598209381,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.613663"
+      }
+    },
+    "1.0": {
+      "bca": 0.4288095238095238,
+      "std_bca": 0.013307798678554392,
+      "kappa": 0.24442295899714656,
+      "ci_lo": 0.39617063492063487,
+      "ci_hi": 0.4769444444444444,
+      "fit_time": 2.9060410499572753,
+      "fit_time_warm": 2.9243748784065247,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.614475"
+      }
+    },
+    "2.0": {
+      "bca": 0.45071428571428573,
+      "std_bca": 0.0174736601256274,
+      "kappa": 0.2724734691199871,
+      "ci_lo": 0.42000000000000004,
+      "ci_hi": 0.4990079365079364,
+      "fit_time": 2.9144225120544434,
+      "fit_time_warm": 2.8942275047302246,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.614998"
+      }
+    },
+    "5.0": {
+      "bca": 0.4969047619047619,
+      "std_bca": 0.011333933557535125,
+      "kappa": 0.33290458387829003,
+      "ci_lo": 0.42928571428571427,
+      "ci_hi": 0.6041666666666666,
+      "fit_time": 2.8621001720428465,
+      "fit_time_warm": 2.8599793314933777,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.615367"
+      }
+    },
+    "10.0": {
+      "bca": 0.49904761904761896,
+      "std_bca": 0.021460293979511873,
+      "kappa": 0.33371176157139065,
+      "ci_lo": 0.4123809523809524,
+      "ci_hi": 0.6060515873015873,
+      "fit_time": 2.9282645702362062,
+      "fit_time_warm": 2.8779934644699097,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.615954"
+      }
+    },
+    "15.0": {
+      "bca": 0.434047619047619,
+      "std_bca": 0.02029543697250104,
+      "kappa": 0.2468779329196095,
+      "ci_lo": 0.3888095238095238,
+      "ci_hi": 0.48730158730158735,
+      "fit_time": 2.8823410987854006,
+      "fit_time_warm": 2.8617751598358154,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.616328"
+      }
+    },
+    "30.0": {
+      "bca": 0.44761904761904764,
+      "std_bca": 5.551115123125783e-17,
+      "kappa": 0.26495049504950496,
+      "ci_lo": 0.4404761904761905,
+      "ci_hi": 0.46924603174603174,
+      "fit_time": 2.9378926753997803,
+      "fit_time_warm": 2.9649975895881653,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 2,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:37:39.616668"
+      }
+    }
+  },
+  "foundation_sft_ea_kadaptive_anchored_cld/subject_03": {
+    "0.5": {
+      "bca": 0.638095238095238,
+      "std_bca": 0.0,
+      "kappa": 0.5181962025316456,
+      "ci_lo": 0.638095238095238,
+      "ci_hi": 0.6979166666666666,
+      "fit_time": 20.34332208633423,
+      "fit_time_warm": 3.189358711242676,
+      "k_minutes": 0.5,
+      "n_cal_trials": 4,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.603034"
+      }
+    },
+    "1.0": {
+      "bca": 0.638095238095238,
+      "std_bca": 0.0,
+      "kappa": 0.5181962025316456,
+      "ci_lo": 0.638095238095238,
+      "ci_hi": 0.6953571428571428,
+      "fit_time": 3.081731176376343,
+      "fit_time_warm": 3.0823100209236145,
+      "k_minutes": 1.0,
+      "n_cal_trials": 12,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.603960"
+      }
+    },
+    "2.0": {
+      "bca": 0.6314285714285715,
+      "std_bca": 0.013333333333333287,
+      "kappa": 0.5090189873417721,
+      "ci_lo": 0.6314285714285715,
+      "ci_hi": 0.6812499999999999,
+      "fit_time": 3.205156421661377,
+      "fit_time_warm": 3.093393623828888,
+      "k_minutes": 2.0,
+      "n_cal_trials": 28,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.604429"
+      }
+    },
+    "5.0": {
+      "bca": 0.6442857142857144,
+      "std_bca": 0.036765482184681175,
+      "kappa": 0.5269664714689997,
+      "ci_lo": 0.6391071428571429,
+      "ci_hi": 0.7088690476190476,
+      "fit_time": 3.7573662281036375,
+      "fit_time_warm": 3.8769516348838806,
+      "k_minutes": 5.0,
+      "n_cal_trials": 72,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.604848"
+      }
+    },
+    "10.0": {
+      "bca": 0.6628571428571428,
+      "std_bca": 0.02412176217507417,
+      "kappa": 0.5500546984581776,
+      "ci_lo": 0.6628571428571428,
+      "ci_hi": 0.7167658730158729,
+      "fit_time": 3.452600336074829,
+      "fit_time_warm": 3.504259943962097,
+      "k_minutes": 10.0,
+      "n_cal_trials": 148,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.605216"
+      }
+    },
+    "15.0": {
+      "bca": 0.6735714285714287,
+      "std_bca": 0.010921280896361631,
+      "kappa": 0.5638425354547765,
+      "ci_lo": 0.6735714285714287,
+      "ci_hi": 0.7317857142857143,
+      "fit_time": 3.208215284347534,
+      "fit_time_warm": 3.230943441390991,
+      "k_minutes": 15.0,
+      "n_cal_trials": 224,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.605571"
+      }
+    },
+    "30.0": {
+      "bca": 0.6738095238095239,
+      "std_bca": 0.0,
+      "kappa": 0.5639097744360902,
+      "ci_lo": 0.6738095238095239,
+      "ci_hi": 0.7267857142857143,
+      "fit_time": 3.247567892074585,
+      "fit_time_warm": 3.2778682708740234,
+      "k_minutes": 30.0,
+      "n_cal_trials": 230,
+      "protocol": "k_minute_sweep",
+      "subject_id": 3,
+      "_meta": {
+        "dataset": "bciciv2a",
+        "backbone": "neurogpt",
+        "method": "foundation_sft_ea_kadaptive_anchored_cld",
+        "saved_at": "2026-06-03T12:38:45.605958"
+      }
+    }
+  }
+}

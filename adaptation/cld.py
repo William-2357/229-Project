@@ -132,7 +132,12 @@ def pad_features_to_bucket(
 
     Pass bucket=None to disable. X_norm must already be in normalized space so
     the appended rows are true zeros (not (0 - mu)/sigma).
+
+    Set env CLD_NO_PAD=1 to globally disable bucketing (solve runs on the true
+    sample count N) — used by the fit-time benchmark to measure unpadded solves.
     """
+    if os.environ.get("CLD_NO_PAD") == "1":
+        return X_norm, y
     if bucket is None or bucket <= 0:
         return X_norm, y
     n = X_norm.shape[0]

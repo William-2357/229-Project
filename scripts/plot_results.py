@@ -1,8 +1,8 @@
 """
 Plot k-minutes vs Mean BCA for all backbones.
-- Foundation backbones: loaded from foundation_results/
+- Foundation backbones: loaded from results/foundation/
 - Specialist backbones: loaded from results/bciciv2a/
-One figure per backbone, saved to plots/.
+One figure per backbone, saved to results/figures/.
 """
 
 import json
@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from pathlib import Path
 
-ROOT = Path(__file__).parent
-FOUNDATION_ROOT = ROOT / "foundation_results"
-SPECIALIST_ROOT = ROOT / "specialist_results"
-OUT_DIR = ROOT / "plots"
-OUT_DIR.mkdir(exist_ok=True)
+ROOT = Path(__file__).resolve().parent.parent
+FOUNDATION_ROOT = ROOT / "results/foundation"
+SPECIALIST_ROOT = ROOT / "results/specialist"
+OUT_DIR = ROOT / "results" / "figures"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 FOUNDATION_BACKBONES = ["mirepnet", "labram", "cbramod", "neurogpt"]
 SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]

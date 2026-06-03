@@ -4,7 +4,7 @@ Run once per dataset before training — saves preprocessed (X, y) arrays so
 experiment jobs skip the expensive resample/filter/epoch pipeline entirely.
 
 Usage:
-    modal run modal_prep_cache.py --dataset bciciv2a
+    modal run scripts/modal_prep_cache.py --dataset bciciv2a
 """
 
 import modal

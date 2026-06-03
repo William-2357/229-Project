@@ -1,7 +1,7 @@
 """Plot foundation-model modal_summary.json files in a multi-panel comparison figure.
 
 Example:
-    python plot_foundation_modal_summary.py \
+    python scripts/plot_foundation_modal_summary.py \
       --json results/bciciv2a/cbramod/modal_summary.json \
              results/bciciv2a/mirepnet/modal_summary_mirepnet.json \
              results/bciciv2a/neurogpt/modal_summary_neuro.json \
@@ -158,7 +158,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--output",
-        default="foundation_backbones_comparison.png",
+        default="results/figures/foundation_backbones_comparison.png",
         help="Output image path.",
     )
     parser.add_argument(

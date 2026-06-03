@@ -26,6 +26,8 @@ was 0.654 (+0.024 from the data-relative fix). Wins where source is less task-al
 
 from __future__ import annotations
 
+import os
+
 import jax
 import jax.numpy as jnp
 import numpy as np
@@ -38,6 +40,7 @@ from ._jaxcld_cpu_linalg import rand_nys_appx_cpu as rand_nys_appx
 
 from .cld import pad_features_to_bucket
 from .foundation_cld import extract_foundation_features
+from .ea import compute_mean_covariance, euclidean_align, matrix_sqrt_inv
 from .foundation_sft_anchored_cld import (
     FoundationSFTAnchoredCLDAdapter,
     _calibration_repeat_count,
@@ -114,9 +117,11 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
     """
 
     def __init__(self, backbone, device: str = "cpu", seed: int = 42, *,
-                 anchor_a_base: float = 2.0, anchor_n_ref: float = 60.0,
-                 anchor_mode: str = "adaptive",          # adaptive (per-pattern) | isotropic
-                 stage2_data: str = "cal",               # cal | source_cal
+                 anchor_a_base: float = float(os.environ.get("KADAPT_A_BASE", "2.0")),
+                 anchor_n_ref: float = 60.0,
+                 # env overrides let us A/B anchor variants on Modal without code churn
+                 anchor_mode: str = os.environ.get("KADAPT_ANCHOR_MODE", "adaptive"),  # adaptive | isotropic
+                 stage2_data: str = os.environ.get("KADAPT_STAGE2", "cal"),            # cal | source_cal
                  anchor_var_eps: float = 1e-4,
                  max_feat_dim: int | None = None,         # None = full dim (tested best); 256 = PCA
                  **kwargs):
@@ -124,6 +129,10 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
         # (the base's hp_select tunes beta/target_mass for the source∪cal UNION, not this anchor).
         kwargs.setdefault("beta", 1e-4)
         kwargs.setdefault("hp_select", False)
+        # KADAPT_SFT_EPOCHS=0 => skip source fine-tuning, use the RAW FROZEN backbone features
+        # (matches the auto repo's "frozen" config; SFT can overfit source and hurt cal-only transfer).
+        if "KADAPT_SFT_EPOCHS" in os.environ:
+            kwargs.setdefault("max_epochs_src", int(os.environ["KADAPT_SFT_EPOCHS"]))
         super().__init__(backbone, device, seed, max_feat_dim=max_feat_dim, **kwargs)
         self.anchor_a_base = anchor_a_base
         self.anchor_n_ref = anchor_n_ref
@@ -205,3 +214,90 @@ class FoundationSFTKAdaptiveAnchoredCLDAdapter(FoundationSFTAnchoredCLDAdapter):
             v_anchor=v_bar, anchor_a=a_eff,
         )
         return m
+
+
+class FoundationSFTKAdaptiveAnchoredEACLDAdapter(FoundationSFTKAdaptiveAnchoredCLDAdapter):
+    """EA whitening + SFT backbone + K-adaptive explicit-anchor Stage 2.
+
+    EA-aligns the source (per-subject when available), target-unlabeled, and calibration before the
+    convex pipeline, then runs the exact K-adaptive Stage-2 anchor of the parent. The per-pattern
+    anchor's multi-task per-source-subject solve is fed the *aligned* per-subject source so the
+    anchor lives in the same whitened feature space as everything else.
+
+    Mirrors ``FoundationSFTAnchoredEACLDAdapter`` but for the K-adaptive Stage 2.
+    """
+
+    # EA whitens the feature space; keep its (would-be) HP cache distinct from the non-EA variant.
+    _hp_variant_tag: str = "ea_"
+
+    def __init__(self, backbone, device: str = "cpu", seed: int = 42, *,
+                 epsilon: float = 1e-6, **kwargs):
+        super().__init__(backbone, device, seed, **kwargs)
+        self.epsilon = epsilon
+        self._target_R_inv_sqrt = None
+
+    def fit(self, source_data, target_unlabeled=None, target_labeled=None,
+            source_cache: dict | None = None, source_per_subject: list | None = None):
+        if source_data is None:
+            raise ValueError("FoundationSFTKAdaptiveAnchoredEACLDAdapter requires source_data")
+        if target_unlabeled is None:
+            raise ValueError(
+                "FoundationSFTKAdaptiveAnchoredEACLDAdapter requires target_unlabeled for EA")
+
+        self._seed()
+        X_src, y_src = source_data
+
+        R_tgt = compute_mean_covariance(target_unlabeled, self.epsilon)
+        self._target_R_inv_sqrt = matrix_sqrt_inv(R_tgt)
+
+        if source_per_subject is None and source_cache is not None:
+            source_per_subject = source_cache.get("source_per_subject")
+
+        # Align the source once (cached across K). Keep the aligned *per-subject* chunks so the
+        # K-adaptive per-pattern anchor solves on the same whitened space as Stage 1/2.
+        _ea_src_key = "sft_kadapt_anchored_ea_src_aligned"
+        if source_cache is not None and _ea_src_key in source_cache:
+            X_src_aligned, aligned_per_subject = source_cache[_ea_src_key]
+        else:
+            if source_per_subject is not None:
+                aligned_per_subject = []
+                for X_subj, y_subj in source_per_subject:
+                    R = compute_mean_covariance(X_subj, self.epsilon)
+                    aligned_per_subject.append(
+                        (euclidean_align(X_subj, matrix_sqrt_inv(R)), y_subj))
+                X_src_aligned = np.concatenate([x for x, _ in aligned_per_subject], axis=0)
+            else:
+                R_src = compute_mean_covariance(X_src, self.epsilon)
+                X_src_aligned = euclidean_align(X_src, matrix_sqrt_inv(R_src))
+                aligned_per_subject = None
+            if source_cache is not None:
+                source_cache[_ea_src_key] = (X_src_aligned, aligned_per_subject)
+
+        # Feed the K-adaptive anchor the ALIGNED per-subject source (not the raw kwarg).
+        self._source_per_subject = aligned_per_subject
+
+        cal_aligned = None
+        if target_labeled is not None:
+            X_cal, y_cal = target_labeled
+            cal_aligned = (euclidean_align(X_cal, self._target_R_inv_sqrt), y_cal)
+
+        # Run the base anchored pipeline directly (skipping the parent's fit, which would reset
+        # _source_per_subject to the unaligned data). self._fit_stage2 still resolves to the
+        # K-adaptive Stage 2 via the instance.
+        return FoundationSFTAnchoredCLDAdapter.fit(
+            self,
+            source_data=(X_src_aligned, y_src),
+            target_unlabeled=euclidean_align(target_unlabeled, self._target_R_inv_sqrt),
+            target_labeled=cal_aligned,
+            source_cache=source_cache,
+        )
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        if self._target_R_inv_sqrt is None:
+            raise RuntimeError("FoundationSFTKAdaptiveAnchoredEACLDAdapter not fitted")
+        return super().predict(euclidean_align(X, self._target_R_inv_sqrt))
+
+    def predict_proba(self, X: np.ndarray) -> np.ndarray:
+        if self._target_R_inv_sqrt is None:
+            raise RuntimeError("FoundationSFTKAdaptiveAnchoredEACLDAdapter not fitted")
+        return super().predict_proba(euclidean_align(X, self._target_R_inv_sqrt))

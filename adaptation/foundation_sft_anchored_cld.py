@@ -514,10 +514,17 @@ class FoundationSFTAnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
         else:
             model = FoundationWithHead(copy.deepcopy(self.backbone), n_classes).to(self.device)
             src_hash = hashlib.md5(X_src.tobytes()[:50000] + y_src.tobytes()).hexdigest()[:8]
+            # Hash the pretrained backbone weights so an updated checkpoint busts the SFT
+            # cache (SFT starts from these weights; without this a new .pth silently reuses
+            # the stale source-fine-tuned checkpoint).
+            bb_hash = hashlib.md5(b"".join(
+                v.detach().cpu().numpy().tobytes()[:4096]
+                for v in self.backbone.state_dict().values()
+            )).hexdigest()[:6]
             lr_tag = f"lr{self.lr_src:.0e}".replace("-", "n")
             checkpoint_path = os.path.join(
                 checkpoint_dir,
-                f"{backbone_name}_seed{self.seed}_src_{src_hash}_{lr_tag}_ep{self.max_epochs_src}_sft.pt",
+                f"{backbone_name}_seed{self.seed}_src_{src_hash}_bb{bb_hash}_{lr_tag}_ep{self.max_epochs_src}_sft.pt",
             )
             if os.path.exists(checkpoint_path):
                 model.load_state_dict(torch.load(checkpoint_path, map_location=self.device))

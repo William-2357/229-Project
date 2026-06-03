@@ -102,7 +102,15 @@ image = (
     # (CLD_TIMING="1" can be added here to print a per-call compile-vs-solve
     # breakdown for the ADMM solver — diagnostic only; it adds a per-iteration
     # block_until_ready sync that inflates fit_time, so leave it off for timing runs.)
-    .env({"JAX_PLATFORMS": "cuda,cpu"})
+    .env({"JAX_PLATFORMS": "cuda,cpu",
+          # A/B knobs for the K-adaptive anchor (baked from the local env at image build;
+          # change the local var -> image rebuilds with the new value). Defaults = tested config.
+          "KADAPT_ANCHOR_MODE": os.environ.get("KADAPT_ANCHOR_MODE", "adaptive"),
+          "KADAPT_STAGE2": os.environ.get("KADAPT_STAGE2", "cal"),
+          "KADAPT_A_BASE": os.environ.get("KADAPT_A_BASE", "2.0"),
+          "KADAPT_SFT_EPOCHS": os.environ.get("KADAPT_SFT_EPOCHS", "200"),
+          "RESULTS_TAG": os.environ.get("RESULTS_TAG", ""),
+          "CLD_NO_PAD": os.environ.get("CLD_NO_PAD", "")})
     .add_local_python_source(
         "adaptation", "data", "evaluation", "models", "plotting",
         copy=True,
@@ -122,11 +130,13 @@ SUPERVISED = {
     "foundation_sft_anchored_cld", "foundation_sft_ea_anchored_cld",
     "finetune", "lora", "ea_lora", "cld", "ea_cld",
     "anchored_cld", "ea_anchored_cld",
+    "kadaptive_anchored_cld", "ea_kadaptive_anchored_cld",
     "foundation_finetune", "foundation_lora", "foundation_ea_lora",
     "foundation_cld", "foundation_ea_cld",
     "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
     "foundation_sft_cld", "foundation_sft_ea_cld",
     "foundation_sft_kadaptive_anchored_cld",
+    "foundation_sft_ea_kadaptive_anchored_cld",
 }
 
 
@@ -188,6 +198,9 @@ def run_job(
     from adaptation.cld import CLDAdapter
     from adaptation.stacked import EACLDAdapter
     from adaptation.anchored_cld import AnchoredCLDAdapter, EAAnchoredCLDAdapter
+    from adaptation.kadaptive_anchored_cld import (
+        KAdaptiveAnchoredCLDAdapter, KAdaptiveAnchoredEACLDAdapter
+    )
     from adaptation.foundation_cld import FoundationCLDAdapter, FoundationEACLDAdapter
     from adaptation.foundation_source_cld import (
         FoundationSourceFineTuneCLDAdapter, FoundationSourceFineTuneEACLDAdapter
@@ -209,7 +222,8 @@ def run_job(
         FoundationSFTAnchoredCLDAdapter, FoundationSFTAnchoredEACLDAdapter
     )
     from adaptation.foundation_sft_kadaptive_anchored_cld import (
-        FoundationSFTKAdaptiveAnchoredCLDAdapter
+        FoundationSFTKAdaptiveAnchoredCLDAdapter,
+        FoundationSFTKAdaptiveAnchoredEACLDAdapter,
     )
     from evaluation.protocols import loso_evaluation, k_minute_sweep
     from evaluation.results import save_result
@@ -225,6 +239,8 @@ def run_job(
         "ea_cld": EACLDAdapter,
         "anchored_cld": AnchoredCLDAdapter,
         "ea_anchored_cld": EAAnchoredCLDAdapter,
+        "kadaptive_anchored_cld": KAdaptiveAnchoredCLDAdapter,
+        "ea_kadaptive_anchored_cld": KAdaptiveAnchoredEACLDAdapter,
         "linear_probe": LinearProbeAdapter,
         "foundation_loso": FoundationLOSOAdapter,
         "foundation_ea": FoundationEAAdapter,
@@ -245,6 +261,7 @@ def run_job(
         "foundation_sft_anchored_cld": FoundationSFTAnchoredCLDAdapter,
         "foundation_sft_ea_anchored_cld": FoundationSFTAnchoredEACLDAdapter,
         "foundation_sft_kadaptive_anchored_cld": FoundationSFTKAdaptiveAnchoredCLDAdapter,
+        "foundation_sft_ea_kadaptive_anchored_cld": FoundationSFTKAdaptiveAnchoredEACLDAdapter,
     }
 
     torch.manual_seed(seed)
@@ -266,7 +283,9 @@ def run_job(
         preprocess_cfg = BACKBONE_PREPROCESS_CONFIGS.get(backbone_name)
         cache_suffix   = BACKBONE_CACHE_SUFFIX.get(backbone_name)
         target_sfreq   = BACKBONE_TARGET_SFREQ.get(backbone_name, 200.0)
-        cache_dir      = f"/data/bciciv2a_{cache_suffix}_cache" if cache_suffix else "/data/bciciv2a_cache"
+        # _v2: raw npz re-prepared with correct cue-aligned events (the prior volume data
+        # had a +500-sample / +2s epoch-onset shift). Bump forces a clean cache recompute.
+        cache_dir      = f"/data/bciciv2a_{cache_suffix}_v2_cache" if cache_suffix else "/data/bciciv2a_v2_cache"
         dataset = BCICIVDataset(
             "/data/bciciv2a",
             cache_dir=cache_dir,
@@ -336,6 +355,11 @@ def run_job(
                 "ci_lo": float(np.mean([r["ci_lo"] for r in repeats])),
                 "ci_hi": float(np.mean([r["ci_hi"] for r in repeats])),
                 "fit_time": float(np.mean([r["fit_time"] for r in repeats])),
+                # Compile-excluded fit time: repeat 0 of each (K) triggers the JAX/XLA
+                # compile (and one-time anchor build); repeats 1+ reuse it. Average the
+                # warm repeats so fit_time_warm reflects steady-state solve time only.
+                "fit_time_warm": float(np.mean([r["fit_time"] for r in repeats[1:]]))
+                if len(repeats) > 1 else float(np.mean([r["fit_time"] for r in repeats])),
                 "k_minutes": float(k),
                 "n_cal_trials": repeats[0]["n_cal_trials"],
                 "protocol": "k_minute_sweep",
@@ -375,8 +399,11 @@ def orchestrate(
     seed: int,
     checkpoint_path: str | None = None,
 ) -> dict:
-    # Load any previously completed results so restarts are idempotent
-    out_path = Path("/project/results") / dataset / backbone / "modal_summary.json"
+    # Load any previously completed results so restarts are idempotent.
+    # RESULTS_TAG writes to a distinct summary file (e.g. corrected-data re-runs land in
+    # modal_summary<TAG>.json) so they don't resume from / overwrite stale prior results.
+    _rtag = os.environ.get("RESULTS_TAG", "")
+    out_path = Path("/project/results") / dataset / backbone / f"modal_summary{_rtag}.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     if out_path.exists():
         all_results = json.loads(out_path.read_text())
