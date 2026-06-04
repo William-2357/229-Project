@@ -17,8 +17,8 @@ FOUNDATION = {"neurogpt", "mirepnet", "labram"}
 
 ROWS = [("Fine-tune", "finetune"), ("LoRA", "lora"), ("EA+LoRA", "ea_lora"),
         ("CHA", "cld"), ("EA+CHA", "ea_cld"),
-        ("K-Anchored-CHA", "kadaptive_anchored_cld"),
-        ("EA+K-Anchored-CHA", "ea_kadaptive_anchored_cld")]
+        ("A-CHA", "kadaptive_anchored_cld"),
+        ("EA + A-CHA", "ea_kadaptive_anchored_cld")]
 KADAPT = {"kadaptive_anchored_cld", "ea_kadaptive_anchored_cld"}
 
 
