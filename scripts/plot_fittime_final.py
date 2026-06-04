@@ -28,7 +28,7 @@ OUT_DIR = ROOT / "results" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 BB_ORDER = [("NeuroGPT","neurogpt"),("MIRepNet","mirepnet"),("LaBraM","labram"),
-            ("CBraMod","cbramod"),("EEGNet","eegnet"),("ShallowConvNet","shallowconv"),
+            ("EEGNet","eegnet"),("ShallowConvNet","shallowconv"),
             ("EEG-Conformer","conformer")]
 GRAD = [("Fine-tune",("foundation_sft_finetune","finetune")),
         ("LoRA",("foundation_sft_lora","lora")),

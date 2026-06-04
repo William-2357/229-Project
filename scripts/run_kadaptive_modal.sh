@@ -12,7 +12,7 @@
 #
 # Each `modal run` is restart-safe: re-run any line to continue where it stopped.
 #
-# Prereqs (one-time): eeg-data volume must hold the raw npz data + the 4 foundation
+# Prereqs (one-time): eeg-data volume must hold the raw npz data + the 3 foundation
 # checkpoints, and the preprocessing caches must be built.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -27,7 +27,6 @@ FM="foundation_sft_kadaptive_anchored_cld,foundation_sft_ea_kadaptive_anchored_c
 SM="kadaptive_anchored_cld,ea_kadaptive_anchored_cld"
 
 # --- Foundation backbones (each needs its matching checkpoint on /data) ---------
-$RUN --backbone cbramod  --methods "$FM" --checkpoint-path /data/CBraMod_checkpoint.pth
 $RUN --backbone labram   --methods "$FM" --checkpoint-path /data/labram-base.pth
 $RUN --backbone mirepnet --methods "$FM" --checkpoint-path /data/MIRepNet.pth
 $RUN --backbone neurogpt --methods "$FM" --checkpoint-path /data/neuro_gpt.pt

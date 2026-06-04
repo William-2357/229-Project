@@ -32,15 +32,14 @@ from pathlib import Path
 #CHECKPOINT_PATH = None     # path to pretrained weights for foundation backbones (e.g. "/data/neurogpt.pt")
 
 DATASET = "bciciv2a"
-# Foundation backbone: cbramod | labram | mirepnet | neurogpt (override with --backbone).
+# Foundation backbone: labram | mirepnet | neurogpt (override with --backbone).
 # Each needs its pretrained checkpoint (override with --checkpoint-path):
-#   cbramod  -> /data/CBraMod_checkpoint.pth
 #   labram   -> /data/labram-base.pth
 #   mirepnet -> /data/MIRepNet.pth
 #   neurogpt -> /data/neuro_gpt.pt
 # For SPECIALIST backbones (eegnet/shallowconv/conformer) use the bare method names
 # (loso/ea/tta/finetune/lora/ea_lora/cld/ea_cld/anchored_cld/ea_anchored_cld) + checkpoint None.
-BACKBONE = "cbramod"
+BACKBONE = "labram"
 METHODS = [
     "foundation_sft_loso",             # K=0 zero-shot: source-finetuned backbone, no target adapt
     "foundation_sft_ea",               # K=0 zero-shot: EA + source-finetuned backbone
@@ -53,7 +52,7 @@ METHODS = [
     "foundation_sft_anchored_cld",     # K>0: source-anchored 2-stage warm ADMM (low-K fix, HP-grid)
     "foundation_sft_ea_anchored_cld",  # K>0: EA + source-anchored 2-stage warm ADMM (low-K fix, HP-grid)
 ]
-CHECKPOINT_PATH = "/data/CBraMod_checkpoint.pth"  # MUST match BACKBONE (see table above)
+CHECKPOINT_PATH = "/data/labram-base.pth"  # MUST match BACKBONE (see table above)
 GPU = "A10G"
 MAX_CONCURRENCY = 20
 K_MINUTES = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]
@@ -513,7 +512,7 @@ def main(
     # backbones (eegnet/shallowconv/conformer) use the bare method names. Mixing them
     # hands a frozen foundation backbone to a specialist adapter (or vice versa),
     # which otherwise crashes deep in a worker (e.g. "element 0 ... does not require grad").
-    FOUNDATION_BACKBONES = {"cbramod", "labram", "mirepnet", "neurogpt"}
+    FOUNDATION_BACKBONES = {"labram", "mirepnet", "neurogpt"}
     is_foundation = backbone in FOUNDATION_BACKBONES
     foundation_methods = [m for m in method_list if m.startswith("foundation")]
     specialist_methods = [m for m in method_list if not m.startswith("foundation")]
@@ -529,7 +528,7 @@ def main(
             f"Backbone '{backbone}' is a specialist model, but these methods are "
             f"foundation-only: {foundation_methods}. Drop the foundation_ prefix "
             f"(e.g. anchored_cld / ea_anchored_cld), or run a foundation backbone "
-            f"(cbramod/labram/mirepnet/neurogpt)."
+            f"(labram/mirepnet/neurogpt)."
         )
 
     print(

@@ -1,6 +1,6 @@
 """Local fit-time benchmark — the in-process twin of scripts/run_fittime_modal.sh.
 
-Runs the K-spanning adaptation methods across the 7 backbones (3 subjects each)
+Runs the K-spanning adaptation methods across the 6 backbones (3 subjects each)
 on THIS machine instead of Modal, padding=false for the convex (CLD) solves
 (CLD_NO_PAD=1), and writes per-backbone
 
@@ -12,13 +12,13 @@ fit_time / fit_time_warm and train_fit_time / train_fit_time_warm (the warm
 variants drop repeat 0, which holds the JAX/XLA compile + one-time anchor build).
 
 Method sets mirror the Modal shell:
-  foundation backbones (cbramod/labram/mirepnet/neurogpt):  foundation_sft_* methods
+  foundation backbones (labram/mirepnet/neurogpt):  foundation_sft_* methods
   specialist backbones (eegnet/shallowconv/conformer):      bare-name methods
 
 Run (use the project venv, which has torch/jax/peft):
-    .venv/bin/python run_fittime.py                          # all 7 backbones, 3 subjects
+    .venv/bin/python run_fittime.py                          # all 6 backbones, 3 subjects
     .venv/bin/python run_fittime.py --backbones eegnet       # one specialist (no checkpoint needed)
-    .venv/bin/python run_fittime.py --backbones cbramod --checkpoint-dir ~/checkpoints
+    .venv/bin/python run_fittime.py --backbones labram --checkpoint-dir ~/checkpoints
     .venv/bin/python run_fittime.py --n-subjects 1 --k-minutes 0.5 1 2   # quick smoke
 
 Then aggregate + plot the pure-training metric:
@@ -48,13 +48,12 @@ _PAD_ENV_PRESET = os.environ.get("CLD_NO_PAD")
 # Config — mirrors scripts/run_fittime_modal.sh
 # ---------------------------------------------------------------------------
 
-FOUNDATION_BACKBONES = ["cbramod", "labram", "mirepnet", "neurogpt"]
+FOUNDATION_BACKBONES = ["labram", "mirepnet", "neurogpt"]
 SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]
 ALL_BACKBONES = FOUNDATION_BACKBONES + SPECIALIST_BACKBONES
 
 # Foundation checkpoint filenames (joined with --checkpoint-dir).
 CHECKPOINT_FILES = {
-    "cbramod": "CBraMod_checkpoint.pth",
     "labram": "labram-base.pth",
     "mirepnet": "MIRepNet.pth",
     "neurogpt": "neuro_gpt.pt",
@@ -192,7 +191,7 @@ def run_backbone(RE, backbone, methods, checkpoint_path, args):
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Local fit-time benchmark (twin of run_fittime_modal.sh)")
     p.add_argument("--backbones", default="all",
-                   help="comma-separated backbones or 'all' (default: all 7)")
+                   help="comma-separated backbones or 'all' (default: all 6)")
     p.add_argument("--methods", default="",
                    help="comma-separated method override; empty = auto by backbone family")
     p.add_argument("--dataset", default="bciciv2a", choices=["bciciv2a", "synthetic"])

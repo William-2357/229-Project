@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Fit-time benchmark: K-spanning adaptation methods, all 7 backbones, 3 subjects.
+# Fit-time benchmark: K-spanning adaptation methods, all 6 backbones, 3 subjects.
 # padding=false for the convex (CLD) solves (CLD_NO_PAD=1), and fit_time_warm in the
 # results excludes the JAX compile (mean over warm repeats). Writes to
 # modal_summary_fittime.json (non-destructive; old 256-padding outputs cached as *_pad256).
@@ -15,7 +15,6 @@ NS=3
 FM="foundation_sft_finetune,foundation_sft_lora,foundation_sft_ea_lora,foundation_sft_cld,foundation_sft_ea_cld,foundation_sft_kadaptive_anchored_cld,foundation_sft_ea_kadaptive_anchored_cld"
 SM="finetune,lora,ea_lora,cld,ea_cld,kadaptive_anchored_cld,ea_kadaptive_anchored_cld"
 
-$RUN --backbone cbramod  --methods "$FM" --checkpoint-path /data/CBraMod_checkpoint.pth --n-subjects $NS
 $RUN --backbone labram   --methods "$FM" --checkpoint-path /data/labram-base.pth        --n-subjects $NS
 $RUN --backbone mirepnet --methods "$FM" --checkpoint-path /data/MIRepNet.pth           --n-subjects $NS
 $RUN --backbone neurogpt --methods "$FM" --checkpoint-path /data/neuro_gpt.pt           --n-subjects $NS

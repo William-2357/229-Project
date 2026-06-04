@@ -22,12 +22,12 @@ SPECIALIST_ROOT = ROOT / "results/specialist"
 OUT_DIR = ROOT / "results" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-FOUNDATION_BACKBONES = ["mirepnet", "labram", "cbramod", "neurogpt"]
+FOUNDATION_BACKBONES = ["mirepnet", "labram", "neurogpt"]
 SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]
 
 BACKBONE_LABELS = {
     "eegnet": "EEGNet", "shallowconv": "ShallowConvNet", "conformer": "EEG-Conformer",
-    "mirepnet": "MirepNet", "labram": "LaBraM", "cbramod": "CBraMod", "neurogpt": "NeuroGPT",
+    "mirepnet": "MirepNet", "labram": "LaBraM", "neurogpt": "NeuroGPT",
 }
 DATASET_LABELS = {"bciciv2a": "BCI Competition IV 2a", "synthetic": "Synthetic"}
 

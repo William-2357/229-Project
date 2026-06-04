@@ -44,10 +44,9 @@ All expose `get_features(X)` and `feature_dim` via the `FoundationBackbone` inte
 |-------|-------------|------------|
 | `MIRepNet` | 256 | Maps to 45-channel template; receives native 250 Hz data (no resampling round-trip) |
 | `NeuroGPT` | 1024 | Encoder + embedder portions, 22 channels, 250 Hz / 2-second chunks |
-| `CBraMod` | — | Spectral patch embedding, mean-pools to one feature vector |
 | `LaBraM` | — | Channel-index mapping, temporal patching, own feature normalization |
 
-> **Sampling rates:** `MIRepNet` and `NeuroGPT` now run on native **250 Hz** data — the dataset is delivered at the backbone's native rate rather than resampled down and back up, eliminating a lossy round-trip. `LaBraM` and `CBraMod` run at 200 Hz. Per-backbone target rates live in `BACKBONE_TARGET_SFREQ` (`data/preprocessing.py`); **delete stale caches after changing a rate.**
+> **Sampling rates:** `MIRepNet` and `NeuroGPT` now run on native **250 Hz** data — the dataset is delivered at the backbone's native rate rather than resampled down and back up, eliminating a lossy round-trip. `LaBraM` runs at 200 Hz. Per-backbone target rates live in `BACKBONE_TARGET_SFREQ` (`data/preprocessing.py`); **delete stale caches after changing a rate.**
 
 ## Preprocessing
 
@@ -56,7 +55,6 @@ Per-backbone preprocessing configs (`data/preprocessing.py`):
 | Backbone | Bandpass | Z-score |
 |----------|----------|---------|
 | `labram` | 0.1–75 Hz | No |
-| `cbramod` | 0.5–75 Hz | No |
 | `neurogpt` | 0.5–40 Hz | No |
 | `mirepnet` | 4–40 Hz | No |
 | Specialists | 4–40 Hz | Yes |
@@ -252,7 +250,7 @@ python run_experiment.py --dataset bciciv2a --backbone labram \
 modal run modal_runner.py
 ```
 
-Default Modal config (set at the top of `modal_runner.py`): **CBraMod** backbone with the
+Default Modal config (set at the top of `modal_runner.py`): **LaBraM** backbone with the
 default foundation-SFT method list (the baselines plus the warm `*_anchored_cld` variants),
 A10G GPU, 20 concurrent jobs (`MAX_CONCURRENCY`), 5 repeats per K (`N_REPEATS`), K-minutes
 sweep `[0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]`. Change `BACKBONE` / `METHODS` /
@@ -285,7 +283,7 @@ results/                        # runtime output dir (Modal: /project/results)
 In this repo, the **curated** results are committed under two top-level folders (split by
 backbone family) rather than a single `results/` tree:
 
-- `foundation_results/{cbramod,labram,mirepnet,neurogpt}/` — foundation backbones
+- `foundation_results/{labram,mirepnet,neurogpt}/` — foundation backbones
 - `specialist_results/{eegnet,shallowconv,conformer}/` — specialist backbones
 
 Each backbone folder holds its `modal_summary.json` (the file consumed by the plotting

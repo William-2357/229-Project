@@ -37,7 +37,7 @@ def curve(d, keys, metric):
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--backbone",default="cbramod")
+    ap=argparse.ArgumentParser(); ap.add_argument("--backbone",default="labram")
     add_metric_arg(ap); a=ap.parse_args()
     metric = resolve_metric(a.metric)
     bb=a.backbone

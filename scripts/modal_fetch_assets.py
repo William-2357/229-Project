@@ -3,7 +3,7 @@
 Runs on Modal (controlled deps, fast network, writes directly to the volume — no
 multi-GB uploads from a laptop).
 
-    modal run scripts/modal_fetch_assets.py --what checkpoints   # 3 public HF checkpoints
+    modal run scripts/modal_fetch_assets.py --what checkpoints   # 2 public HF checkpoints
     modal run scripts/modal_fetch_assets.py --what data          # BCICIV2a via MOABB -> A0XT.npz
     modal run scripts/modal_fetch_assets.py --what all
 
@@ -33,7 +33,6 @@ image = (
 CHECKPOINTS = {
     "starself/MIRepNet":   ("MIRepNet.pth",                       "/data/MIRepNet.pth"),
     "wenhuic/Neuro-GPT":   ("pretrained_model/pytorch_model.bin", "/data/neuro_gpt.pt"),
-    "weighting666/CBraMod": ("pretrained_weights.pth",            "/data/CBraMod_checkpoint.pth"),
 }
 
 

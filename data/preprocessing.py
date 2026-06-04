@@ -168,20 +168,6 @@ LABRAM_PREPROCESS_CONFIG: dict = {
     "apply_zscore": False,
 }
 
-# CBraMod (Wang et al. 2024) — pretrained on TUAB at 200 Hz.
-# Bandpass: 0.5–75 Hz (per the TUAB preprocessing in the paper).
-# The patch embedding computes an explicit FFT spectral projection over 101
-# frequency bins (0–100 Hz at 200 Hz sampling).  Passing 4–40 Hz filtered
-# data zeros out bins 40–75 Hz, corrupting the pretrained spectral_proj
-# weights — the most critical preprocessing mismatch in the codebase.
-# CBraModBackbone.get_features() applies its own per-channel z-score, so
-# apply_zscore can be either value; False avoids a redundant pass.
-CBRAMOD_PREPROCESS_CONFIG: dict = {
-    "l_freq": 0.5,
-    "h_freq": 75.0,
-    "apply_zscore": False,
-}
-
 # NeuroGPT (Cui et al. 2023) — pretrained on Temple University EEG Corpus.
 # Bandpass: 0.5–40 Hz (per the paper's preprocessing description).
 # The model applies its own per-channel z-score in get_features().
@@ -206,7 +192,6 @@ MIREPNET_PREPROCESS_CONFIG: dict = {
 # Backbones not listed use the default pipeline (4–40 Hz, z-scored).
 BACKBONE_PREPROCESS_CONFIGS: dict[str, dict] = {
     "labram":   LABRAM_PREPROCESS_CONFIG,
-    "cbramod":  CBRAMOD_PREPROCESS_CONFIG,
     "neurogpt": NEUROGPT_PREPROCESS_CONFIG,
     "mirepnet": MIREPNET_PREPROCESS_CONFIG,
 }
@@ -214,7 +199,6 @@ BACKBONE_PREPROCESS_CONFIGS: dict[str, dict] = {
 # Cache directory suffix per backbone (appended to the base cache path).
 BACKBONE_CACHE_SUFFIX: dict[str, str] = {
     "labram":   "labram",
-    "cbramod":  "cbramod",
     "neurogpt": "neurogpt",
     "mirepnet": "mirepnet",
 }
@@ -226,16 +210,14 @@ BACKBONE_CACHE_SUFFIX: dict[str, str] = {
 # 250 -> 200 -> 250 resampling round-trip and matches the exact rate (sample
 # alignment, filter phase) their checkpoints expect.
 #
-# LaBraM and CBraMod were pretrained at 200 Hz, so they stay at 200 Hz (their
-# 0.1-75 Hz / 0.5-75 Hz content is fully preserved below the 100 Hz Nyquist).
-# NOTE: CBraMod does no internal resampling, so it MUST be fed its native rate.
+# LaBraM was pretrained at 200 Hz, so it stays at 200 Hz (its 0.1-75 Hz content
+# is fully preserved below the 100 Hz Nyquist).
 #
 # Caches are per-backbone (BACKBONE_CACHE_SUFFIX), so the 250 Hz MIRepNet/
-# NeuroGPT caches never collide with the 200 Hz LaBraM/CBraMod caches. After
-# changing a backbone's rate, delete its stale cache dir so it recomputes.
+# NeuroGPT caches never collide with the 200 Hz LaBraM cache. After changing a
+# backbone's rate, delete its stale cache dir so it recomputes.
 BACKBONE_TARGET_SFREQ: dict[str, float] = {
     "mirepnet": 250.0,
     "neurogpt": 250.0,
     "labram":   200.0,
-    "cbramod":  200.0,
 }

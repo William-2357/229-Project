@@ -28,6 +28,5 @@ data/synthetic_cache/
 labram-base.pth
 modal_runner.py
 run_experiment.py
-CBraMod_checkpoint.pth
 MIRepNet.pth
 models/pytorch_model.bin

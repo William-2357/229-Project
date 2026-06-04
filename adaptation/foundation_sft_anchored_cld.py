@@ -15,7 +15,7 @@ on small K by anchoring to the source solution rather than treating source data
 as merely an ADMM warm start.
 
 Reference: reve_kmin_convexnn_v3.ipynb — adapted for BCICIV2a LOSO and
-           foundation backbones (CBraMod / LaBraM / MIRepNet / NeuroGPT).
+           foundation backbones (LaBraM / MIRepNet / NeuroGPT).
 """
 
 from __future__ import annotations

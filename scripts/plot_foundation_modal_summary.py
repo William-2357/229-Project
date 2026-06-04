@@ -2,7 +2,7 @@
 
 Example:
     python scripts/plot_foundation_modal_summary.py \
-      --json results/bciciv2a/cbramod/modal_summary.json \
+      --json results/bciciv2a/labram/modal_summary.json \
              results/bciciv2a/mirepnet/modal_summary_mirepnet.json \
              results/bciciv2a/neurogpt/modal_summary_neuro.json \
       --output results/bciciv2a/foundation_backbones.png
@@ -64,7 +64,6 @@ METHOD_ORDER = [
 ]
 
 BACKBONE_LABELS = {
-    "cbramod": "CBRAMod",
     "mirepnet": "Mirepnet",
     "neurogpt": "NeuroGPT",
     "labram": "LaBraM",

@@ -17,7 +17,7 @@ SPECIALIST_ROOT = ROOT / "results/specialist"
 OUT_DIR = ROOT / "results" / "figures"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-FOUNDATION_BACKBONES = ["mirepnet", "labram", "cbramod", "neurogpt"]
+FOUNDATION_BACKBONES = ["mirepnet", "labram", "neurogpt"]
 SPECIALIST_BACKBONES = ["eegnet", "shallowconv", "conformer"]
 
 # Color + linestyle keyed by *base* method name (after stripping foundation_sft_/foundation_ prefix)
@@ -41,7 +41,6 @@ BACKBONE_DISPLAY = {
     "conformer":   "EEG-Conformer",
     "mirepnet":    "MirepNet",
     "labram":      "LaBraM",
-    "cbramod":     "CBraMod",
     "neurogpt":    "NeuroGPT",
 }
 

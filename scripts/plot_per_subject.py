@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "results" / "figures"; OUT_DIR.mkdir(parents=True, exist_ok=True)
-FOUNDATION = {"neurogpt", "mirepnet", "labram", "cbramod"}
+FOUNDATION = {"neurogpt", "mirepnet", "labram"}
 
 ROWS = [("Fine-tune", "finetune"), ("LoRA", "lora"), ("EA+LoRA", "ea_lora"),
         ("CHA", "cld"), ("EA+CHA", "ea_cld"),
