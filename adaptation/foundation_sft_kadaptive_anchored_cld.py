@@ -35,9 +35,8 @@ import numpy as np
 
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
 from jaxcld.optimizers.pcg import pcg
-from jaxcld.preconditioner.nystrom import Nys_Precond
+from jaxcld.preconditioner.nystrom import Nys_Precond, rand_nys_appx
 from jaxcld.utils.proximal_utils import batch_proxl2_tensor
-from ._jaxcld_cpu_linalg import rand_nys_appx_cpu as rand_nys_appx
 
 from .cld import pad_features_to_bucket
 from .foundation_cld import extract_foundation_features

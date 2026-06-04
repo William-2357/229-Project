@@ -38,11 +38,6 @@ def _block_cld(model) -> None:
     if leaves:
         jax.block_until_ready(leaves)
 
-# Patch jaxcld's Nyström preconditioner to run its qr/cholesky/solve/svd on CPU,
-# avoiding `cuSolver INTERNAL` crashes on Modal GPUs. Must come after the admm
-# import above so the patch overrides the name admm() already bound.
-from . import _jaxcld_cpu_linalg  # noqa: F401
-
 from .base import BaseAdapter, train_epoch, evaluate_model
 
 
@@ -334,7 +329,13 @@ class CLDAdapter(BaseAdapter):
         else:
             X_fit, y_fit = X_src, y_src
 
+        # Target forward pass (feature extraction) — counted into train_time so
+        # CLD's on-target cost is measured at the same boundary as finetune/lora,
+        # which include their forward passes. extract_* blocks on .cpu() so this
+        # wall time is an honest GPU figure.
+        _t_feat = time.perf_counter()
         X_feat = extract_penultimate_features(model, X_fit, self.device)
+        _feat_time = time.perf_counter() - _t_feat
         if X_feat is None:
             raise RuntimeError("CLDAdapter: no Linear or Conv2d layer for feature extraction")
 
@@ -345,7 +346,7 @@ class CLDAdapter(BaseAdapter):
             self.admm_iters, self.pcg_iters, self.seed,
         )
 
-        self._train_time = float(getattr(self._cld_model, "_solve_time", 0.0))
+        self._train_time = _feat_time + float(getattr(self._cld_model, "_solve_time", 0.0))
         self._fit_time = time.time() - t0
         return self
 

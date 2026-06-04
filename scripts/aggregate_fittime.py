@@ -17,14 +17,17 @@ from fittime_metrics import resolve_metric, add_metric_arg
 
 _ap = argparse.ArgumentParser(description=__doc__)
 add_metric_arg(_ap)
-metric = resolve_metric(_ap.parse_args().metric)
+_ap.add_argument("--results-dir", default="results/fittime",
+                 help="dir holding <backbone>/modal_summary.json (default: results/fittime)")
+_args = _ap.parse_args()
+metric = resolve_metric(_args.metric)
 
 K_MAP = {"0.0": "K=0", "0.5": "K=0.5", "1.0": "K=1", "2.0": "K=2",
          "5.0": "K=5", "10.0": "K=10", "15.0": "K=15", "30.0": "K=30"}
 K_COLS = ["K=0", "K=0.5", "K=1", "K=2", "K=5", "K=10", "K=15", "K=30"]
 
 acc = defaultdict(list)
-for path in sorted(glob.glob("results/fittime/*/modal_summary.json")):
+for path in sorted(glob.glob(os.path.join(_args.results_dir, "*/modal_summary.json"))):
     backbone = os.path.basename(os.path.dirname(path))
     data = json.load(open(path))
     for key, k_dict in data.items():

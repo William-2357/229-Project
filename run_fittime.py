@@ -62,13 +62,13 @@ CHECKPOINT_FILES = {
 
 # Method sets per backbone family (identical to the Modal shell).
 FOUNDATION_METHODS = [
-    "foundation_sft_finetune", "foundation_sft_lora", "foundation_sft_ea_lora",
-    "foundation_sft_cld", "foundation_sft_ea_cld",
-    "foundation_sft_kadaptive_anchored_cld", "foundation_sft_ea_kadaptive_anchored_cld",
+    "foundation_sft_finetune", "foundation_sft_lora", 
+    "foundation_sft_cld", 
+    "foundation_sft_kadaptive_anchored_cld", 
 ]
 SPECIALIST_METHODS = [
-    "finetune", "lora", "ea_lora", "cld", "ea_cld",
-    "kadaptive_anchored_cld", "ea_kadaptive_anchored_cld",
+    "finetune", "lora", "cld", 
+    "kadaptive_anchored_cld",
 ]
 
 K_MINUTES_DEFAULT = [0.5, 1.0, 2.0, 5.0, 10.0, 15.0, 30.0]

@@ -35,12 +35,8 @@ import torch.nn as nn
 
 from jaxcld.models.cvx_relu_mlp import CVX_ReLU_MLP
 from jaxcld.optimizers.pcg import pcg
-from jaxcld.preconditioner.nystrom import Nys_Precond
+from jaxcld.preconditioner.nystrom import Nys_Precond, rand_nys_appx
 from jaxcld.utils.proximal_utils import batch_proxl2_tensor
-
-# CPU-pinned Nyström build (qr/cholesky/solve/svd) — avoids cuSolver INTERNAL
-# crashes on Modal GPUs. Same numerics as jaxcld's rand_nys_appx.
-from ._jaxcld_cpu_linalg import rand_nys_appx_cpu as rand_nys_appx
 
 from .base import BaseAdapter
 from .cld import maybe_reduce_features, pad_features_to_bucket
@@ -595,14 +591,20 @@ class FoundationSFTAnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
         # ---- Stage 2: warm ADMM on source + calibration (K > 0) ------------
         if target_labeled is not None and len(target_labeled[0]) >= n_classes:
             X_calib, y_calib = target_labeled
+            # Target forward pass — counted into train_time (added to the Stage-2
+            # solve below) so the on-target cost matches finetune/lora's boundary.
+            _t_feat = time.perf_counter()
             X_calib_feat = extract_foundation_features(backbone, X_calib, self.device, self.batch_size)
             if self._feat_pca is not None:
                 X_calib_feat = self._feat_pca.transform(X_calib_feat).astype(np.float32)
+            _feat_time = time.perf_counter() - _t_feat
 
             self._cld_model = self._fit_stage2(
                 X_src_feat, y_src, X_calib_feat, y_calib,
                 stage1_model, mu, sigma, n_classes, n_neurons, source_cache,
             )  # sets self._train_time to the Stage-2 solve time
+            # add the target forward pass so train_time = forward + solve.
+            self._train_time = _feat_time + float(getattr(self, "_train_time", 0.0))
         else:
             # K=0: Stage 1 (source) model used directly — no target training.
             self._cld_model = stage1_model

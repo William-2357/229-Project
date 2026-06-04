@@ -161,9 +161,14 @@ class FoundationSourceFineTuneCLDAdapter(BaseAdapter):
         # ---- fit_time covers target adaptation only (frozen backbone + source
         #      features are ready and cached across K) -------------------------
         t0 = time.time()
+        # Target forward pass (feature extraction) — counted into train_time so
+        # CLD's on-target cost is measured at the same boundary as finetune/lora.
+        _feat_time = 0.0
         if target_labeled is not None and len(target_labeled[0]) >= 2:
+            _t_feat = time.perf_counter()
             X_feat_raw = extract_foundation_features(backbone, X_fit, self.device, self.batch_size)
             X_feat = self._feat_pca.transform(X_feat_raw).astype(np.float32) if self._feat_pca is not None else X_feat_raw
+            _feat_time = time.perf_counter() - _t_feat
         else:
             X_feat = X_src_feat
 
@@ -203,7 +208,7 @@ class FoundationSourceFineTuneCLDAdapter(BaseAdapter):
             norm_stats=norm_stats,
         )
 
-        self._train_time = float(getattr(self._cld_model, "_solve_time", 0.0))
+        self._train_time = _feat_time + float(getattr(self._cld_model, "_solve_time", 0.0))
         self._fit_time = time.time() - t0
         return self
 

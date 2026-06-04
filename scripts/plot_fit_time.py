@@ -47,6 +47,8 @@ cmap = plt.get_cmap("tab10")
 fig, ax = plt.subplots(figsize=(7, 5))
 
 for i, method in enumerate(ADAPTATIONS):
+    if method not in means.index:
+        continue
     ys = means.loc[method]
     xs = [k for k, c in zip(k_vals, k_cols) if pd.notna(ys[c])]
     yv = [ys[c] for c in k_cols if pd.notna(ys[c])]

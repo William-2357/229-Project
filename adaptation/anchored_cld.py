@@ -210,13 +210,19 @@ class AnchoredCLDAdapter(_AnchoredHPSelectMixin, BaseAdapter):
         t0 = time.time()
         if has_calib:
             X_calib, y_calib = target_labeled
+            # Target forward pass — counted into train_time (added to the Stage-2
+            # solve below) so the on-target cost matches finetune/lora's boundary.
+            _t_feat = time.perf_counter()
             X_calib_feat = extract_penultimate_features(model, X_calib, self.device, self.batch_size)
             if self._feat_pca is not None:
                 X_calib_feat = self._feat_pca.transform(X_calib_feat).astype(np.float32)
+            _feat_time = time.perf_counter() - _t_feat
             self._cld_model = self._fit_stage2(
                 X_src_feat, y_src, X_calib_feat, y_calib,
                 stage1_model, mu, sigma, n_classes, n_neurons, source_cache)
-            # _fit_stage2 sets self._train_time to the Stage-2 solve time
+            # _fit_stage2 sets self._train_time to the Stage-2 solve time; add the
+            # target forward pass so train_time = forward + solve.
+            self._train_time = _feat_time + float(getattr(self, "_train_time", 0.0))
         else:
             # K=0: Stage 1 (source) model used directly — no target training.
             self._cld_model = stage1_model
